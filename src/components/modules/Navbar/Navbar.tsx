@@ -133,7 +133,7 @@ export default function Navbar() {
               /> */}
               <Link
                 href="/"
-                className="font-extrabold text-3xl text-[#914c0b] cursor-pointer hover:text-primary-600 transition-colors"
+                className="font-extrabold text-3xl text-[#785706] cursor-pointer hover:text-secondary/80 transition-colors"
                 aria-label="Go to homepage"
               >
                 Dressen
@@ -155,7 +155,7 @@ export default function Navbar() {
             <div className="flex items-center gap-3 flex-shrink-0">
               <Link
                 href="/contact-us"
-                className="inline-flex items-center text-white gap-2 px-3 py-2 rounded-md border border-neutral hover:bg-primary-600 bg-primary transition-all duration-200"
+                className="inline-flex items-center text-secondary gap-2 px-3 py-2 rounded-md border border-neutral hover:bg-highlight/90 bg-highlight transition-all duration-200"
                 aria-label="contact"
               >
                 <Headphones size={18} />
@@ -163,7 +163,7 @@ export default function Navbar() {
 
               <Link
                 href="/dashboard/checkout"
-                className="relative inline-flex items-center justify-center h-10 w-10 rounded-md border border-primary hover:bg-gray-50"
+                className="relative inline-flex items-center justify-center h-10 w-10 rounded-md border border-neutral hover:bg-accent/50 text-secondary"
                 aria-label="cart"
               >
                 <ShoppingCart size={18} />
@@ -214,7 +214,7 @@ export default function Navbar() {
                 >
                   <Menu size={20} />
                 </button>
-                <Link href="/" className="font-bold text-xl text-white">
+                <Link href="/" className="font-bold text-xl text-secondary">
                   Dressen
                 </Link>
               </div>
