@@ -87,9 +87,9 @@ export default function CategoryRail() {
           <button
             key={c.id}
             onClick={() => setCategory(c)}
-            className={`whitespace-nowrap px-3 py-2 rounded-full border transition ${
+            className={`whitespace-nowrap px-3 py-2 rounded-full border transition text-primary ${
               current && current === (c.slug ?? c.id)
-                ? "bg-highlight text-secondary"
+                ? "bg-primary !text-secondary"
                 : "hover:bg-accent/50"
             }`}
             aria-pressed={current === (c.slug ?? c.id)}

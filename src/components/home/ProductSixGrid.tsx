@@ -340,7 +340,7 @@ export default function ProductSixGrid({
                   </div>
 
                   <div className="mt-auto">
-                    <button className="inline-flex w-full items-center justify-center h-9 rounded-md bg-highlight text-secondary text-sm font-bold hover:bg-highlight/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight/70 transition-colors">
+                    <button className="inline-flex w-full items-center justify-center h-9 rounded-md bg-highlight text-primary text-sm font-bold hover:bg-highlight/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight/70 transition-colors">
                       Buy now
                     </button>
                   </div>

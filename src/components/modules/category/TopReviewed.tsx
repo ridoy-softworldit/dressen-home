@@ -259,7 +259,7 @@ function TopReviewedImpl({
 
                   {/* CTA */}
                   <div className="mt-auto">
-                    <span className="inline-flex w-full items-center justify-center h-9 rounded-md bg-highlight text-secondary text-sm font-bold hover:bg-highlight/90 transition-colors">
+                    <span className="inline-flex w-full items-center justify-center h-9 rounded-md bg-highlight text-primary text-sm font-bold hover:bg-highlight/90 transition-colors">
                       View details
                     </span>
                   </div>
