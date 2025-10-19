@@ -848,10 +848,7 @@ export default function CheckoutPage() {
                   <span className="text-gray-600">Subtotal</span>
                   <span className="text-gray-900">৳{subTotal.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Shipping</span>
-                  <span className="text-green-600">Free</span>
-                </div>
+
                 {promoApplied && (
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Discount</span>
@@ -875,13 +872,7 @@ export default function CheckoutPage() {
                   Secure SSL encrypted checkout
                 </span>
               </div>
-              {/* Free Shipping Notice */}
-              <div className="rounded-lg bg-blue-50 p-3 mb-4">
-                <p className="text-xs text-blue-800 flex items-center">
-                  <Truck className="w-3 h-3 mr-1" />
-                  Free shipping on orders over ৳50!
-                </p>
-              </div>
+
               {/* Promo Code */}
               <div className="border-t pt-4">
                 <p className="text-sm font-medium text-gray-900 mb-2">

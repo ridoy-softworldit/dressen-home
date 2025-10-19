@@ -94,13 +94,13 @@ export default function Discount({
   // Loader
   if (loading) {
     return (
-      <section className="w-full py-12">
+      <section className="w-full py-12 bg-secondary">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold md:text-3xl">{title}</h2>
+          <h2 className="text-2xl font-bold md:text-3xl text-primary">{title}</h2>
         </div>
         <div className="grid grid-cols-2 gap-4 px-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 lg:gap-6">
           {Array.from({ length: limit }).map((_, i) => (
-            <div key={i} className="h-[320px] w-full rounded-2xl bg-gray-100 animate-pulse" />
+            <div key={i} className="h-[320px] w-full rounded-2xl bg-muted animate-pulse" />
           ))}
         </div>
       </section>
@@ -111,13 +111,13 @@ export default function Discount({
   const dataset = items.length ? items : FALLBACK;
 
   return (
-    <section className="w-full py-12">
+    <section className="w-full py-12 bg-secondary">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-bold md:text-3xl">{title}</h2>
+        <h2 className="text-2xl font-bold md:text-3xl text-primary">{title}</h2>
         <Button
           asChild
           variant="outline"
-          className="rounded-[12px] border border-gray-300 px-4 py-2 text-sm hover:bg-gray-100 md:px-6 md:py-3 md:text-base"
+          className="rounded-[12px] border border-neutral px-4 py-2 text-sm hover:bg-accent/50 md:px-6 md:py-3 md:text-base"
         >
           <Link href="/discounts">
             View All <ChevronRight className="ml-1 inline h-4 w-4" />
@@ -132,7 +132,7 @@ export default function Discount({
           const discountPct = showSale ? Math.round(((p.price ?? 0) - (p.salePrice ?? 0)) / (p.price ?? 1) * 100) : 0;
           return (
             <Link key={p.id} href={href} className="group">
-              <Card className="relative w-full cursor-pointer rounded-2xl border-none bg-[#F7F7F7] shadow-sm transition-all duration-300 hover:shadow-md">
+              <Card className="relative w-full cursor-pointer rounded-2xl border-none bg-card shadow-sm transition-all duration-300 hover:shadow-md">
                 <CardContent className="flex flex-col p-4">
                   <div className="relative mb-4 grid h-28 w-full place-items-center sm:h-32 lg:h-40">
                     {showSale && discountPct > 0 && (
@@ -152,7 +152,7 @@ export default function Discount({
                   </div>
 
                   <div className="flex-grow">
-                    <h3 className="line-clamp-1 text-sm font-semibold md:text-base">
+                    <h3 className="line-clamp-1 text-sm font-semibold md:text-base text-primary">
                       {p.title}
                     </h3>
                   </div>
@@ -160,15 +160,15 @@ export default function Discount({
                   <div className="mt-3">
                     {showSale ? (
                       <>
-                        <div className="text-xs text-gray-400 line-through">
+                        <div className="text-xs text-muted-foreground line-through">
                           {formatBDT(p.price ?? 0)}
                         </div>
-                        <div className="text-lg font-bold text-[#795548]">
+                        <div className="text-lg font-bold text-primary">
                           {formatBDT(p.salePrice ?? 0)}
                         </div>
                       </>
                     ) : (
-                      <div className="text-lg font-bold text-[#795548]">
+                      <div className="text-lg font-bold text-primary">
                         {formatBDT(p.price ?? 0)}
                       </div>
                     )}
@@ -177,9 +177,9 @@ export default function Discount({
                   <div className="absolute bottom-3 right-3">
                     <Button
                       size="icon"
-                      className="h-8 w-8 rounded-full bg-gray-200 transition-colors hover:bg-gray-300"
+                      className="h-8 w-8 rounded-full bg-accent transition-colors hover:bg-accent/80"
                     >
-                      <ArrowUpRight className="h-4 w-4 text-black" />
+                      <ArrowUpRight className="h-4 w-4 text-primary" />
                     </Button>
                   </div>
                 </CardContent>

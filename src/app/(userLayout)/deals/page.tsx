@@ -203,7 +203,7 @@ export default function DealsMorePage() {
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#1F2937] flex items-center gap-2">
-                <Flame className="w-7 h-7 text-[#795548]" />
+                <Flame className="w-7 h-7 text-black" />
                 More Deals
               </h1>
               <p className="text-sm sm:text-base text-gray-600 mt-1">
@@ -244,7 +244,7 @@ export default function DealsMorePage() {
                 className={[
                   "h-9 rounded-full border px-4 text-sm transition",
                   activeCat === c
-                    ? "bg-[#FEC007] text-white border-[#795548]"
+                    ? "bg-primary text-white border-[#795548]"
                     : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
                 ].join(" ")}
                 aria-pressed={activeCat === c}
@@ -333,7 +333,7 @@ export default function DealsMorePage() {
                       {pct}% OFF
                     </span>
                     {(p.badge || isNew) && (
-                      <span className="inline-block rounded-full bg-[#FEC007] text-white text-[10px] px-2 py-0.5 font-semibold">
+                      <span className="inline-block rounded-full bg-primary text-white text-[10px] px-2 py-0.5 font-semibold">
                         {p.badge ?? "NEW"}
                       </span>
                     )}
@@ -373,7 +373,7 @@ export default function DealsMorePage() {
                       <span className="text-xs text-gray-400 line-through">
                         {formatBDT(p.oldPrice)}
                       </span>
-                      <span className="text-base font-semibold text-[#795548]">
+                      <span className="text-base font-semibold text-black">
                         {formatBDT(p.price)}
                       </span>
                     </div>

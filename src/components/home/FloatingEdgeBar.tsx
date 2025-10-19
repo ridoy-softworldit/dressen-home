@@ -10,7 +10,7 @@ export default function FloatingEdgeBar() {
 
   return (
     <aside className="fixed right-0 top-1/2 -translate-y-1/2 hidden md:flex md:z-40">
-      <div className="bg-[#FEC007] text-white shadow-lg border-l border-white/10 w-[110px] md:w-14">
+      <div className="bg-primary text-white shadow-lg border-l border-white/10 w-[110px] md:w-14">
         <ul className="flex flex-col items-center justify-center divide-y divide-white/10">
           <li className="w-full relative">
             <Link

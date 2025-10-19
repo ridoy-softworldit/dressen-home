@@ -119,7 +119,7 @@ export default function Navbar() {
   return (
     <>
       {/* ===== Desktop/Large Screen ===== */}
-      <div className="hidden lg:block w-full bg-white border-b shadow-sm sticky top-0 z-50">
+      <div className="hidden lg:block w-full bg-accent border-b border-neutral shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 w-full md:px-6 lg:px-36">
           <div className="flex items-center justify-between h-16">
             {/* Logo + Title */}
@@ -133,7 +133,7 @@ export default function Navbar() {
               /> */}
               <Link
                 href="/"
-                className="font-extrabold text-3xl text-[#FEC007] cursor-pointer"
+                className="font-extrabold text-3xl text-[#914c0b] cursor-pointer hover:text-primary-600 transition-colors"
                 aria-label="Go to homepage"
               >
                 Dressen
@@ -155,7 +155,7 @@ export default function Navbar() {
             <div className="flex items-center gap-3 flex-shrink-0">
               <Link
                 href="/contact-us"
-                className="inline-flex items-center text-white gap-2 px-3 py-2 rounded-md border border-gray-200 hover:bg-gray-50 bg-[#FEC007]"
+                className="inline-flex items-center text-white gap-2 px-3 py-2 rounded-md border border-neutral hover:bg-primary-600 bg-primary transition-all duration-200"
                 aria-label="contact"
               >
                 <Headphones size={18} />
@@ -163,7 +163,7 @@ export default function Navbar() {
 
               <Link
                 href="/dashboard/checkout"
-                className="relative inline-flex items-center justify-center h-10 w-10 rounded-md border border-gray-200 hover:bg-gray-50"
+                className="relative inline-flex items-center justify-center h-10 w-10 rounded-md border border-primary hover:bg-gray-50"
                 aria-label="cart"
               >
                 <ShoppingCart size={18} />
@@ -201,7 +201,7 @@ export default function Navbar() {
       </div>
 
       {/* ===== Mobile/Small Screen ===== */}
-      <div className="lg:hidden bg-[#FEC007] text-white w-full">
+      <div className="lg:hidden bg-primary text-secondary w-full">
         <div className="container mx-auto px-4 py-3">
           {/* Normal State */}
           {!isSearchActive && (
@@ -221,7 +221,7 @@ export default function Navbar() {
 
               <div className="flex items-center gap-2">
                 <button
-                  className="p-2 rounded-lg bg-white text-[#795548] hover:bg-white/90 transition-colors"
+                  className="p-2 rounded-lg bg-white text-black hover:bg-white/90 transition-colors"
                   aria-label="Search"
                   onClick={() => setIsSearchActive(true)}
                 >
@@ -230,7 +230,7 @@ export default function Navbar() {
 
                 <Link
                   href="/contact-us"
-                  className="p-2 rounded-lg bg-white text-[#795548] hover:bg-white/90 transition-colors"
+                  className="p-2 rounded-lg bg-white text-black hover:bg-white/90 transition-colors"
                   aria-label="Contact"
                 >
                   <Phone size={18} />
@@ -238,7 +238,7 @@ export default function Navbar() {
 
                 <Link
                   href="/dashboard/checkout"
-                  className="relative p-2 rounded-lg bg-white text-[#795548] hover:bg-white/90 transition-colors"
+                  className="relative p-2 rounded-lg bg-white text-black hover:bg-white/90 transition-colors"
                   aria-label="Cart"
                 >
                   <ShoppingCart size={18} />
@@ -252,7 +252,7 @@ export default function Navbar() {
                 {!isLoggedIn ? (
                   <Link
                     href="/auth/login"
-                    className="p-2 rounded-lg bg-white text-[#795548] hover:bg-white/90 transition-colors"
+                    className="p-2 rounded-lg bg-white text-black hover:bg-white/90 transition-colors"
                     aria-label="Login/Register"
                   >
                     <UserIcon size={18} />
@@ -263,7 +263,7 @@ export default function Navbar() {
                     onClick={handleLogout}
                     aria-label="Logout"
                     disabled={isLogoutLoading}
-                    className="p-2 rounded-lg bg-white text-[#795548] hover:bg-white/90 transition-colors disabled:opacity-60"
+                    className="p-2 rounded-lg bg-white text-black hover:bg-white/90 transition-colors disabled:opacity-60"
                   >
                     <LogOut size={18} />
                   </button>

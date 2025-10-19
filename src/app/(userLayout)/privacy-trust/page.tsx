@@ -5,22 +5,21 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useState, useEffect } from "react"
 
-const termsContent = {
-    acceptance: { title: "Acceptance of Terms", content: ["By accessing and using this website, you accept...", "If you do not agree...", "These terms constitute the entire agreement...", "Any modifications must be agreed upon in writing."] },
-    shipping: { title: "Shipping and Delivery", content: ["We offer various shipping options...", "Standard shipping takes 3-5 business days...", "Express shipping available at extra cost...", "International shipping may take 7-14 business days."] },
-    product: { title: "Product Information", content: ["We strive to provide accurate product descriptions...", "Product images are illustrative...", "Specifications may be modified without notice...", "Products are subject to availability."] },
-    order: { title: "Order Process", content: ["Orders processed within 1-2 business days...", "Confirmation email with tracking sent after shipping...", "Right to refuse or cancel orders...", "Order modifications possible within 2 hours."] },
-    pricing: { title: "Pricing and Payment", content: ["All prices listed in USD...", "We accept credit cards, PayPal...", "Payment must be received in full...", "Taxes and shipping fees calculated at checkout."] },
-    returns: { title: "Returns and Refunds", content: ["Items may be returned within 30 days...", "Return shipping costs are customer responsibility...", "Refunds processed within 5-7 business days...", "Custom items not eligible unless defective."] },
-    intellectual: { title: "Intellectual Property", content: ["All content protected by copyright...", "No reproduction without permission...", "Trademarks/logos need consent...", "User content remains property of users."] },
-    changes: { title: "Changes to Terms", content: ["We may modify terms at any time...", "Changes effective immediately...", "Continued use = acceptance...", "Review periodically for updates."] },
-    contact: { title: "Contact Us", content: ["For questions, contact customer service...", "Available Mon-Fri, 9 AM - 6 PM EST...", "Reach via email, phone, or form...", "Responses within 24 hours on business days."] },
+const privacyContent = {
+    collection: { title: "Information We Collect", content: ["Personal information like name, email, phone when you register or place orders", "Payment information processed securely through encrypted channels", "Browsing data and preferences to improve your shopping experience", "Device information and IP address for security purposes"] },
+    usage: { title: "How We Use Your Information", content: ["Process and fulfill your clothing orders efficiently", "Send order confirmations and shipping updates", "Provide customer support and respond to inquiries", "Improve our website and personalize your experience"] },
+    sharing: { title: "Information Sharing", content: ["We never sell your personal information to third parties", "Share with trusted payment processors for secure transactions", "Provide shipping details to delivery partners only", "May disclose if required by law or to protect our rights"] },
+    security: { title: "Data Security", content: ["Use industry-standard SSL encryption for all transactions", "Secure servers with regular security updates and monitoring", "Limited access to personal data by authorized personnel only", "Regular security audits to protect your information"] },
+    cookies: { title: "Cookies and Tracking", content: ["Essential cookies for website functionality and shopping cart", "Analytics cookies to understand how you use our site", "Marketing cookies for personalized product recommendations", "You can manage cookie preferences in your browser settings"] },
+    rights: { title: "Your Privacy Rights", content: ["Access and review your personal information anytime", "Request correction of inaccurate information", "Delete your account and associated data", "Opt-out of marketing communications at any time"] },
+    retention: { title: "Data Retention", content: ["Keep account information while your account is active", "Retain order history for 3 years for warranty and returns", "Delete inactive accounts after 2 years of no activity", "Some data may be kept longer if required by law"] },
+    contact: { title: "Contact Us", content: ["Email us at Dressenmanager@gmail.com for privacy questions", "Call +8801909008004 during business hours", "Write to us at Kazla, Dhaka, Bangladesh", "We respond to privacy inquiries within 48 hours"] },
 }
 
-type SectionKey = keyof typeof termsContent
+type SectionKey = keyof typeof privacyContent
 
-export default function TermsAndConditions() {
-    const [activeSection, setActiveSection] = useState<SectionKey>("acceptance")
+export default function PrivacyPolicy() {
+    const [activeSection, setActiveSection] = useState<SectionKey>("collection")
     const [email, setEmail] = useState("")
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [submitMessage, setSubmitMessage] = useState("")
@@ -48,17 +47,17 @@ export default function TermsAndConditions() {
     }, [submitMessage])
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col">
+        <div className="min-h-screen bg-accent flex flex-col border-b-2 mb-4 pb-6">
             <div className="flex-1 flex flex-col max-w-6xl mx-auto w-full">
                 {/* Header */}
                 <div className="text-center py-8 px-4 sm:px-6">
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-900 mb-2">
-                        Terms and Conditions
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-secondary mb-2">
+                        Privacy Policy
                     </h1>
-                    <p className="text-gray-600 text-sm sm:text-base">
-                        By using our site, you agree to comply with and be bound by these Terms and Conditions.
+                    <p className="text-secondary-600 text-sm sm:text-base">
+                        Your privacy is important to us. This policy explains how we collect, use, and protect your information.
                         <br className="hidden sm:block" />
-                        If you do not agree, please do not use our website.
+                        Last updated: {new Date().toLocaleDateString()}
                     </p>
                 </div>
 
@@ -67,7 +66,7 @@ export default function TermsAndConditions() {
                     {/* Sidebar */}
                     <div className="w-full lg:w-64 flex-shrink-0 mb-6">
                         <nav className="flex lg:flex-col gap-3 overflow-x-auto lg:overflow-x-visible">
-                            {Object.entries(termsContent).map(([key, section]) => {
+                            {Object.entries(privacyContent).map(([key, section]) => {
                                 const active = activeSection === (key as SectionKey)
                                 return (
                                     <button
@@ -78,9 +77,9 @@ export default function TermsAndConditions() {
                                         className={[
                                             "block w-auto lg:w-full flex-shrink-0 text-left px-5 py-3 text-sm sm:text-base rounded-full transition-all duration-200 border truncate",
                                             active
-                                                ? "font-medium text-white bg-black border-black shadow-sm"
-                                                : "text-gray-700 bg-white/60 border-gray-200 hover:bg-black hover:text-white hover:border-black",
-                                            "focus:outline-none focus:ring-2 focus:ring-black/30",
+                                                ? "font-medium text-secondary bg-primary border-primary shadow-sm"
+                                                : "text-secondary-700 bg-white/60 border-neutral hover:bg-primary hover:text-secondary hover:border-primary",
+                                            "focus:outline-none focus:ring-2 focus:ring-primary/30",
                                         ].join(" ")}
                                     >
                                         {section.title}
@@ -92,18 +91,18 @@ export default function TermsAndConditions() {
 
                     {/* Main Content */}
                     <div className="flex-1 flex flex-col min-h-[500px] lg:min-h-0 ">
-                        <div className="flex-1 bg-white rounded-2xl sm:rounded-3xl border border-gray-200 p-6 sm:p-8 overflow-auto transition-all duration-300">
-                            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 sm:mb-6">
-                                {termsContent[activeSection].title}
+                        <div className="flex-1 bg-white rounded-2xl sm:rounded-3xl border border-neutral p-6 sm:p-8 overflow-auto transition-all duration-300">
+                            <h2 className="text-lg sm:text-xl font-semibold text-primary mb-4 sm:mb-6">
+                                {privacyContent[activeSection].title}
                             </h2>
                             <div className="space-y-3 sm:space-y-4">
-                                {termsContent[activeSection].content.map((item, index) => (
+                                {privacyContent[activeSection].content.map((item, index) => (
                                     <div
                                         key={index}
-                                        className="opacity-0 animate-in fade-in duration-300"
-                                        style={{ animationDelay: `${index * 100}ms` }}
+                                        className=""
+
                                     >
-                                        <p className="text-sm sm:text-base text-gray-600 leading-relaxed">• {item}</p>
+                                        <p className="text-sm sm:text-base text-secondary-600 leading-relaxed">• {item}</p>
                                     </div>
                                 ))}
                             </div>
@@ -123,15 +122,15 @@ export default function TermsAndConditions() {
     rounded-[16px]
     opacity-100
     rotate-0
-    bg-white/70 border border-gray-200 backdrop-blur
+    bg-white/70 border border-neutral backdrop-blur
   "
                 >
-                    <h2 className="text-lg sm:text-xl font-medium text-gray-900">
-                        Have any other questions?
+                    <h2 className="text-lg sm:text-xl font-medium text-primary">
+                        Have privacy questions?
                     </h2>
 
-                    <p className="text-sm sm:text-base text-gray-600">
-                        Feel free to reach out to us for any questions or concerns.
+                    <p className="text-sm sm:text-base text-secondary-600">
+                        Contact us at Dressenmanager@gmail.com for any privacy concerns.
                     </p>
 
                     {/* form pinned to bottom */}
@@ -144,12 +143,12 @@ export default function TermsAndConditions() {
                             placeholder="Enter your Email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="flex-1 bg-gray-100 border-gray-200 text-sm sm:text-base transition-all duration-200 focus:bg-white rounded-full focus:border-black focus:ring-2 focus:ring-black/15 mb-3"
+                            className="flex-1 bg-neutral/50 border-primary/50 text-sm sm:text-base transition-all duration-200 focus:bg-white rounded-full focus:border-primary focus:ring-2 focus:ring-primary/15 mb-3"
                         />
                         <Button
                             type="submit"
                             disabled={isSubmitting}
-                            className="rounded-full bg-black hover:bg-black text-white px-6 py-3 text-sm sm:text-base font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2 focus:ring-black/30 mb-2"
+                            className="rounded-full bg-primary hover:bg-primary-600 text-secondary px-6 py-3 text-sm sm:text-base font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2 focus:ring-primary/30 mb-2"
                         >
                             {isSubmitting ? "SENDING..." : "SEND"}
                         </Button>

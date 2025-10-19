@@ -17,36 +17,35 @@ export default function Footer() {
   const sellerHref = "https://Dressen-admin-panel.vercel.app/auth/register";
 
   return (
-    <footer className="bg-gray-50 py-12 px-6">
-      <div className="max-w-6xl mx-auto">
+    <footer className="bg-white py-12 px-6">
+      <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           {/* Brand Section */}
           <div className="md:col-span-1">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-[#795548] mb-1">Dressen</h2>
-              <p className="text-sm text-gray-600 mb-6">
+              <h2 className="text-2xl font-bold text-primary mb-1">Dressen</h2>
+              <p className="text-sm text-primary/70 mb-6">
                 Connect with our social media platforms
               </p>
 
               {/* Social Media Icons */}
               <div className="space-y-3 mb-6">
-                <div className="text-sm font-medium text-gray-700 mb-2">
-                  Follow Us: 
-                <div className="flex gap-2 items-center">
+                <div className="text-sm font-medium text-primary mb-2">
+                  Follow Us:
+                </div>
+                <div className="space-y-2">
                   <a
                     href="https://www.facebook.com/share/1B8o3BFkr5/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                    className="flex items-center gap-2 text-sm text-primary/70 hover:text-blue-600 transition-colors"
                   >
                     <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
                       <Facebook className="w-3 h-3 text-white" />
                     </div>
                     Dressen Facebook Page
                   </a>
-                </div>
-                 
-                  
+
                 </div>
               </div>
 
@@ -72,39 +71,39 @@ export default function Footer() {
 
           {/* About Section */}
           <div>
-            <h3 className="font-semibold text-black mb-4">About</h3>
-            <ul className="space-y-2 text-sm text-gray-600">
+            <h3 className="font-semibold text-primary mb-4">About</h3>
+            <ul className="space-y-2 text-sm text-primary/70">
               <li>
-                <Link href="/faqs-page" className="hover:text-black transition-colors">
+                <Link href="/faqs-page" className="hover:text-primary transition-colors">
                   FAQ
                 </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-black transition-colors">
+                <Link href="/privacy-trust" className="hover:text-primary transition-colors">
                   Privacy Policy
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-black transition-colors">
+                <a href="#" className="hover:text-primary transition-colors">
                   Search
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-black transition-colors">
+                <Link href="/product-listing" className="hover:text-primary transition-colors">
                   Shop
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
 
           {/* Contact Section */}
           <div>
-            <h3 className="font-semibold text-black mb-4">Contact</h3>
-            <ul className="space-y-2 text-sm text-gray-600">
+            <h3 className="font-semibold text-primary mb-4">Contact</h3>
+            <ul className="space-y-2 text-sm text-primary/70">
               <li>
                 <a
                   href="mailto:dressenbd@gmail.com"
-                  className="hover:text-black transition-colors flex items-center gap-2"
+                  className="hover:text-primary transition-colors flex items-center gap-2"
                 >
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
@@ -113,9 +112,9 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-sm text-primary/70">
                   <svg
-                    className="w-4 h-4 text-gray-500"
+                    className="w-4 h-4 text-primary/60"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -126,31 +125,24 @@ export default function Footer() {
               </li>
               <li className="text-sm">
                 <div className="flex items-start gap-2">
-                  <svg className="w-4 h-4 mt-0.5 text-gray-500" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 mt-0.5 text-primary/60" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                   </svg>
-                  <span className="text-gray-500">
+                  <span className="text-primary/70">
                     Kazla, Dhaka, Bangladesh
                   </span>
                 </div>
               </li>
+
             </ul>
           </div>
 
           {/* Shop Section */}
           <div>
-            <h3 className="font-semibold text-black mb-4">Shop</h3>
-            <ul className="space-y-2 text-sm text-gray-600">
-              {/* <li>
-                <Link
-                  href={sellerHref}
-                  className="hover:text-black transition-colors"
-                >
-                  Become a Seller
-                </Link>
-              </li> */}
+            <h3 className="font-semibold text-primary mb-4">Shop</h3>
+            <ul className="space-y-2 text-sm text-primary/70">
               <li>
-                <a href="#" className="hover:text-black transition-colors">
+                <a href="#" className="hover:text-primary transition-colors">
                   Return & Exchange
                 </a>
               </li>
@@ -159,25 +151,25 @@ export default function Footer() {
 
           {/* Our Information Section */}
           <div>
-            <h3 className="font-semibold text-black mb-4">Our Information</h3>
-            <ul className="space-y-2 text-sm text-gray-600">
+            <h3 className="font-semibold text-primary mb-4">Our Information</h3>
+            <ul className="space-y-2 text-sm text-primary/70">
               <li>
-                <a href="#" className="hover:text-black transition-colors">
+                <a href="#" className="hover:text-primary transition-colors">
                   Privacy Policy Update
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-black transition-colors">
+                <Link href="/about" className="hover:text-primary transition-colors">
                   About Us
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Copyright */}
-        <div className="mt-12 pt-8 border-t border-gray-200 text-center">
-          <p className="text-sm text-gray-500 mb-4">
+        <div className="mt-12 pt-8 border-t border-neutral text-center">
+          <p className="text-sm text-primary/60 mb-4">
             © {new Date().getFullYear()} Dressen. All rights reserved - Design & Developed by <span className="text-md">WebQ Team</span> 
           </p>
         </div>

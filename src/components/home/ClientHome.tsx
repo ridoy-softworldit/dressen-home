@@ -30,7 +30,7 @@ export default function ClientHome() {
 } = useGetTopReviewedProductsQuery();
   
  return (
-    <main className="bg-white w-full">
+    <main className="bg-secondary w-full">
       <MainMenu />
 
       {/* Hero */}

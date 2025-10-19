@@ -713,7 +713,7 @@ export default function ProductListing() {
                               "absolute top-2 right-2 h-8 w-8 transition-all duration-200 shadow-md",
                               isAddedToCart(product.id)
                                 ? "bg-[#16a34a] hover:bg-[#16a34a] text-white cursor-default shadow-lg"
-                                : "bg-white/90 hover:bg-[#FEC007] hover:text-white text-[#795548] hover:shadow-lg"
+                                : "bg-white/90 hover:bg-primary hover:text-white text-black hover:shadow-lg"
                             )}
                             aria-label={`Add ${product.name} to cart`}
                             onClick={(e) => !isAddedToCart(product.id) && handleAddToCart(product, e)}
@@ -732,7 +732,7 @@ export default function ProductListing() {
                           </p>
 
                           <div className="flex items-center gap-2">
-                            <span className="text-lg font-bold text-[#795548]">{formatPrice(product.price)}</span>
+                            <span className="text-lg font-bold text-black">{formatPrice(product.price)}</span>
                             {product.originalPrice && (
                               <span className="text-sm text-gray-500 line-through">{formatPrice(product.originalPrice)}</span>
                             )}

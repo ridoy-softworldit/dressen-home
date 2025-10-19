@@ -9,13 +9,13 @@ import { Button } from "@/components/ui/button";
 
 export default function ContactUs() {
   return (
-    <div className="p-4 md:p-8 lg:p-16 mx-auto max-w-7xl">
+    <div className="p-4 md:p-8 lg:p-16 mx-auto max-w-7xl bg-accent min-h-screen">
       <div className="pointer-events-none absolute -top-24 left-1/2 lg:h-[600px] h-[300px] lg:w-[900px] w-[400px] -translate-x-1/2 rounded-full bg-[linear-gradient(90deg,#9747FF80_0%,#9747FF80_50%,#FFCC0080_50%,#FFCC0080_100%)] blur-3xl opacity-20" />
       {/* ===== div2 ===== */}
       <div className="text-center overflow-hidden mb-20 relative">
         
-        <h1 className="text-4xl font-bold mb-2">Contact Us</h1>
-        <p className="max-w-2xl mx-auto text-[#464747]">
+        <h1 className="text-4xl font-bold mb-2 text-secondary">Contact Us</h1>
+        <p className="max-w-2xl mx-auto text-secondary-600">
           We’re here to help! Reach out to our team for inquiries, support, or
           feedback, and we’ll get back to you as soon as possible
         </p>
@@ -35,29 +35,20 @@ export default function ContactUs() {
           <Card className="absolute top-28 left-4  md:left-18 w-[300px] rounded-2xl p-6 bg-white/80 backdrop-blur-md border border-white/30 shadow-xl">
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-center text-black">
-                Come See Us
+                Visit Dressen
               </CardTitle>
             </CardHeader>
 
             <CardContent className="space-y-6 text-sm">
               <div className="relative border-l-2 border-white/50 pl-6 space-y-6">
-                <div className="relative flex gap-4">
-                  <div className="absolute -left-8 top-1 w-3 h-3 rounded-full bg-black border-2 border-white shadow"></div>
-                  <div>
-                    <h1 className="font-bold">Address</h1>
-                    <div className="flex gap-2">
-                      <MapPin className="w-5 h-5 text-black shrink-0" />
-                      <p>New York, USA</p>
-                    </div>
-                  </div>
-                </div>
+
                 <div className="relative flex gap-4">
                   <div className="absolute -left-8 top-1 w-3 h-3 rounded-full bg-black border-2 border-white shadow"></div>
                   <div>
                     <h1 className="font-bold">Email</h1>
                     <div className="flex gap-2">
                       <Mail className="w-5 h-5 text-black shrink-0" />
-                      <p>hello@example.com</p>
+                      <p>dressenbd@gmail.com</p>
                     </div>
                   </div>
                 </div>
@@ -67,7 +58,17 @@ export default function ContactUs() {
                     <h1 className="font-bold">Phone</h1>
                     <div className="flex gap-2">
                       <Phone className="w-5 h-5 text-black shrink-0" />
-                      <p>+1 (234) 567-890</p>
+                      <p>+8801909008004</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="relative flex gap-4">
+                  <div className="absolute -left-8 top-1 w-3 h-3 rounded-full bg-black border-2 border-white shadow"></div>
+                  <div>
+                    <h1 className="font-bold">Address</h1>
+                    <div className="flex gap-2">
+                      <MapPin className="w-5 h-5 text-black shrink-0" />
+                      <p className="whitespace-nowrap">Kazla, Dhaka, Bangladesh</p>
                     </div>
                   </div>
                 </div>
@@ -79,7 +80,7 @@ export default function ContactUs() {
         {/* Right form card */}
         <Card className="w-full rounded-2xl  bg-white shadow-lg">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold">Get in touch</CardTitle>
+            <CardTitle className="text-2xl font-bold text-secondary">Get in touch</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-3">
@@ -119,13 +120,16 @@ export default function ContactUs() {
 
       {/* ===== div1 (bottom) ===== */}
       <div className="mt-16">
-        <div className="w-full h-[400px]">
-          <Image
-            src="https://i.ibb.co.com/pjBVbhJS/Group-36384.png"
-            alt="Background"
-            width={1200}
-            height={400}
-            className="object-contain rounded-xl w-full h-full"
+        <div className="w-full h-[400px] rounded-xl overflow-hidden">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.9073486780896!2d90.36311731498!3d23.747129984589!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755bf4a6e0b8c5b%3A0x5b5b5b5b5b5b5b5b!2sKazla%2C%20Dhaka%2C%20Bangladesh!5e0!3m2!1sen!2s!4v1703123456789!5m2!1sen!2s"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Kazla, Dhaka, Bangladesh Map"
           />
         </div>
         <div className="bg-background flex items-center justify-center p-4">

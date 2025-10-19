@@ -276,9 +276,9 @@ export default function ProductSixGrid({
   );
 
   return (
-    <section className="w-full bg-white">
+    <section className="w-full bg-secondary">
       <div className="container mx-auto px-3 sm:px-4 lg:px-6">
-        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3">
+        <h2 className="text-lg sm:text-xl font-semibold text-primary mb-3">
           {title}
         </h2>
 
@@ -287,12 +287,12 @@ export default function ProductSixGrid({
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="rounded-lg border bg-white p-3 animate-pulse h-[320px]"
+                className="rounded-lg border border-neutral bg-card p-3 animate-pulse h-[320px]"
               />
             ))}
           </div>
         ) : error ? (
-          <div className="text-center text-red-500 py-4">
+          <div className="text-center text-destructive py-4">
             Failed to load products. Showing fallback data.
           </div>
         ) : (
@@ -306,10 +306,10 @@ export default function ProductSixGrid({
                 <Link
                   key={p.id}
                   href={`/product-details?id=${encodeURIComponent(p.id)}`}
-                  className="group relative rounded-lg border bg-white overflow-hidden p-3 flex flex-col h-[320px] hover:shadow-md transition-shadow duration-300"
+                  className="group relative rounded-lg border border-neutral bg-card overflow-hidden p-3 flex flex-col h-[320px] hover:shadow-md transition-shadow duration-300"
                   aria-label={`View details for ${p.title}`}
                 >
-                  <span className="absolute top-2 right-2 z-10 px-2 py-0.5 rounded-md text-[11px] font-semibold text-white bg-[#FEC007]">
+                  <span className="absolute top-2 right-2 z-10 px-2 py-0.5 rounded-md text-[11px] font-semibold text-secondary bg-highlight">
                     {pct}%
                   </span>
 
@@ -324,23 +324,23 @@ export default function ProductSixGrid({
                     />
                   </div>
 
-                  <div className="mt-3 text-center text-[13px] sm:text-sm font-medium text-gray-900 min-h-[40px]">
+                  <div className="mt-3 text-center text-[13px] sm:text-sm font-medium text-primary min-h-[40px]">
                     {p.title}
                   </div>
 
                   <div className="mt-2 flex items-center justify-center gap-2 min-h-[24px]">
                     {typeof mrp === "number" ? (
-                      <span className="text-xs sm:text-sm text-gray-400 line-through">
+                      <span className="text-xs sm:text-sm text-muted-foreground line-through">
                         {formatBDT(mrp)}
                       </span>
                     ) : null}
-                    <span className="text-sm sm:text-base font-semibold text-[#795548]">
+                    <span className="text-sm sm:text-base font-semibold text-primary">
                       {formatBDT(sale || mrp || 0)}
                     </span>
                   </div>
 
                   <div className="mt-auto">
-                    <button className="inline-flex w-full items-center justify-center h-9 rounded-md text-[#795548] text-sm font-bold hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#795548]">
+                    <button className="inline-flex w-full items-center justify-center h-9 rounded-md bg-highlight text-secondary text-sm font-bold hover:bg-highlight/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight/70 transition-colors">
                       Buy now
                     </button>
                   </div>

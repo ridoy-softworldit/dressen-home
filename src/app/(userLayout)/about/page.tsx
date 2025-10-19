@@ -76,7 +76,7 @@ export default function AboutPage() {
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div>
-              <p className="text-xs tracking-widest text-[#795548] font-semibold">
+              <p className="text-xs tracking-widest text-black font-semibold">
                 ABOUT Dressen
               </p>
               <h1 className="mt-2 text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight text-[#1F2937]">
@@ -118,22 +118,22 @@ export default function AboutPage() {
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           <Stat
-            icon={<Store className="w-5 h-5 text-[#795548]" />}
+            icon={<Store className="w-5 h-5 text-black" />}
             label="Active Sellers"
             value="1,200+"
           />
           <Stat
-            icon={<Package className="w-5 h-5 text-[#795548]" />}
+            icon={<Package className="w-5 h-5 text-black" />}
             label="Products"
             value="38,000+"
           />
           <Stat
-            icon={<Users className="w-5 h-5 text-[#795548]" />}
+            icon={<Users className="w-5 h-5 text-black" />}
             label="Happy Customers"
             value="210K+"
           />
           <Stat
-            icon={<ShoppingBag className="w-5 h-5 text-[#795548]" />}
+            icon={<ShoppingBag className="w-5 h-5 text-black" />}
             label="Orders Delivered"
             value="1.9M+"
           />
@@ -188,22 +188,22 @@ export default function AboutPage() {
         </p>
         <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <ValueCard
-            icon={<Shield className="w-5 h-5 text-[#795548]" />}
+            icon={<Shield className="w-5 h-5 text-black" />}
             title="Trust & Safety"
             text="Verified sellers, secure payments, and responsive support."
           />
           <ValueCard
-            icon={<Leaf className="w-5 h-5 text-[#795548]" />}
+            icon={<Leaf className="w-5 h-5 text-black" />}
             title="Simplicity"
             text="Fewer clicks, more done—frictionless shopping."
           />
           <ValueCard
-            icon={<Rocket className="w-5 h-5 text-[#795548]" />}
+            icon={<Rocket className="w-5 h-5 text-black" />}
             title="Speed"
             text="Fast-loading pages, quick checkout, and smart search."
           />
           <ValueCard
-            icon={<Smile className="w-5 h-5 text-[#795548]" />}
+            icon={<Smile className="w-5 h-5 text-black" />}
             title="Delight"
             text="UX-first design—clean, helpful, and joyful."
           />
@@ -217,19 +217,19 @@ export default function AboutPage() {
         </h2>
         <ul className="mt-4 space-y-4">
           <li className="flex gap-3">
-            <div className="w-2 h-2 mt-2 rounded-full bg-[#FEC007]" />
+            <div className="w-2 h-2 mt-2 rounded-full bg-primary" />
             <p className="text-gray-700">
               <b>2023:</b> MVP launched—Featured, Discounts, and Deals sections.
             </p>
           </li>
           <li className="flex gap-3">
-            <div className="w-2 h-2 mt-2 rounded-full bg-[#FEC007]" />
+            <div className="w-2 h-2 mt-2 rounded-full bg-primary" />
             <p className="text-gray-700">
               <b>2024:</b> Seller portal, order tracking, top-reviewed listings.
             </p>
           </li>
           <li className="flex gap-3">
-            <div className="w-2 h-2 mt-2 rounded-full bg-[#FEC007]" />
+            <div className="w-2 h-2 mt-2 rounded-full bg-primary" />
             <p className="text-gray-700">
               <b>2025:</b> AI recommendations, smart search & personalized deals
               (ongoing).

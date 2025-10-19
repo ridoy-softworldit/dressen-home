@@ -5,7 +5,7 @@ import ClientHome from "@/components/home/ClientHome";
 
 export const metadata: Metadata = {
   title: "Dressen - Best Deals | Home",
-  description: "Portable chairs, trendy clothing & more in Bangladesh.",
+  description: "Trendy clothing & more in Bangladesh.",
 };
 
 export default function HomePage() {

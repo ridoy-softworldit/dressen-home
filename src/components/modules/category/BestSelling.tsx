@@ -95,7 +95,7 @@ export default function BestSelling({ data = [], title = "Best Selling" }: Props
                 <CardContent className="flex flex-col p-4">
                   {/* Discount badge */}
                   {badge ? (
-                    <span className="absolute right-3 top-3 z-10 rounded-md bg-[#FEC007] px-2 py-0.5 text-[11px] font-semibold text-white">
+                    <span className="absolute right-3 top-3 z-10 rounded-md bg-primary px-2 py-0.5 text-[11px] font-semibold text-white">
                       {badge}%
                     </span>
                   ) : null}
@@ -123,12 +123,12 @@ export default function BestSelling({ data = [], title = "Best Selling" }: Props
                     <div className="flex items-center gap-2">
                       {p.salePrice ? (
                         <>
-                          <span className="text-sm font-bold text-[#795548] md:text-lg">
+                          <span className="text-sm font-bold text-black md:text-lg">
                             {formatBDT(p.salePrice)}
                           </span>
                         </>
                       ) : (
-                        <span className="text-sm font-bold text-[#795548] md:text-lg">
+                        <span className="text-sm font-bold text-black md:text-lg">
                           {formatBDT(p.price)}
                         </span>
                       )}

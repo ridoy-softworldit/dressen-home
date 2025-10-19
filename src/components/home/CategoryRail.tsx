@@ -59,14 +59,14 @@ export default function CategoryRail() {
         <div className="hidden md:flex gap-2">
           <button 
             onClick={() => scrollBy(-240)} 
-            className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100 transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-full border border-neutral hover:bg-accent/50 transition-colors"
             aria-label="Previous categories"
           >
             ‹
           </button>
           <button 
             onClick={() => scrollBy(240)} 
-            className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100 transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-full border border-neutral hover:bg-accent/50 transition-colors"
             aria-label="Next categories"
           >
             ›
@@ -77,7 +77,7 @@ export default function CategoryRail() {
       <div ref={railRef} className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin">
         <button
           onClick={() => setCategory(undefined)}
-          className={`whitespace-nowrap px-3 py-2 rounded-full border ${current ? "opacity-80 hover:opacity-100" : "bg-gray-900 text-white"}`}
+          className={`whitespace-nowrap px-3 py-2 rounded-full border ${current ? "opacity-80 hover:opacity-100" : "bg-primary text-secondary"}`}
           aria-pressed={!current}
         >
           All
@@ -89,8 +89,8 @@ export default function CategoryRail() {
             onClick={() => setCategory(c)}
             className={`whitespace-nowrap px-3 py-2 rounded-full border transition ${
               current && current === (c.slug ?? c.id)
-                ? "bg-[#FEC007] text-white"
-                : "hover:bg-gray-100 dark:hover:bg-gray-800"
+                ? "bg-highlight text-secondary"
+                : "hover:bg-accent/50"
             }`}
             aria-pressed={current === (c.slug ?? c.id)}
           >

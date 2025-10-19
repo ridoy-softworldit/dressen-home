@@ -99,12 +99,12 @@ export default function NewWatches({ data = [], title = "New Products" }: Props)
                   <div className="flex items-center gap-2">
                     {p.salePrice ? (
                       <>
-                        <span className="text-sm font-bold text-[#795548] md:text-lg">
+                        <span className="text-sm font-bold text-black md:text-lg">
                           {formatBDT(p.price)}
                         </span>
                       </>
                     ) : (
-                      <span className="text-sm font-bold text-[#795548] md:text-lg">
+                      <span className="text-sm font-bold text-black md:text-lg">
                         {formatBDT(p.price)}
                       </span>
                     )}

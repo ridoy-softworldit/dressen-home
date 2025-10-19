@@ -15,10 +15,9 @@ const footerLinks = [
   {
     title: "Contact",
     links: [
-      { label: "contact@dressen.com", href: "mailto:contact@dressen.com" },
+      { label: "contact@Dressen.com", href: "mailto:contact@Dressen.com" },
       { label: "+1 (555) 123-4567", href: "tel:+15551234567" },
-      "123 Fashion Street, Style District",
-      "New York, NY 10001, USA",
+      "Mirpur, Dhaka, Bangladesh",
     ],
   },
   {

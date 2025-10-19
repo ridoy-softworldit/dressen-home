@@ -422,7 +422,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           {/* Enhanced Price Display */}
           <div className="bg-gray-50 p-4 rounded-lg mt-4">
             <div className="flex items-center gap-3 mb-2">
-              <span className="text-3xl font-bold text-[#795548]">৳{productView.price.toFixed(0)}</span>
+              <span className="text-3xl font-bold text-black">৳{productView.price.toFixed(0)}</span>
               {discountPct > 0 && (
                 <>
                   <span className="text-lg text-gray-500 line-through">৳{productView.compareAt.toFixed(0)}</span>
@@ -436,11 +436,11 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           </div>
 
           {/* Stock Status */}
-          <div className="flex items-center gap-2 mt-4">
+          {/* <div className="flex items-center gap-2 mt-4">
             {productView.specifications.quantity > 0 ? (
               <>
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="text-green-600 font-medium">In Stock ({productView.specifications.quantity} left)</span>
+                <span className="text-green-600 font-medium">Stock Available</span>
               </>
             ) : (
               <>
@@ -448,15 +448,17 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 <span className="text-red-600 font-medium">Out of Stock</span>
               </>
             )}
-          </div>
+          </div> */}
 
           {/* Delivery & Payment Info */}
           <div className="grid grid-cols-2 gap-3 mt-4">
-            <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg">
-              <Truck className="w-5 h-5 text-blue-600" />
+            <div className="flex items-center gap-2 p-3 bg-orange-50 rounded-lg">
+              <svg className="w-6 h-6 text-orange-600" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 7h-3V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h1.05a2.5 2.5 0 0 0 4.9 0h4.1a2.5 2.5 0 0 0 4.9 0H20a1 1 0 0 0 1-1v-5a1 1 0 0 0-.293-.707L19 7zM7.5 17.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm9 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM19 9.414L20.586 11H19V9.414z"/>
+              </svg>
               <div>
-                <p className="text-sm font-medium text-blue-800">Free Delivery</p>
-                <p className="text-xs text-blue-600">2-3 days</p>
+                <p className="text-sm font-medium text-orange-700">Fast Delivery</p>
+                <p className="text-xs text-orange-700">Across Country</p>
               </div>
             </div>
             <div className="flex items-center gap-2 p-3 bg-green-50 rounded-lg">
@@ -556,7 +558,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
               className={clsx('w-full py-6 text-lg font-semibold transition-all', {
                 'bg-gray-500 hover:bg-gray-600': productView.specifications.quantity === 0,
                 'bg-green-600 hover:bg-green-600 cursor-default': isAddedToCart,
-                'bg-[#FEC007] hover:bg-[#FEC007]/90 text-white': productView.specifications.quantity > 0 && !isAddedToCart,
+                'bg-primary hover:bg-primary/90 text-white': productView.specifications.quantity > 0 && !isAddedToCart,
               })}
             >
               <ShoppingCart className="w-5 h-5 mr-2" />
@@ -730,8 +732,8 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         </Card>
       </div>
 
-      {/* Available Vouchers */}
-      <div className="w-full mx-auto mt-10">
+      {/* Available Vouchers - Commented Out */}
+      {/* <div className="w-full mx-auto mt-10">
         <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <span className="text-xl">🔷</span> Available Vouchers
         </h2>
@@ -772,7 +774,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             </Card>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Related Products */}
       {relatedProducts.length > 0 && (
@@ -791,7 +793,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                   <div className="flex flex-col">
                     <h3 className="text-[16px] font-medium text-gray-900 truncate">{p.name}</h3>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="text-[#795548] font-semibold">৳{p.price}</span>
+                      <span className="text-black font-semibold">৳{p.price}</span>
                       {p.oldPrice && <span className="text-gray-500 line-through text-sm">৳{p.oldPrice}</span>}
                     </div>
                     <span className="text-gray-500 text-xs mt-1">{p.sold} sold</span>

@@ -6,7 +6,7 @@ const NavbarLogo = () => {
   return (
     <div>
       <MobileMenu />
-      <Link href="/" className="text-xl font-bold">
+      <Link href="/" className="text-xl font-bold text-[#d4a017]">
         Dressen
       </Link>
     </div>

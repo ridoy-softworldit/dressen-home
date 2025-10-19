@@ -39,11 +39,11 @@ export default function CategorySidebar() {
   return (
     <aside className="hidden md:block md:col-span-3 lg:col-span-2">
       <div className="border rounded-lg overflow-hidden h-44 sm:h-56 md:h-64 lg:h-80 xl:h-96">
-        <div className="px-3 bg-[#FEC007] py-2 font-medium border-b text-white">Categories</div>
+        <div className="px-3 bg-highlight py-2 font-medium border-b text-secondary">Categories</div>
         <ul className="divide-y">
           {cats.map((c) => (
             <li key={c.id} className="text-sm">
-              <Link href={`/category?slug=${encodeURIComponent(c.id)}`} className="block px-3 py-2 hover:bg-gray-50">
+              <Link href={`/category?slug=${encodeURIComponent(c.id)}`} className="block px-3 py-2 hover:bg-accent/50">
                 {c.label}
               </Link>
               {!!c.children?.length && (
@@ -52,7 +52,7 @@ export default function CategorySidebar() {
                     <li key={sc.id}>
                       <Link
                         href={`/category?slug=${encodeURIComponent(sc.id)}`}
-                        className="block px-3 py-1.5 hover:bg-gray-50 text-[13px]"
+                        className="block px-3 py-1.5 hover:bg-accent/50 text-[13px]"
                       >
                         {sc.label}
                       </Link>

@@ -56,11 +56,11 @@ export default function MainMenu() {
   };
 
   return (
-    <div className="relative hidden lg:block left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen bg-[#FEC007]">
+    <div className="relative hidden lg:block left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen bg-primary">
       <div className="container mx-auto w-full px-3 md:px-6 lg:px-36">
         <div className="flex items-center justify-between py-2 h-10">
           {/* Left menu */}
-          <nav className="flex items-center gap-5 text-sm text-white pl-6">
+          <nav className="flex items-center gap-5 text-sm font-medium text-secondary pl-6">
             <Link href="/" className="hover:underline">Home</Link>
             <Link href="/product-listing" className="hover:underline">Product</Link>
             <Link href="/about" className="hover:underline">About</Link>
@@ -68,7 +68,7 @@ export default function MainMenu() {
           </nav>
 
           {/* Right: Account + Cart */}
-          <div className="flex items-center gap-4 text-white">
+          <div className="flex items-center gap-4 text-secondary">
             {!isLoggedIn ? (
               // 🔓 লগইন না থাকলে - Login/Register link
               <Link href="/auth/login" className="text-sm hover:underline">
@@ -88,7 +88,7 @@ export default function MainMenu() {
                       alt={displayName || "User avatar"}
                       width={28}
                       height={28}
-                      className="rounded-full object-cover border-2 border-white/30 group-hover:border-white/60 transition-colors"
+                      className="rounded-full object-cover border-2 border-accent/30 group-hover:border-accent/60 transition-colors"
                       sizes="28px"
                       priority
                       onError={(e) => {
@@ -107,7 +107,7 @@ export default function MainMenu() {
                   type="button"
                   onClick={handleLogout}
                   aria-label="Logout"
-                  className="inline-flex items-center gap-1 rounded-md border border-white/30 px-2 py-1 text-sm hover:bg-white/10 disabled:opacity-60 transition-colors"
+                  className="inline-flex items-center gap-1 rounded-md border border-red-300 bg-secondary text-red-600 px-2 py-1 text-sm hover:bg-red-50 hover:border-red-400 disabled:opacity-60 transition-colors"
                   disabled={isLogoutLoading}
                 >
                   <LogOut size={16} />
@@ -119,12 +119,12 @@ export default function MainMenu() {
             {/* Cart with count */}
             <Link 
               href="/dashboard/checkout" 
-              className="relative inline-flex p-2 rounded-md hover:bg-white/10 transition-colors" 
+              className="relative inline-flex p-2 rounded-md hover:bg-accent/20 transition-colors" 
               aria-label="Cart"
             >
               <ShoppingCart size={20} />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 h-5 min-w-5 px-1 rounded-full text-xs bg-orange-500 text-white flex items-center justify-center font-medium">
+                <span className="absolute -top-1 -right-1 h-5 min-w-5 px-1 rounded-full text-xs bg-accent text-primary flex items-center justify-center font-medium">
                   {cartCount > 99 ? '99+' : cartCount}
                 </span>
               )}
