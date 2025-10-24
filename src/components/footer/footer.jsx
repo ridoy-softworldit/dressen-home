@@ -19,7 +19,7 @@ export default function Footer() {
   const { data: settings } = useGetSettingsQuery();
   // const sellerHref = isLoggedIn ? "/sr" : "/auth/login";
 
-  const sellerHref = "https://admin.Dressenmart.com/auth/login";
+  const sellerHref = "https://dressen-admin-panel-gamma.vercel.app/auth/login";
 
   return (
     <footer className="bg-gray-50 py-12 px-6">
