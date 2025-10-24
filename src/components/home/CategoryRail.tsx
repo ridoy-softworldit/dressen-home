@@ -55,18 +55,18 @@ export default function CategoryRail() {
   return (
     <section className="w-full">
       <div className="mb-2 flex items-center justify-between px-1">
-        <h3 className="font-semibold text-base md:text-lg">Browse by Category</h3>
+        <h3 className="font-semibold text-base md:text-lg text-secondary">Browse by Category</h3>
         <div className="hidden md:flex gap-2">
           <button 
             onClick={() => scrollBy(-240)} 
-            className="w-8 h-8 flex items-center justify-center rounded-full border border-neutral hover:bg-accent/50 transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-full border border-neutral hover:bg-section transition-colors text-secondary"
             aria-label="Previous categories"
           >
             ‹
           </button>
           <button 
             onClick={() => scrollBy(240)} 
-            className="w-8 h-8 flex items-center justify-center rounded-full border border-neutral hover:bg-accent/50 transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-full border border-neutral hover:bg-section transition-colors text-secondary"
             aria-label="Next categories"
           >
             ›
@@ -77,7 +77,7 @@ export default function CategoryRail() {
       <div ref={railRef} className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin">
         <button
           onClick={() => setCategory(undefined)}
-          className={`whitespace-nowrap px-3 py-2 rounded-full border ${current ? "opacity-80 hover:opacity-100" : "bg-primary text-secondary"}`}
+          className={`whitespace-nowrap px-3 py-2 rounded-full border border-neutral ${current ? "bg-accent text-secondary hover:bg-section" : "bg-secondary text-accent"}`}
           aria-pressed={!current}
         >
           All
@@ -87,10 +87,10 @@ export default function CategoryRail() {
           <button
             key={c.id}
             onClick={() => setCategory(c)}
-            className={`whitespace-nowrap px-3 py-2 rounded-full border transition text-primary ${
+            className={`whitespace-nowrap px-3 py-2 rounded-full border border-neutral transition ${
               current && current === (c.slug ?? c.id)
-                ? "bg-primary !text-secondary"
-                : "hover:bg-accent/50"
+                ? "bg-primary text-secondary"
+                : "bg-accent text-secondary hover:bg-section"
             }`}
             aria-pressed={current === (c.slug ?? c.id)}
           >

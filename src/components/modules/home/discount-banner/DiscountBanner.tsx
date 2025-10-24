@@ -7,7 +7,7 @@ const DiscountBanner = () => {
       className="mt-20 relative flex items-center justify-between z-0
       mb-24 overflow-hidden p-6 md:p-10 bg-gradient-to-r 
       h-28 md:h-[290px] lg:h-[330px] xl:h-[390px] rounded-[16px] md:rounded-[30px]
-      bg-[linear-gradient(to_right,_#A7AAFF,_#E0E1FC,_#d9d9d9a2,_#d9d9d9a2,_#d9d9d9a2,_#F1ECD7,_#FFE67C)]"
+      bg-gradient-to-r from-highlight/60 via-primary/30 to-primary"
     >
       {/* Left Image */}
       <div
@@ -43,7 +43,7 @@ const DiscountBanner = () => {
           className="py-1 md:py-2 lg:py-3 xl:py-4 !px-2 md:!px-5 xl:!px-8 rounded md:rounded-[12px] 
           text-[8px] md:text-base 
           ml-6 md:ml-20 lg:ml-24 mt-1
-          bg-black text-white"
+          bg-secondary text-accent"
         >
           Get Discount
         </button>

@@ -21,12 +21,12 @@ const NewArrivalsCard = ({
 }: ProductCardProps) => {
   return (
     <Card
-      className="group rounded-[12px] lg:rounded-3xl overflow-hidden bg-[#f7f7f7ad] 
+      className="group rounded-[12px] lg:rounded-3xl overflow-hidden bg-neutral/70 
     lg:p-2 gap-0 py-0"
     >
       <div
         className="relative w-full h-[150px] sm:h-[235px] lg:h-[200px]  
-      lg:rounded-3xl bg-[#F3F3F4]"
+      lg:rounded-3xl bg-neutral"
       >
         <Image
           src={image}
@@ -53,7 +53,7 @@ const NewArrivalsCard = ({
           {/* btn */}
           <Link
             href={`/product-details/${id}`} 
-            className="bg-black text-white md:bg-[#F3F3F4] md:text-black
+            className="bg-secondary text-accent md:bg-neutral md:text-secondary
               p-0.5 md:p-2 rounded-full shadow"
           >
             <ArrowUpRight className="w-4 h-4 lg:w-6 lg:h-6" />

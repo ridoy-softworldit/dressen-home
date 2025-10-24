@@ -8,7 +8,7 @@ export type OrderStatus =
   | "cancelled"
   | "completed";
 
-export type ShippingType = "amount" | "percentage";
+export type ShippingType = "amount" | "percentage" | "free";
 
 export interface ShippingInfo {
   name: string;

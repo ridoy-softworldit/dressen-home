@@ -110,7 +110,7 @@ export default function ContactForm() {
 
         <Button
           type="submit"
-          className="w-auto bg-gray-900 hover:bg-gray-800 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
+          className="w-auto bg-gray-900 hover:bg-gray-800 text-[#2e2e2e] px-6 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
         >
           Send Message
           <ChevronRight className="w-4 h-4" />

@@ -28,7 +28,7 @@ export default function Page() {
   }, [brandsData, dispatch]);
 
   // Fetch products
-  const { data: productsData, isLoading: productsLoading, error: productsError } = useGetAllProductsQuery();
+  const { data: productsData, isLoading: productsLoading, error: productsError } = useGetAllProductsQuery({ page: 1 });
 
   useEffect(() => {
     if (productsData) {

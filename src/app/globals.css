@@ -54,87 +54,89 @@
 :root {
   --radius: 0.625rem;
   
-  /* Custom Color Palette */
-  --primary: #1E1E1E; /* Deep Charcoal Black */
-  --primary-foreground: #F6F5F3; /* Soft warm white on charcoal */
-  --secondary: #F6F5F3; /* Soft Warm White */
-  --secondary-foreground: #1E1E1E; /* Charcoal on soft white */
-  --accent: #D2B48C; /* Muted Beige / Sand */
-  --accent-foreground: #1E1E1E; /* Charcoal on beige */
-  --highlight: #6B705C; /* Deep Olive / Stone */
-  --neutral: #E4E4E4; /* Neutral Gray */
+  /* Dressen Color Palette */
+  --primary: #FACF35;
+  --primary-hover: #E6BD2E;
+  --secondary: #2E2E2E;
+  --accent: #FFFFFF;
+  --section: #F9F9F9;
+  --neutral: #E4E4E4;
+  --highlight: #3B5BA9;
+  --discount: #E74C3C;
+  --success: #2ECC71;
   
-  /* Base colors using custom palette */
-  --background: #F6F5F3; /* Soft Warm White */
-  --foreground: #1E1E1E; /* Deep Charcoal Black */
-  --card: #FFFFFF; /* Pure white for cards */
-  --card-foreground: #1E1E1E; /* Deep Charcoal Black */
-  --popover: #FFFFFF; /* Pure white */
-  --popover-foreground: #1E1E1E; /* Deep Charcoal Black */
-  --muted: #E4E4E4; /* Neutral Gray */
-  --muted-foreground: #1E1E1E; /* Deep Charcoal Black */
-  --destructive: #dc2626; /* Keep red for errors */
-  --destructive-foreground: #F6F5F3;
-  --border: #E4E4E4; /* Neutral Gray */
-  --input: #FFFFFF; /* Pure white */
-  --ring: #6B705C; /* Deep Olive for focus rings */
+  /* Base Colors */
+  --background: #FFFFFF;
+  --foreground: #2E2E2E;
+  --card: #FFFFFF;
+  --card-foreground: #2E2E2E;
+  --popover: #FFFFFF;
+  --popover-foreground: #2E2E2E;
+  --primary-foreground: #2E2E2E;
+  --secondary-foreground: #FFFFFF;
+  --muted: #E4E4E4;
+  --muted-foreground: #6B7280;
+  --accent-foreground: #2E2E2E;
+  --destructive: #E74C3C;
+  --border: #E4E4E4;
+  --input: #E4E4E4;
+  --ring: #FACF35;
   
-  /* Sidebar colors */
-  --sidebar: #F6F5F3;
-  --sidebar-foreground: #1E1E1E;
-  --sidebar-primary: #6B705C;
-  --sidebar-primary-foreground: #F6F5F3;
+  /* Chart Colors */
+  --chart-1: #FACF35;
+  --chart-2: #3B5BA9;
+  --chart-3: #E0B82E;
+  --chart-4: #2ECC71;
+  --chart-5: #E63946;
+  
+  /* Sidebar Colors */
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #2E2E2E;
+  --sidebar-primary: #FACF35;
+  --sidebar-primary-foreground: #2E2E2E;
   --sidebar-accent: #E4E4E4;
-  --sidebar-accent-foreground: #1E1E1E;
+  --sidebar-accent-foreground: #2E2E2E;
   --sidebar-border: #E4E4E4;
-  --sidebar-ring: #6B705C;
-  
-  /* Chart colors using palette */
-  --chart-1: #6B705C; /* Deep Olive */
-  --chart-2: #1E1E1E; /* Deep Charcoal Black */
-  --chart-3: #D2B48C; /* Muted Beige */
-  --chart-4: #E4E4E4; /* Neutral Gray */
-  --chart-5: #F6F5F3; /* Soft Warm White */
+  --sidebar-ring: #FACF35;
 }
 
 .dark {
-  /* Dark mode using custom palette */
-  --background: #1E1E1E; /* Deep Charcoal Black */
-  --foreground: #F6F5F3; /* Soft Warm White */
-  --card: #2A2A2A; /* Slightly lighter charcoal */
-  --card-foreground: #F6F5F3; /* Soft Warm White */
-  --popover: #2A2A2A; /* Slightly lighter charcoal */
-  --popover-foreground: #F6F5F3; /* Soft Warm White */
-  --primary: #F6F5F3; /* Soft warm white as primary in dark */
-  --primary-foreground: #1E1E1E; /* Charcoal on soft white */
-  --secondary: #3A3A3A; /* Lighter charcoal for secondary */
-  --secondary-foreground: #F6F5F3; /* Soft Warm White */
-  --muted: #3A3A3A; /* Lighter charcoal */
-  --muted-foreground: #E4E4E4; /* Neutral Gray */
-  --accent: #D2B48C; /* Muted Beige */
-  --accent-foreground: #1E1E1E; /* Charcoal on beige */
-  --destructive: #dc2626; /* Keep red for errors */
-  --destructive-foreground: #F6F5F3;
-  --border: #3A3A3A; /* Lighter charcoal for borders */
-  --input: #2A2A2A; /* Slightly lighter charcoal */
-  --ring: #6B705C; /* Deep Olive for focus rings */
+  /* Dressen Dark Mode Colors */
+  --background: #2E2E2E;
+  --foreground: #FFFFFF;
+  --card: #2A2A2A;
+  --card-foreground: #FFFFFF;
+  --popover: #2A2A2A;
+  --popover-foreground: #FFFFFF;
+  --primary: #FACF35;
+  --primary-foreground: #2E2E2E;
+  --secondary: #3A3A3A;
+  --secondary-foreground: #FFFFFF;
+  --muted: #3A3A3A;
+  --muted-foreground: #9CA3AF;
+  --accent: #2A2A2A;
+  --accent-foreground: #FFFFFF;
+  --destructive: #E74C3C;
+  --border: #3A3A3A;
+  --input: #3A3A3A;
+  --ring: #FACF35;
   
-  /* Dark sidebar colors */
-  --sidebar: #1E1E1E;
-  --sidebar-foreground: #F6F5F3;
-  --sidebar-primary: #6B705C;
-  --sidebar-primary-foreground: #F6F5F3;
+  /* Dark Chart Colors */
+  --chart-1: #FACF35;
+  --chart-2: #3B5BA9;
+  --chart-3: #E6BD2E;
+  --chart-4: #2ECC71;
+  --chart-5: #E74C3C;
+  
+  /* Dark Sidebar Colors */
+  --sidebar: #2A2A2A;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #FACF35;
+  --sidebar-primary-foreground: #2E2E2E;
   --sidebar-accent: #3A3A3A;
-  --sidebar-accent-foreground: #F6F5F3;
+  --sidebar-accent-foreground: #FFFFFF;
   --sidebar-border: #3A3A3A;
-  --sidebar-ring: #6B705C;
-  
-  /* Dark chart colors */
-  --chart-1: #6B705C; /* Deep Olive */
-  --chart-2: #F6F5F3; /* Soft Warm White */
-  --chart-3: #D2B48C; /* Muted Beige */
-  --chart-4: #E4E4E4; /* Neutral Gray */
-  --chart-5: #3A3A3A; /* Lighter charcoal */
+  --sidebar-ring: #FACF35;
 }
 
 @layer base {

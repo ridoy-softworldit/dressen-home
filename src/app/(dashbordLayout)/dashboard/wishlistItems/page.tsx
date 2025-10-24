@@ -13,8 +13,6 @@ import {
 } from "@/redux/featured/customer/customerApi";
 import { useAppSelector } from "@/redux/hooks";
 import { selectCurrentUser } from "@/redux/featured/auth/authSlice";
-import { useSession } from "next-auth/react";
-import AuthGuard from "@/components/shared/AuthGuard";
 import Image from "next/image";
 
 // Strip unnecessary fields
@@ -25,12 +23,8 @@ function stripServerFields<T extends Record<string, any>>(data: T) {
 
 export default function CustomerSync() {
   const currentUser = useAppSelector(selectCurrentUser);
-  const { data: session } = useSession();
   const params = useParams();
-  
-  // Use actual logged-in user ID
-  const user = session?.user || currentUser;
-  const customerId = user?.id || "";
+  const customerId = "68977cb8e9dabd00341e79e0";
 
   const {
     data: customer,
@@ -38,7 +32,7 @@ export default function CustomerSync() {
     isError,
     error,
     refetch,
-  } = useGetSingleCustomerQuery(customerId || "", { skip: !customerId });
+  } = useGetSingleCustomerQuery(customerId, { skip: !customerId });
 
   const [createCustomer, { isLoading: creating, isSuccess: createOk }] =
     useCreateCustomerMutation();
@@ -72,12 +66,9 @@ export default function CustomerSync() {
 
   if (!customerId) {
     return (
-      <div className="w-full p-6">
-        <h1 className="text-2xl font-semibold mb-8">My Wishlist</h1>
-        <div className="text-center py-12">
-          <p className="text-gray-500">Please log in to view your wishlist.</p>
-        </div>
-      </div>
+      <p className="text-sm text-gray-500">
+        ⚠️ URL এ /customers/[id] ফরম্যাটে id দিন।
+      </p>
     );
   }
 
@@ -87,26 +78,12 @@ export default function CustomerSync() {
 
   if (isError) {
     return (
-      <div className="w-full p-6">
-        <h1 className="text-2xl font-semibold mb-8">My Wishlist</h1>
-        <div className="text-center py-12">
-          <p className="text-gray-500">Your wishlist is empty or could not be loaded.</p>
-          <p className="text-sm text-gray-400 mt-2">Start adding items to see them here!</p>
-        </div>
-      </div>
+      <p className="text-sm text-red-600">Error: {JSON.stringify(error)}</p>
     );
   }
 
   if (!customer) {
-    return (
-      <div className="w-full p-6">
-        <h1 className="text-2xl font-semibold mb-8">My Wishlist</h1>
-        <div className="text-center py-12">
-          <p className="text-gray-500">Your wishlist is empty.</p>
-          <p className="text-sm text-gray-400 mt-2">Start adding items to see them here!</p>
-        </div>
-      </div>
-    );
+    return <p className="text-sm text-gray-500">No customer found.</p>;
   }
 
   // Assume wishlist is an array of objects with { id, name, category, price }
@@ -115,8 +92,7 @@ export default function CustomerSync() {
     : [];
 
   return (
-    <AuthGuard>
-      <div className="w-full p-6">
+    <div className="w-full p-6">
       <h1 className="text-2xl font-semibold mb-8">My Wishlist</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -155,7 +131,7 @@ export default function CustomerSync() {
                   </span>
                   <Button
                     size="sm"
-                    className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 text-sm"
+                    className="bg-orange-500 hover:bg-orange-600 text-[#2e2e2e] px-3 py-1.5 text-sm"
                     onClick={handleClone}
                     disabled={!clonedPayload || creating}
                   >
@@ -167,14 +143,7 @@ export default function CustomerSync() {
             </div>
           </Card>
         ))}
-        {wishlistItems.length === 0 && (
-          <div className="col-span-full text-center py-12">
-            <p className="text-gray-500">Your wishlist is empty.</p>
-            <p className="text-sm text-gray-400 mt-2">Start adding items to see them here!</p>
-          </div>
-        )}
       </div>
     </div>
-    </AuthGuard>
   );
 }

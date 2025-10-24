@@ -27,29 +27,11 @@ import { IProduct } from "@/types/product";
 type Product = IProduct;
 
 // ✅ ADD THIS SAFE TYPE CHECKER
-const isRecord = (value: unknown): value is Record<string, unknown> => {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-};
+// const isRecord = (value: unknown): value is Record<string, unknown> => {
+//   return typeof value === 'object' && value !== null && !Array.isArray(value);
+// };
 
-// ✅ SAFE VALUE EXTRACTORS
-const getProductPrice = (product: Product): number => {
-  if (product.productInfo && isRecord(product.productInfo)) {
-    const salePrice = product.productInfo.salePrice;
-    const regularPrice = product.productInfo.price;
-    
-    if (typeof salePrice === 'number' && salePrice > 0) return salePrice;
-    if (typeof regularPrice === 'number') return regularPrice;
-  }
-  return 0;
-};
 
-const getProductDate = (product: Product): number => {
-  const productRecord = product as unknown as Record<string, unknown>;
-  if (productRecord.createdAt && typeof productRecord.createdAt === 'string') {
-    return new Date(productRecord.createdAt).getTime();
-  }
-  return 0;
-};
 
 
 
@@ -291,7 +273,7 @@ function FilterPanel({
 }
 
 export function ProductCollection() {
-  const { data, isLoading, error } = useGetAllProductsQuery();
+  const { data, isLoading, error } = useGetAllProductsQuery({ page: 1 });
   const [productData, setProductData] = useState<Product[]>([]);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);

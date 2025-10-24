@@ -42,8 +42,8 @@ const InputField = ({
           type={type}
           placeholder={placeholder}
           defaultValue={defaultValue}
-          className={`w-full border rounded-md px-4 py-[10px] pr-10 focus:outline-none 
-            focus:ring-2 focus:ring-blue-500 ${className}`}
+          className={`w-full border border-neutral rounded-md px-4 py-[10px] pr-10 focus:outline-none 
+            focus:ring-2 focus:ring-primary ${className}`}
           {...(register || {})}
           {...rest}
         />
@@ -64,7 +64,7 @@ const InputField = ({
       </div>
 
       {/* Error */}
-      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+      {error && <p className="text-error text-xs mt-1">{error}</p>}
     </div>
   );
 };

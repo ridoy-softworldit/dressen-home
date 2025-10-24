@@ -18,7 +18,6 @@ import {
 import { selectCurrentUser } from "@/redux/featured/auth/authSlice";
 import { useAppSelector } from "@/redux/hooks";
 import { useGetSingleUserQuery } from "@/redux/featured/user/userApi";
-import { useSession } from "next-auth/react";
 
 interface SidebarItem {
   icon: LucideIcon;
@@ -62,17 +61,15 @@ interface DashboardSidebarProps {
 export default function DashboardSidebar({ onClose }: DashboardSidebarProps) {
   const pathname = usePathname();
   const currentUser = useAppSelector(selectCurrentUser);
-  const { data: session } = useSession();
 
   const { data: userData } = useGetSingleUserQuery(currentUser?._id as string, {
     skip: !currentUser?._id,
   }) as { data?: UserApiResponse };
 
-  // Use NextAuth session data if available, fallback to Redux
-  const user = session?.user || currentUser;
-  const userName = user?.name || "User";
-  const userEmail = user?.email || "user@example.com";
-  const userImage = user?.image || userData?.data?.image || "/default-profile.png";
+  const userName = currentUser?.name || "John Doe";
+  const userEmail = currentUser?.email || "john.doe@example.com";
+  const userImage =
+    userData?.data?.image || "/placeholder.svg?height=40&width=40";
 
 
   return (
@@ -91,9 +88,9 @@ export default function DashboardSidebar({ onClose }: DashboardSidebarProps) {
                   .toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <div className="space-y-0.5 flex-1 min-w-0">
-              <div className="text-black truncate">{userName}</div>
-              <div className="text-sm text-gray-600 truncate">{userEmail}</div>
+            <div className="space-y-0.5">
+              <div className="text-black">{userName}</div>
+              <div className="text-sm text-gray-600">{userEmail}</div>
             </div>
           </div>
         </div>

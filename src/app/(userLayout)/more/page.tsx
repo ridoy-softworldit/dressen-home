@@ -21,59 +21,10 @@ import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import type { RemoteProduct } from '@/types/product';
 
-type FeaturedCategory =
-  | "Smartphones"
-  | "Books"
-  | "Kitchen"
-  | "Sports"
-  | "Fashion";
+
 
 // Commented for future use
-// type FeaturedItem = {
-//   id: string;
-//   title: string;
-//   category: FeaturedCategory;
-//   image: string;
-//   price: number;
-//   oldPrice?: number;
-//   featuredScore: number; // arbitrary ranking score
-//   createdAt: string;
-//   badge?: "FEATURED" | "PICK" | "NEW";
-// };
 
-// const categories = [
-//   "All",
-//   "Smartphones",
-//   "Books",
-//   "Kitchen",
-//   "Sports",
-//   "Fashion",
-// ] as const;
-// type Category = (typeof categories)[number];
-
-type FeaturedItem = {
-  id: string;
-  title: string;
-  category: FeaturedCategory;
-  image: string;
-  price: number;
-  oldPrice?: number;
-  featuredScore: number; // arbitrary ranking score
-  createdAt: string;
-  badge?: "FEATURED" | "PICK" | "NEW";
-};
-
-
-
-const categories = [
-  "All",
-  "Smartphones",
-  "Books",
-  "Kitchen",
-  "Sports",
-  "Fashion",
-] as const;
-type Category = (typeof categories)[number];
 
 function formatBDT(n: number) {
   return `৳${Math.round(n)}`;
@@ -82,7 +33,7 @@ function formatBDT(n: number) {
 export default function FeaturedMorePage() {
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector(selectCartItems);
-  const { data: apiProducts, isLoading } = useGetAllProductsQuery();
+  const { data: apiProducts, isLoading } = useGetAllProductsQuery({ page: 1 });
   const { data: apiCategories } = useGetAllCategoryQuery();
   
   const [activeCat, setActiveCat] = useState<string>("All");
@@ -165,7 +116,7 @@ export default function FeaturedMorePage() {
     return (
       <main className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#795548] mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#facf35] mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading products...</p>
         </div>
       </main>
@@ -181,7 +132,7 @@ export default function FeaturedMorePage() {
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#1F2937] flex items-center gap-2">
-                <Sparkles className="w-7 h-7 text-black" />
+                <Sparkles className="w-7 h-7 text-[#facf35]" />
                 Featured Picks
               </h1>
               <p className="text-sm sm:text-base text-gray-600 mt-1">
@@ -222,7 +173,7 @@ export default function FeaturedMorePage() {
                 className={[
                   "h-9 rounded-full border px-4 text-sm transition",
                   activeCat === c
-                    ? "bg-primary text-white border-[#795548]"
+                    ? "bg-[#facf35] text-[#2e2e2e] border-[#facf35]"
                     : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
                 ].join(" ")}
                 aria-pressed={activeCat === c}
@@ -311,7 +262,7 @@ export default function FeaturedMorePage() {
                         {formatBDT(p.oldPrice)}
                       </span>
                     )}
-                    <span className="text-base font-semibold text-black">
+                    <span className="text-base font-semibold text-[#facf35]">
                       {formatBDT(p.price)}
                     </span>
                   </div>
@@ -322,13 +273,13 @@ export default function FeaturedMorePage() {
                       className="flex-1"
                       aria-label={`View details of ${p.title}`}
                     >
-                      <Button className="w-full bg-primary hover:bg-primary/90 text-white">View</Button>
+                      <Button className="w-full bg-[#facf35] hover:bg-[#facf35]/90 text-[#2e2e2e]">View</Button>
                     </Link>
                     <Button
                       variant="outline"
                       className={clsx("w-10 px-0", {
-                        'bg-green-600 hover:bg-green-600 text-white': isAddedToCart(p.id),
-                        'hover:bg-primary hover:text-white': !isAddedToCart(p.id)
+                        'bg-green-600 hover:bg-green-600 text-[#2e2e2e]': isAddedToCart(p.id),
+                        'hover:bg-[#facf35] hover:text-[#2e2e2e]': !isAddedToCart(p.id)
                       })}
                       onClick={(e) => !isAddedToCart(p.id) && handleAddToCart(p, e)}
                       disabled={isAddedToCart(p.id)}

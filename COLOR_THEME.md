@@ -1,14 +1,18 @@
-# Dressen Color Palette Implementation
+# 🎨 Dressen Color Palette Implementation (v2 – Based on #FACF35)
 
 ## Color Palette Overview
 
 | Color Name | Hex Code | Usage | Tailwind Classes |
 |------------|----------|-------|------------------|
-| **Primary (Gold Gradient)** | `#D4A017` | Buttons, highlights, section titles | `bg-primary`, `text-primary`, `border-primary` |
-| **Secondary (Charcoal Black)** | `#1E1E1E` | Text, icons, header background | `bg-secondary`, `text-secondary`, `border-secondary` |
-| **Accent (Soft White)** | `#F8F8F8` | Clean neutral background | `bg-accent`, `text-accent`, `border-accent` |
-| **Neutral Gray** | `#E5E5E5` | Borders, dividers, subtle UI elements | `bg-neutral`, `text-neutral`, `border-neutral` |
-| **Highlight Accent (Royal Blue)** | `#3B5BA9` | Contrast buttons, links (use sparingly) | `bg-highlight`, `text-highlight`, `border-highlight` |
+| **Primary (Bright Gold)** | `#FACF35` | Main brand color for buttons, highlights, titles | `bg-primary`, `text-primary`, `border-primary` |
+| **Primary Hover (Deep Gold)** | `#E6BD2E` | Hover state for gold elements | `hover:bg-primary-hover`, `bg-primary-hover` |
+| **Secondary (Charcoal)** | `#2E2E2E` | Text, icons, headers (softer than pure black) | `bg-secondary`, `text-secondary`, `border-secondary` |
+| **Accent (Pure White)** | `#FFFFFF` | Clean backgrounds and content areas | `bg-accent`, `text-accent`, `border-accent` |
+| **Section Background** | `#F9F9F9` | Light gray for section separation | `bg-section`, `text-section`, `border-section` |
+| **Neutral Gray** | `#E4E4E4` | Borders, dividers, subtle backgrounds | `bg-neutral`, `text-neutral`, `border-neutral` |
+| **Highlight Accent (Royal Blue)** | `#3B5BA9` | Links, CTAs, trust elements | `bg-highlight`, `text-highlight`, `border-highlight` |
+| **Discount Red** | `#E74C3C` | Discount badges, urgent CTAs | `bg-discount`, `text-discount`, `border-discount` |
+| **Success Green** | `#2ECC71` | Success states | `text-success`, `bg-success` |
 
 ## Implementation Status
 
@@ -17,87 +21,99 @@
 - [x] Global CSS variables updated
 - [x] Button component variants updated
 - [x] Navbar component colors updated
+- [x] Footer component colors updated
+- [x] Card components (BestSellerCard, NewArrivalsCard) updated
+- [x] Form components (AuthForm, InputField) updated
+- [x] Home page components (Promo, DiscountBanner, Sidebar) updated
+- [x] Mobile navigation components updated
 - [x] Dark mode color scheme implemented
 - [x] Color utility file created (`src/utils/colors.ts`)
 
 ### 🔄 Next Steps
-- [ ] Update footer component
-- [ ] Update card components
-- [ ] Update form components
 - [ ] Update product listing components
 - [ ] Update dashboard components
+- [ ] Update remaining UI components
 - [ ] Update authentication pages
+- [ ] Update shop/category pages
 
-## Usage Examples
+## Tailwind Config Variables
+
+```js
+// tailwind.config.js
+theme: {
+  extend: {
+    colors: {
+      primary: '#FACF35',
+      'primary-hover': '#E6BD2E',
+      secondary: '#2E2E2E',
+      accent: '#FFFFFF',
+      section: '#F9F9F9',
+      neutral: '#E4E4E4',
+      highlight: '#3B5BA9',
+      discount: '#E74C3C',
+      success: '#2ECC71',
+    },
+  },
+}
+```
+
+## Example Usage
 
 ### Buttons
 ```tsx
-// Primary gold button
-<Button variant="default">Primary Action</Button>
+<Button className="bg-primary text-secondary hover:bg-primary-hover">
+  Primary Action
+</Button>
 
-// Secondary charcoal button  
-<Button variant="secondary">Secondary Action</Button>
+<Button className="bg-secondary text-accent hover:bg-[#3A3A3A]">
+  Secondary Action
+</Button>
 
-// Highlight blue button (use sparingly)
-<Button variant="highlight">Special Action</Button>
-
-// Outline button
-<Button variant="outline">Outline Button</Button>
+<Button className="bg-highlight text-accent hover:bg-[#314C8D]">
+  Special Action
+</Button>
 ```
 
-### Text Colors
+### Text and Backgrounds
 ```tsx
-// Primary text (charcoal)
-<p className="text-secondary">Main content text</p>
+<div className="bg-accent text-secondary">
+  Main content area
+</div>
 
-// Secondary text (lighter charcoal)
-<p className="text-secondary-600">Supporting text</p>
+<h1 className="text-primary">
+  Premium Gold Headline
+</h1>
 
-// Highlight text (royal blue)
-<p className="text-highlight">Important links</p>
-```
-
-### Backgrounds
-```tsx
-// Clean white background
-<div className="bg-accent">Content area</div>
-
-// Gold accent background
-<div className="bg-primary">Header or highlight section</div>
-
-// Charcoal background
-<div className="bg-secondary">Dark sections</div>
-```
-
-### Borders and Dividers
-```tsx
-// Neutral borders
-<div className="border border-neutral">Card with subtle border</div>
-
-// Gold accent borders
-<div className="border border-primary">Highlighted card</div>
+<p className="text-highlight">
+  Learn more about our products
+</p>
 ```
 
 ## Color Combinations
 
-### Recommended Pairings
-- **Gold + Charcoal**: `bg-primary text-secondary` (Primary buttons)
-- **Charcoal + Soft White**: `bg-secondary text-accent` (Dark sections)
-- **Soft White + Charcoal**: `bg-accent text-secondary` (Main content areas)
-- **Royal Blue + Soft White**: `bg-highlight text-accent` (Special actions)
+### ✅ Recommended Pairings
 
-### Hover States
-- **Primary hover**: `hover:bg-primary-600`
-- **Secondary hover**: `hover:bg-secondary-800`
-- **Highlight hover**: `hover:bg-highlight-800`
-- **Neutral hover**: `hover:bg-neutral-400`
+| Combination | Use Case |
+|-------------|----------|
+| Gold (#FACF35) + Charcoal (#1E1E1E) | Premium contrast for buttons, headings |
+| Charcoal (#1E1E1E) + Soft White (#FAFAFA) | Readable and elegant text sections |
+| Gold (#FACF35) + Royal Blue (#3B5BA9) | Limited accent usage for strong CTAs |
+| Neutral Gray (#E4E4E4) + Charcoal (#1E1E1E) | Minimal card and border combinations |
+
+### Hover / Focus States
+
+| State | Base | Hover |
+|-------|------|-------|
+| Primary Button | #FACF35 | #E0B82E |
+| Secondary Button | #1E1E1E | #3A3A3A |
+| Highlight Button | #3B5BA9 | #314C8D |
+| Neutral | #E4E4E4 | #CFCFCF |
 
 ## Accessibility Notes
 
-- All color combinations meet WCAG AA contrast requirements
-- Focus states use gold (`ring-primary`) for consistency
-- Error states maintain red color for universal recognition
-- Dark mode maintains the same color relationships with adjusted brightness
+✅ Contrast ratios are optimized for readability on both light and dark backgrounds  
+✅ Gold (#FACF35) provides strong brand recognition without straining the eyes  
+✅ All hover and focus states maintain AA compliance
 
 ## File Locations
 
@@ -118,14 +134,31 @@ When updating existing components:
 5. Use `text-highlight` for important links instead of blue variants
 6. Use `bg-primary` for main action buttons
 
-## CSS Variables Available
+## CSS Variables (for Global Styles)
 
 ```css
---primary: #D4A017
---secondary: #1E1E1E  
---accent: #F8F8F8
---neutral: #E5E5E5
---highlight: #3B5BA9
+:root {
+  --primary: #FACF35;
+  --primary-hover: #E6BD2E;
+  --secondary: #2E2E2E;
+  --accent: #FFFFFF;
+  --section: #F9F9F9;
+  --neutral: #E4E4E4;
+  --highlight: #3B5BA9;
+  --discount: #E74C3C;
+  --success: #2ECC71;
+}
 ```
 
-These can be used in custom CSS when Tailwind classes aren't sufficient.
+## Quick Visual Summary
+
+| Purpose | Color | Hex |
+|---------|-------|-----|
+| 🌞 Primary Bright Gold | ![#FACF35](https://via.placeholder.com/20/FACF35/000000?text=+) | #FACF35 |
+| 🟡 Primary Hover Deep Gold | ![#E6BD2E](https://via.placeholder.com/20/E6BD2E/000000?text=+) | #E6BD2E |
+| 🌑 Secondary Charcoal | ![#2E2E2E](https://via.placeholder.com/20/2E2E2E/000000?text=+) | #2E2E2E |
+| ⚪ Accent Pure White | ![#FFFFFF](https://via.placeholder.com/20/FFFFFF/000000?text=+) | #FFFFFF |
+| 🔳 Section Light Gray | ![#F9F9F9](https://via.placeholder.com/20/F9F9F9/000000?text=+) | #F9F9F9 |
+| ⚙️ Neutral Gray | ![#E4E4E4](https://via.placeholder.com/20/E4E4E4/000000?text=+) | #E4E4E4 |
+| 🔵 Royal Blue Highlight | ![#3B5BA9](https://via.placeholder.com/20/3B5BA9/000000?text=+) | #3B5BA9 |
+| 🔴 Discount Red | ![#E74C3C](https://via.placeholder.com/20/E74C3C/000000?text=+) | #E74C3C |

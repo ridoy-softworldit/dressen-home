@@ -71,11 +71,11 @@ function Stars({ value }: { value: number }) {
 /** ---------- Skeleton ---------- */
 function SkeletonCard() {
   return (
-    <div className="rounded-2xl border border-neutral bg-card p-3 h-[320px] animate-pulse">
-      <div className="h-36 bg-muted rounded-lg" />
-      <div className="mt-3 h-4 bg-muted rounded" />
-      <div className="mt-2 h-4 w-2/3 bg-muted rounded" />
-      <div className="mt-6 h-9 bg-muted rounded" />
+    <div className="rounded-2xl border bg-white p-3 h-[320px] animate-pulse">
+      <div className="h-36 bg-gray-100 rounded-lg" />
+      <div className="mt-3 h-4 bg-gray-100 rounded" />
+      <div className="mt-2 h-4 w-2/3 bg-gray-100 rounded" />
+      <div className="mt-6 h-9 bg-gray-100 rounded" />
     </div>
   );
 }
@@ -164,12 +164,12 @@ function TopReviewedImpl({
 
 
   return (
-    <section className="w-full bg-secondary">
+    <section className="w-full">
       <div className="container mx-auto px-3 sm:px-4 lg:px-6">
         {/* Header */}
         <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-lg font-bold sm:text-xl text-primary">{title}</h3>
-          <Link href="/reviews" className="text-sm text-primary hover:underline">
+          <h3 className="text-lg font-bold sm:text-xl text-secondary">{title}</h3>
+          <Link href="/reviews" className="text-sm text-highlight hover:underline hover:text-primary">
             View all
           </Link>
         </div>
@@ -187,9 +187,9 @@ function TopReviewedImpl({
             ))}
           </div>
         ) : error ? (
-          <div className="rounded-lg border border-neutral p-6 text-center text-sm text-destructive">
-            Failed to load reviewed products.
-          </div>
+          <div className="text-center py-12">
+          <p className="text-secondary/60">Failed to load products</p>
+        </div>
         ) : (
           <motion.div
             className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4"
@@ -211,11 +211,11 @@ function TopReviewedImpl({
                 variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}
                 whileHover={{ y: -3 }}
                 transition={{ type: "spring", stiffness: 260, damping: 18 }}
-                className="group relative rounded-2xl border border-neutral bg-card p-3 h-[320px] shadow-sm hover:shadow-md"
+                className="group relative rounded-2xl border bg-white p-3 h-[320px] shadow-sm hover:shadow-md"
               >
                 {/* badge */}
                 {p.fallback && (
-                  <span className="absolute top-2 right-2 z-10 rounded-md px-2 py-0.5 text-[11px] font-semibold text-white bg-slate-500/90">
+                  <span className="absolute top-2 right-2 z-10 rounded-md px-2 py-0.5 text-[11px] font-semibold text-accent bg-secondary/90">
                     Smart picks
                   </span>
                 )}
@@ -240,26 +240,26 @@ function TopReviewedImpl({
                   </div>
 
                   {/* title */}
-                  <div className="mt-3 line-clamp-2 h-[42px] text-center text-[13px] font-medium text-primary sm:text-sm">
+                  <div className="mt-3 line-clamp-2 h-[42px] text-center text-[13px] font-medium text-secondary sm:text-sm">
                     {p.title}
                   </div>
 
                   {/* rating */}
                   <div className="mt-1 flex items-center justify-center gap-2">
                     <Stars value={p.rating} />
-                    <span className="text-xs text-muted-foreground">({p.reviews})</span>
+                    <span className="text-xs text-secondary/60">({p.reviews})</span>
                   </div>
 
                   {/* price */}
                   <div className="mt-2 flex min-h-[24px] items-center justify-center">
-                    <span className="text-sm font-semibold text-primary sm:text-base">
+                    <span className="text-sm font-semibold text-secondary sm:text-base">
                       {formatBDT(p.price)}
                     </span>
                   </div>
 
                   {/* CTA */}
                   <div className="mt-auto">
-                    <span className="inline-flex w-full items-center justify-center h-9 rounded-md bg-highlight text-primary text-sm font-bold hover:bg-highlight/90 transition-colors">
+                    <span className="inline-flex w-full items-center justify-center h-9 rounded-md text-highlight text-sm font-bold hover:text-primary transition-colors">
                       View details
                     </span>
                   </div>

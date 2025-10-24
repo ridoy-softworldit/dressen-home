@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-// BestSelling.tsx / NewWatches.tsx / Discount.tsx
+// BestSelling.tsx / CategoryProduct.tsx / Discount.tsx
 import type { IProduct } from "@/types/product";
 import type { ProductData } from "@/types/product";
 

@@ -14,7 +14,7 @@ type Brand = {
 type Product = IProduct;
 
 export default function LogoPage() {
-  const { data } = useGetAllProductsQuery();
+  const { data } = useGetAllProductsQuery({ page: 1 });
 
   // Extract unique brands from products data
   const getBrands = () => {

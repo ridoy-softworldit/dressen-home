@@ -17,12 +17,18 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import CartSidebar from "@/components/navBer/CartSidebar";
 import { useState } from "react";
 import { selectCustomer } from "@/redux/featured/customer/customerSlice";
+import { selectCartTotalItems } from "@/redux/featured/cart/cartSlice";
 
 const NavbarActions = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const customerData = useAppSelector(selectCustomer);
-  const cartItems = customerData?.cartItem[0]?.productInfo || [];
+  const customerCartItems = customerData?.cartItem[0]?.productInfo || [];
+
+  const reduxCartTotalItems = useAppSelector(selectCartTotalItems);
   const currentUser = useAppSelector(selectCurrentUser);
+  
+  // Use redux cart total items (this is where addToCart adds items)
+  const cartCount = reduxCartTotalItems;
   const dispatch = useAppDispatch();
   const [logout] = useLogoutMutation();
   const { data: session } = useSession();
@@ -31,7 +37,7 @@ const NavbarActions = () => {
     if (currentUser?._id) {
       try {
         await logout(currentUser._id).unwrap();
-      } catch (err) {}
+      } catch {}
     }
     dispatch(logoutUser());
     await signOut({ callbackUrl: "/auth/login" });
@@ -46,9 +52,9 @@ const NavbarActions = () => {
           className="relative cursor-pointer"
         >
           <ShoppingCart size={18} />
-          {cartItems.length > 0 && (
+          {cartCount > 0 && (
             <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full p-0 flex items-center justify-center text-xs bg-orange-500 hover:bg-orange-600 text-white">
-              <span className="p-1">{cartItems.length}</span>
+              <span className="p-1">{cartCount}</span>
             </span>
           )}
         </div>
@@ -128,7 +134,7 @@ const NavbarActions = () => {
       <CartSidebar
         isCartOpen={isCartOpen}
         setIsCartOpen={setIsCartOpen}
-        cartItems={cartItems}
+        cartItems={customerCartItems}
       />
     </>
   );

@@ -25,7 +25,7 @@ export default function SellerHero() {
                     </p>
 
                     <div className="flex justify-center lg:justify-start">
-                        <Button className="bg-black hover:bg-gray-800 text-white px-5 md:px-6 py-3 md:py-4 text-sm md:text-base font-semibold rounded-lg shadow-lg group transition-all duration-300">
+                        <Button className="bg-black hover:bg-gray-800 text-[#2e2e2e] px-5 md:px-6 py-3 md:py-4 text-sm md:text-base font-semibold rounded-lg shadow-lg group transition-all duration-300">
                             Register Now
                             <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                         </Button>

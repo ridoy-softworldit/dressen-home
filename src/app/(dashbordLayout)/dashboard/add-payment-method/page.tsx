@@ -187,7 +187,7 @@ export default function AddPaymentMethod() {
                 </Button>
                 <Button
                   type="submit"
-                  className="h-11 bg-orange-500 hover:bg-orange-600 text-white"
+                  className="h-11 bg-orange-500 hover:bg-orange-600 text-[#2e2e2e]"
                 >
                   Save Payment Method
                 </Button>

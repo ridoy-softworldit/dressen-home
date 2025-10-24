@@ -67,7 +67,7 @@ export default function Sidebar() {
                 className={`w-full flex items-center gap-3 px-4 py-3 text-left rounded-lg transition-colors
               ${
                 isActive
-                  ? "bg-orange-600 text-white font-medium"
+                  ? "bg-orange-600 text-[#2e2e2e] font-medium"
                   : "text-orange-700 hover:bg-orange-200"
               }`}
               >

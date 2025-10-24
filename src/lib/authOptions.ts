@@ -65,7 +65,7 @@ export const authOptions: NextAuthOptions = {
             walletPoint: u.walletPoint ?? 0,
             accessToken,
           } as any;
-        } catch (e) {
+        } catch {
           return null;
         }
       },
@@ -99,7 +99,7 @@ export const authOptions: NextAuthOptions = {
             return true;
           }
           return false;
-        } catch (e) {
+        } catch {
           return false;
         }
       }

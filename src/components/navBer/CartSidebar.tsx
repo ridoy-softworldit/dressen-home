@@ -82,7 +82,7 @@ export default function CartSidebar({
       refetchCustomer();
       toast.success('Removed from cart successfully!');
       setLoadingId(null);
-    } catch (error) {
+    } catch {
       toast.error('Failed to remove from cart.');
     }
   };
@@ -116,7 +116,7 @@ export default function CartSidebar({
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between border-b p-4">
                 <h2 className="text-lg font-medium">
-                  Shopping Cart ({cartItems.length} Items)
+                  Shopping Cart ({cartItems.reduce((total, item) => total + item.quantity, 0)} Items)
                 </h2>
                 <Button
                   variant="ghost"
@@ -223,7 +223,7 @@ export default function CartSidebar({
                   <span className="font-bold text-lg">{overallTotal}</span>
                 </div>
                 <Link href={`/dashboard/checkout`}>
-                  <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white">
+                  <Button className="w-full bg-orange-500 hover:bg-orange-600 text-[#2e2e2e]">
                     Checkout
                   </Button>
                 </Link>

@@ -135,7 +135,7 @@ export default function DiscountsPage() {
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#1F2937] flex items-center gap-2">
-                <Percent className="w-7 h-7 text-black" />
+                <Percent className="w-7 h-7 text-[#facf35]" />
                 More Discounts
               </h1>
               <p className="text-sm sm:text-base text-gray-600 mt-1">
@@ -176,7 +176,7 @@ export default function DiscountsPage() {
                 className={[
                   "h-9 rounded-full border px-4 text-sm transition",
                   activeCat === c
-                    ? "bg-primary text-white border-[#795548]"
+                    ? "bg-[#facf35] text-[#2e2e2e] border-[#facf35]"
                     : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
                 ].join(" ")}
                 aria-pressed={activeCat === c}
@@ -281,7 +281,7 @@ export default function DiscountsPage() {
                       <span className="text-xs text-gray-400 line-through">
                         {formatBDT(p.oldPrice)}
                       </span>
-                      <span className="text-base font-semibold text-black">
+                      <span className="text-base font-semibold text-[#facf35]">
                         {formatBDT(p.price)}
                       </span>
                     </div>
@@ -292,13 +292,13 @@ export default function DiscountsPage() {
                         className="flex-1"
                         aria-label={`View details of ${p.title}`}
                       >
-                        <Button className="w-full bg-primary hover:bg-primary/90 text-white">View</Button>
+                        <Button className="w-full bg-[#facf35] hover:bg-[#facf35]/90 text-[#2e2e2e]">View</Button>
                       </Link>
                       <Button
                         variant="outline"
                         className={clsx("w-10 px-0", {
-                          'bg-green-600 hover:bg-green-600 text-white': isAddedToCart(p.id),
-                          'hover:bg-primary hover:text-white': !isAddedToCart(p.id)
+                          'bg-green-600 hover:bg-green-600 text-[#2e2e2e]': isAddedToCart(p.id),
+                          'hover:bg-[#facf35] hover:text-[#2e2e2e]': !isAddedToCart(p.id)
                         })}
                         onClick={(e) => !isAddedToCart(p.id) && handleAddToCart(p, e)}
                         disabled={isAddedToCart(p.id)}

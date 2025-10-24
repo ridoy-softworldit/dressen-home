@@ -2,13 +2,11 @@
 
 import Link from "next/link";
 import { useGetAllCategoryQuery } from "@/redux/featured/category/categoryApi";
-import { categories as localCats } from "@/data/categories";
 
-// ✅ Remote টাইপ (exact backend শেপ যদি আগেই ডিফাইন করে থাকেন, সেটাই import করুন)
-type RemoteSubCategory = { _id?: string; slug?: string; id?: string; name?: string; label?: string };
+type RemoteSubCategory = { _id?: string; slug?: string; name?: string };
 type RemoteCategory = {
-  _id?: string; slug?: string; id?: string; name?: string; label?: string;
-  children?: RemoteSubCategory[];
+  _id?: string; slug?: string; name?: string;
+  subCategories?: RemoteSubCategory[];
 };
 
 type UICategory = {
@@ -23,27 +21,23 @@ export default function CategorySidebar() {
   const cats: UICategory[] =
     isSuccess && Array.isArray(remoteCats) && remoteCats.length
       ? (remoteCats as RemoteCategory[]).map((c) => ({
-          id: c.slug ?? c._id ?? c.id ?? "",
-          label: c.name ?? c.label ?? "Category",
-          children: (c.children ?? []).map((sc) => ({
-            id: sc.slug ?? sc._id ?? sc.id ?? "",
-            label: sc.name ?? sc.label ?? "Subcategory",
+          id: c.slug ?? c._id ?? "",
+          label: c.name ?? "Category",
+          children: (c.subCategories ?? []).map((sc) => ({
+            id: sc.slug ?? sc._id ?? "",
+            label: sc.name ?? "Subcategory",
           })),
         }))
-      : localCats.map((c) => ({
-          id: c.id,
-          label: c.label,
-          children: c.children,
-        }));
+      : [];
 
   return (
     <aside className="hidden md:block md:col-span-3 lg:col-span-2">
       <div className="border rounded-lg overflow-hidden h-44 sm:h-56 md:h-64 lg:h-80 xl:h-96">
-        <div className="px-3 bg-highlight py-2 font-medium border-b text-primary">Categories</div>
+        <div className="px-3 bg-[#facf35] py-2 font-medium border-b text-[#2e2e2e]">Categories</div>
         <ul className="divide-y">
           {cats.map((c) => (
             <li key={c.id} className="text-sm">
-              <Link href={`/category?slug=${encodeURIComponent(c.id)}`} className="block px-3 py-2 hover:bg-accent/50 text-primary">
+              <Link href={`/category?slug=${encodeURIComponent(c.id)}`} className="block px-3 py-2 hover:bg-gray-50">
                 {c.label}
               </Link>
               {!!c.children?.length && (
@@ -52,7 +46,7 @@ export default function CategorySidebar() {
                     <li key={sc.id}>
                       <Link
                         href={`/category?slug=${encodeURIComponent(sc.id)}`}
-                        className="block px-3 py-1.5 hover:bg-accent/50 text-[13px] text-primary"
+                        className="block px-3 py-1.5 hover:bg-gray-50 text-[13px]"
                       >
                         {sc.label}
                       </Link>

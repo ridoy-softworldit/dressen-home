@@ -18,7 +18,7 @@ import {
 export const metadata = {
   title: "About — Dressen",
   description:
-    "Learn about Dressen — our story, values, team, and what we’re building for shoppers and sellers.",
+    "Learn about Dressen — your premier fashion destination offering trendy, quality clothing for every style and occasion.",
 };
 
 function Stat({
@@ -76,25 +76,23 @@ export default function AboutPage() {
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div>
-              <p className="text-xs tracking-widest text-black font-semibold">
+              <p className="text-xs tracking-widest text-primary font-semibold">
                 ABOUT Dressen
               </p>
-              <h1 className="mt-2 text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight text-[#1F2937]">
-                We make shopping simple, social & fair.
+              <h1 className="mt-2 text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight text-secondary">
+                Fashion that fits your lifestyle.
               </h1>
               <p className="mt-3 text-gray-600 max-w-2xl">
-                Dressen is a modern marketplace experience where brands, creators,
-                and local sellers bring you great products in one place. Fast
-                delivery, trusted reviews, and smart deals—without friction.
+                Dressen brings you the latest in fashion trends and timeless classics. From casual everyday wear to elegant formal pieces—discover quality clothing that expresses your unique style.
               </p>
 
               <div className="mt-6 flex flex-col sm:flex-row gap-3">
-                <Link href="/more">
-                  <Button className="w-full sm:w-auto">Explore Featured</Button>
+                <Link href="/product-listing">
+                  <Button className="w-full sm:w-auto">Shop Now</Button>
                 </Link>
-                <Link href="/sr">
+                <Link href="/contact-us">
                   <Button variant="outline" className="w-full sm:w-auto">
-                    Become a Seller
+                    Contact Us
                   </Button>
                 </Link>
               </div>
@@ -102,8 +100,8 @@ export default function AboutPage() {
 
             <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-gray-200 bg-white">
               <Image
-                src="/new-arrival-4.png"
-                alt="Dressen marketplace preview"
+                src="/about1.jpg"
+                alt="Fashion collection from Dressen"
                 fill
                 className="object-contain"
                 sizes="(max-width: 1024px) 100vw, 600px"
@@ -118,24 +116,24 @@ export default function AboutPage() {
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           <Stat
-            icon={<Store className="w-5 h-5 text-black" />}
-            label="Active Sellers"
-            value="1,200+"
+            icon={<Store className="w-5 h-5 text-primary" />}
+            label="Collections"
+            value="25+"
           />
           <Stat
-            icon={<Package className="w-5 h-5 text-black" />}
+            icon={<Package className="w-5 h-5 text-primary" />}
             label="Products"
-            value="38,000+"
+            value="1500+"
           />
           <Stat
-            icon={<Users className="w-5 h-5 text-black" />}
+            icon={<Users className="w-5 h-5 text-primary" />}
             label="Happy Customers"
-            value="210K+"
+            value="50K+"
           />
           <Stat
-            icon={<ShoppingBag className="w-5 h-5 text-black" />}
+            icon={<ShoppingBag className="w-5 h-5 text-primary" />}
             label="Orders Delivered"
-            value="1.9M+"
+            value="200K+"
           />
         </div>
       </section>
@@ -144,31 +142,26 @@ export default function AboutPage() {
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
           <div className="order-2 lg:order-1">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1F2937]">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-secondary">
               Our Story
             </h2>
             <p className="mt-3 text-gray-600">
-              Dressen started with a simple question:{" "}
-              <span className="font-semibold text-[#1F2937]">
-                “Why is online shopping still complex?”
+              Dressen started with a simple belief:{" "}
+              <span className="font-semibold text-secondary">
+                &ldquo;Fashion should be accessible, stylish, and sustainable.&rdquo;
               </span>{" "}
-              Choosing the right product, validating quality, and getting a fair
-              price shouldn’t be hard. We built a platform where discovery,
-              reviews, deals, and delivery come together—beautifully.
+              From our first boutique to today&rsquo;s online platform, we&rsquo;ve been committed to curating quality clothing that empowers people to express their individuality.
             </p>
             <p className="mt-3 text-gray-600">
-              Today, Dressen offers curated collections, category-first
-              navigation, top-reviewed listings, and Today’s Deals. Next up:
-              more automation and AI-powered recommendations to personalize
-              shopping for you.
+              Today, Dressen offers everything from casual everyday essentials to statement pieces for special occasions. We carefully select each item for quality, style, and value, bringing you fashion that fits your lifestyle and budget.
             </p>
           </div>
 
           <div className="order-1 lg:order-2">
             <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-gray-200 bg-white">
               <Image
-                src="/new-arrival-1.png"
-                alt="Dressen team and culture"
+                src="/about2.jpg"
+                alt="Dressen fashion collection and styling"
                 fill
                 className="object-contain"
                 sizes="(max-width: 1024px) 100vw, 600px"
@@ -180,79 +173,78 @@ export default function AboutPage() {
 
       {/* VALUES */}
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1F2937]">
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-secondary">
           Our Values
         </h2>
         <p className="text-gray-600 mt-2">
-          Four principles guide every decision we make.
+          Four principles guide every collection and every customer experience.
         </p>
         <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <ValueCard
-            icon={<Shield className="w-5 h-5 text-black" />}
-            title="Trust & Safety"
-            text="Verified sellers, secure payments, and responsive support."
+            icon={<Shield className="w-5 h-5 text-primary" />}
+            title="Quality & Durability"
+            text="Premium materials, careful craftsmanship, and lasting construction."
           />
           <ValueCard
-            icon={<Leaf className="w-5 h-5 text-black" />}
-            title="Simplicity"
-            text="Fewer clicks, more done—frictionless shopping."
+            icon={<Leaf className="w-5 h-5 text-primary" />}
+            title="Sustainability"
+            text="Eco-friendly practices and responsible sourcing for a better future."
           />
           <ValueCard
-            icon={<Rocket className="w-5 h-5 text-black" />}
-            title="Speed"
-            text="Fast-loading pages, quick checkout, and smart search."
+            icon={<Rocket className="w-5 h-5 text-primary" />}
+            title="Fast Delivery"
+            text="Quick processing and reliable shipping to your doorstep."
           />
           <ValueCard
-            icon={<Smile className="w-5 h-5 text-black" />}
-            title="Delight"
-            text="UX-first design—clean, helpful, and joyful."
+            icon={<Smile className="w-5 h-5 text-primary" />}
+            title="Style & Comfort"
+            text="Trendy designs that don't compromise on comfort and wearability."
           />
         </div>
       </section>
 
       {/* TIMELINE */}
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      {/* <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1F2937]">
           Milestones
         </h2>
         <ul className="mt-4 space-y-4">
           <li className="flex gap-3">
-            <div className="w-2 h-2 mt-2 rounded-full bg-primary" />
+            <div className="w-2 h-2 mt-2 rounded-full bg-[#facf35]" />
             <p className="text-gray-700">
-              <b>2023:</b> MVP launched—Featured, Discounts, and Deals sections.
+              <b>2020:</b> Started with a single street cart serving fresh beverages and snacks.
             </p>
           </li>
           <li className="flex gap-3">
-            <div className="w-2 h-2 mt-2 rounded-full bg-primary" />
+            <div className="w-2 h-2 mt-2 rounded-full bg-[#facf35]" />
             <p className="text-gray-700">
-              <b>2024:</b> Seller portal, order tracking, top-reviewed listings.
+              <b>2022:</b> Expanded to multiple locations and launched delivery service.
             </p>
           </li>
           <li className="flex gap-3">
-            <div className="w-2 h-2 mt-2 rounded-full bg-primary" />
+            <div className="w-2 h-2 mt-2 rounded-full bg-[#facf35]" />
             <p className="text-gray-700">
-              <b>2025:</b> AI recommendations, smart search & personalized deals
-              (ongoing).
+              <b>2024:</b> Online ordering platform and expanded menu with specialty items.
             </p>
           </li>
         </ul>
-      </section>
+      </section> */}
 
       {/* TEAM (static/dummy) */}
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      {/* <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1F2937]">
           Team
         </h2>
         <p className="text-gray-600 mt-2">
-          A small, dedicated group across product, engineering, and design.
+          A passionate team of chefs, baristas, and food enthusiasts dedicated to bringing you the best flavors from our kitchen to your table.
         </p>
 
         <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           {[
-            { name: "Ayesha Rahman", role: "Product Lead" },
-            { name: "Arif Hossain", role: "Engineering" },
-            { name: "Nadia Islam", role: "Design" },
-            { name: "Rehan Ahmed", role: "Ops" },
+            { name: "Chef Rahman", role: "Head Chef" },
+            { name: "Barista Hossain", role: "Beverage Master" },
+            { name: "Manager Islam", role: "Operations" },
+            { name: "Quality Ahmed", role: "Quality Control" },
           ].map((m) => (
             <Card key={m.name} className="border-gray-200">
               <CardContent className="p-4">
@@ -273,30 +265,30 @@ export default function AboutPage() {
             </Card>
           ))}
         </div>
-      </section>
+      </section> */}
 
       {/* FAQ */}
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1F2937]">
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-secondary">
           FAQs
         </h2>
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
           {[
             {
-              q: "How fast is delivery?",
-              a: "Typically 24–72 hours depending on location and item. Order tracking is always available.",
+              q: "What sizes do you offer?",
+              a: "We offer a full range of sizes from XS to 3XL for most items. Check individual product pages for specific size charts and availability.",
             },
             {
-              q: "What do I need to become a seller?",
-              a: "Basic KYC, product listings, and pricing. Go live after approval.",
+              q: "Do you offer free shipping?",
+              a: "Yes! We offer free shipping on orders over $75. Standard delivery takes 3-7 business days, with express options available.",
             },
             {
-              q: "What is your return policy?",
-              a: "Easy returns/exchanges for eligible items—details are shown on product pages.",
+              q: "What's your return policy?",
+              a: "We accept returns within 30 days of purchase. Items must be unworn with original tags. Free returns for exchanges or store credit.",
             },
             {
-              q: "Are payments secure?",
-              a: "Yes—secure payment gateways and strong protection for sensitive data.",
+              q: "How do I find my perfect fit?",
+              a: "Use our detailed size guides on each product page. We also offer virtual fitting tools and customer reviews with fit feedback.",
             },
           ].map((item) => (
             <details
@@ -317,20 +309,19 @@ export default function AboutPage() {
         <Card className="border-gray-200 overflow-hidden">
           <CardContent className="p-6 sm:p-8 flex flex-col md:flex-row items-center gap-6">
             <div className="flex-1">
-              <h3 className="text-xl sm:text-2xl font-extrabold text-[#1F2937]">
-                Ready to explore more?
+              <h3 className="text-xl sm:text-2xl font-extrabold text-secondary">
+                Ready to upgrade your wardrobe?
               </h3>
               <p className="text-gray-600 mt-1">
-                Top-reviewed, discounted, and today’s best deals—discover
-                everything in one place.
+                Discover the latest trends, timeless classics, and exclusive deals—find fashion that fits your style and budget.
               </p>
             </div>
             <div className="flex items-center gap-3">
               <Link href="/deals">
-                <Button>See Deals</Button>
+                <Button>View Deals</Button>
               </Link>
-              <Link href="/auth/login">
-                <Button variant="outline">Join Dressen</Button>
+              <Link href="/products">
+                <Button variant="outline">Shop Now</Button>
               </Link>
             </div>
           </CardContent>

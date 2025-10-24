@@ -87,8 +87,8 @@ export default function ShoppingPage() {
                 size="icon"
                 className="hidden sm:inline-flex h-10 w-10"
               >
-                    <User className="h-5 w-5" />
-                  </Button>
+                <User className="h-5 w-5" />
+              </Button>
               <Button
                 variant="ghost"
                 size="icon"
@@ -133,8 +133,8 @@ export default function ShoppingPage() {
                     <Search className="h-5 w-5" />
                   </Button>
                   <Button variant="ghost" size="icon" className="flex-1 h-10">
-                        <User className="h-5 w-5" />
-                      </Button>
+                    <User className="h-5 w-5" />
+                  </Button>
                 </div>
               </div>
             </div>

@@ -113,7 +113,7 @@ function ProductError({ message }: { message: string }) {
         <p className="text-gray-600 mb-6">{message}</p>
         <button 
           onClick={() => window.history.back()}
-          className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition"
+          className="bg-orange-500 text-[#2e2e2e] px-6 py-2 rounded-lg hover:bg-orange-600 transition"
         >
           Go Back
         </button>

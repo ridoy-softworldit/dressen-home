@@ -68,7 +68,7 @@ export default function PaymentMethods() {
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 {/* Left: brand + number + expiry */}
                 <div className="flex items-start sm:items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center text-sm font-semibold">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-[#2e2e2e] flex items-center justify-center text-sm font-semibold">
                     {method.type === "visa" ? "V" : "M"}
                   </div>
 

@@ -899,11 +899,6 @@
     postcss "^8.4.41"
     tailwindcss "4.1.11"
 
-"@types/country-list@^2.1.4":
-  version "2.1.4"
-  resolved "https://registry.npmjs.org/@types/country-list/-/country-list-2.1.4.tgz"
-  integrity sha512-c4orjm0wT+BRt6Ynf2/QRRL+iMX4SdLT11jAjKqkJ7mQr/DLOmdz7qR8i04j9Y7wFSoP70cXJc18FN4YGNgGaA==
-
 "@types/d3-array@^3.0.3":
   version "3.2.1"
   resolved "https://registry.npmjs.org/@types/d3-array/-/d3-array-3.2.1.tgz"
@@ -1530,11 +1525,6 @@ country-flag-icons@^1.5.17:
   version "1.5.19"
   resolved "https://registry.npmjs.org/country-flag-icons/-/country-flag-icons-1.5.19.tgz"
   integrity sha512-D/ZkRyj+ywJC6b2IrAN3/tpbReMUqmuRLlcKFoY/o0+EPQN9Ev/e8tV+D3+9scvu/tarxwLErNwS73C3yzxs/g==
-
-country-list@^2.4.1:
-  version "2.4.1"
-  resolved "https://registry.npmjs.org/country-list/-/country-list-2.4.1.tgz"
-  integrity sha512-KhVV/UfUV3dSNpsWIqHTQxLpYDKPKz1UwkRjadt+YbX2PRhyCEihEoS5XgB7J7AMXpkicvl+tRHvkNI5wbji/g==
 
 cross-spawn@^7.0.6:
   version "7.0.6"

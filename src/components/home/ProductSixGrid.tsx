@@ -107,10 +107,6 @@ const isIProduct = (p: RemoteProduct | IProduct): p is IProduct => {
   return "productInfo" in p && "description" in p;
 };
 
-const isRemoteProduct = (p: RemoteProduct | IProduct): p is RemoteProduct => {
-  return !isIProduct(p);
-};
-
 // Converts value to number, returns null if invalid
 const toNumber = (v: unknown): number | null => {
   if (typeof v === "number" && Number.isFinite(v)) return v;
@@ -257,7 +253,7 @@ const discountPct = (mrp?: number | null, sale?: number | null): number => {
 
 export default function ProductSixGrid({
   title = "Featured Deals",
-  useQuery = useGetAllProductsQuery,
+  useQuery = () => useGetAllProductsQuery({ page: 1 }),
   fallback = FALLBACK,
 }: Props) {
   const { data: fetched, isLoading, error } = useQuery();
@@ -276,9 +272,9 @@ export default function ProductSixGrid({
   );
 
   return (
-    <section className="w-full bg-secondary">
+    <section className="w-full bg-white">
       <div className="container mx-auto px-3 sm:px-4 lg:px-6">
-        <h2 className="text-lg sm:text-xl font-semibold text-primary mb-3">
+        <h2 className="text-lg sm:text-xl font-semibold text-secondary mb-3">
           {title}
         </h2>
 
@@ -287,14 +283,14 @@ export default function ProductSixGrid({
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="rounded-lg border border-neutral bg-card p-3 animate-pulse h-[320px]"
+                className="rounded-lg border bg-white p-3 animate-pulse h-[320px]"
               />
             ))}
           </div>
         ) : error ? (
-          <div className="text-center text-destructive py-4">
-            Failed to load products. Showing fallback data.
-          </div>
+           <div className="text-center py-12">
+          <p className="text-secondary/60">Failed to load products</p>
+        </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4">
             {items.map((p) => {
@@ -306,10 +302,10 @@ export default function ProductSixGrid({
                 <Link
                   key={p.id}
                   href={`/product-details?id=${encodeURIComponent(p.id)}`}
-                  className="group relative rounded-lg border border-neutral bg-card overflow-hidden p-3 flex flex-col h-[320px] hover:shadow-md transition-shadow duration-300"
+                  className="group relative rounded-lg border bg-white overflow-hidden p-3 flex flex-col h-[320px] hover:shadow-md transition-shadow duration-300"
                   aria-label={`View details for ${p.title}`}
                 >
-                  <span className="absolute top-2 right-2 z-10 px-2 py-0.5 rounded-md text-[11px] font-semibold text-secondary bg-highlight">
+                  <span className="absolute top-2 right-2 z-10 px-2 py-0.5 rounded-md text-[11px] font-semibold  bg-red-500 text-white">
                     {pct}%
                   </span>
 
@@ -324,23 +320,23 @@ export default function ProductSixGrid({
                     />
                   </div>
 
-                  <div className="mt-3 text-center text-[13px] sm:text-sm font-medium text-primary min-h-[40px]">
+                  <div className="mt-3 text-center text-[13px] sm:text-sm font-medium text-secondary min-h-[40px]">
                     {p.title}
                   </div>
 
                   <div className="mt-2 flex items-center justify-center gap-2 min-h-[24px]">
                     {typeof mrp === "number" ? (
-                      <span className="text-xs sm:text-sm text-muted-foreground line-through">
+                      <span className="text-xs sm:text-sm text-secondary/40 line-through decoration-red-500">
                         {formatBDT(mrp)}
                       </span>
                     ) : null}
-                    <span className="text-sm sm:text-base font-semibold text-primary">
+                    <span className="text-sm sm:text-base font-semibold text-secondary">
                       {formatBDT(sale || mrp || 0)}
                     </span>
                   </div>
 
                   <div className="mt-auto">
-                    <button className="inline-flex w-full items-center justify-center h-9 rounded-md bg-highlight text-primary text-sm font-bold hover:bg-highlight/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-highlight/70 transition-colors">
+                    <button className="inline-flex w-full items-center justify-center h-9 rounded-md text-highlight text-sm font-bold hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                       Buy now
                     </button>
                   </div>

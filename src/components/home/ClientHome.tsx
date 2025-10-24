@@ -16,6 +16,7 @@ import {
 } from "@/redux/featured/product/productApi";
 import Discount from "../modules/category/Discount";
 import TopReviewed from "../modules/category/TopReviewed";
+import HomepagePopup from "./HomepagePopup";
 
 export default function ClientHome() {
   const {data: discounted,
@@ -30,7 +31,8 @@ export default function ClientHome() {
 } = useGetTopReviewedProductsQuery();
   
  return (
-    <main className="bg-secondary w-full">
+    <main className="bg-white w-full">
+      <HomepagePopup />
       <MainMenu />
 
       {/* Hero */}

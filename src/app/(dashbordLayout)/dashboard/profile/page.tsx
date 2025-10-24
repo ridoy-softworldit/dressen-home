@@ -11,7 +11,6 @@ import toast, { Toaster } from "react-hot-toast";
 import { useUpdateUserMutation } from "@/redux/featured/user/userApi";
 import CloudinaryUploader from "@/components/CloudinaryUploader/CloudinaryUploader";
 import { useSession } from "next-auth/react";
-import AuthGuard from "@/components/shared/AuthGuard";
 
 interface FormData {
   firstName: string;
@@ -80,7 +79,7 @@ export default function ProfilePage() {
         duration: 3000,
         position: "top-right",
       });
-    } catch (err) {
+    } catch {
       toast.error("Profile update failed ❌", {
         duration: 3000,
         position: "top-right",
@@ -97,8 +96,7 @@ export default function ProfilePage() {
 
 
   return (
-    <AuthGuard>
-      <div className="min-h-screen bg-white shadow-sm ml-4 rounded-lg px-4 py-8 md:px-8">
+    <div className="min-h-screen bg-white shadow-sm ml-4 rounded-lg px-4 py-8 md:px-8">
       <Toaster />
 
       <div className="max-w-4xl mx-auto w-full">
@@ -234,7 +232,7 @@ export default function ProfilePage() {
                   <div className="pt-6">
                     <Button
                       onClick={handleSave}
-                      className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg"
+                      className="bg-orange-500 hover:bg-orange-600 text-[#2e2e2e] px-8 py-3 rounded-lg"
                     >
                       Save Changes
                     </Button>
@@ -246,6 +244,5 @@ export default function ProfilePage() {
         </div>
       </div>
     </div>
-    </AuthGuard>
   );
 }

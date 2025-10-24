@@ -187,7 +187,7 @@ function matchesCategory(p: IProduct, t: { id?: string; slug?: string; name?: st
 /* ---------- Component ---------- */
 export default function CategoryProductCards() {
   const { data: catData } = useGetAllCategoryQuery();
-  const { data: prodData } = useGetAllProductsQuery();
+  const { data: prodData } = useGetAllProductsQuery({ page: 1 });
 
   const router = useRouter();
   const params = useSearchParams();
@@ -246,10 +246,10 @@ export default function CategoryProductCards() {
     router.push(`/product-details?id=${encodeURIComponent(pid)}`);
 
   return (
-    <section id="category-product-cards" className="w-full bg-secondary">
+    <section id="category-product-cards" className="w-full bg-white">
       <div className="container mx-auto px-3 md:px-4 xl:px-6">
         {showEmpty ? (
-          <div className="py-6 text-center text-sm text-primary/70">
+          <div className="py-6 text-center text-sm text-gray-600">
             There is no product in this Category.
           </div>
         ) : (
@@ -263,7 +263,7 @@ export default function CategoryProductCards() {
                   className="group text-left"
                   aria-label={`View ${it.title}`}
                 >
-                  <div className="relative rounded-lg border border-neutral bg-card overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                  <div className="relative rounded-lg border bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex flex-col items-center justify-center p-4">
                       <div className="relative w-full max-w-[320px] aspect-[4/3] grid place-items-center">
                         <Image
@@ -274,11 +274,11 @@ export default function CategoryProductCards() {
                           className="object-contain transition-transform duration-300 group-hover:scale-95"
                         />
                       </div>
-                      <p className="mt-3 text-center text-sm md:text-base font-medium text-primary line-clamp-1">
+                      <p className="mt-3 text-center text-sm md:text-base font-medium text-gray-800 line-clamp-1">
                         {it.title}
                       </p>
                       {it.priceText && (
-                        <p className="text-center text-sm text-highlight font-semibold">
+                        <p className="text-center text-sm text-orange-600 font-semibold">
                           {it.priceText}
                         </p>
                       )}

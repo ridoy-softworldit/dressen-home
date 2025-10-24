@@ -9,10 +9,10 @@ export default function NavbarActions() {
   const cartCount = useAppSelector(selectCartCount);
 
   return (
-    <div className="flex items-center gap-4 text-white">
-        <Link href="/auth/login" className="text-sm hover:underline">
-          Login / Register
-        </Link>
+    <div className="flex items-center gap-4 text-[#2e2e2e]">
+      <Link href="/auth/login" className="text-sm hover:underline">
+        Login / Register
+      </Link>
 
       <Link
         href="/dashboard"
@@ -25,7 +25,7 @@ export default function NavbarActions() {
       <Link href="/dashboard/checkout" className="relative inline-flex">
         <ShoppingCart size={20} />
         {cartCount > 0 && (
-          <span className="absolute -top-2 -right-2 h-5 min-w-5 px-1 rounded-full text-xs bg-orange-500 text-white flex items-center justify-center">
+          <span className="absolute -top-2 -right-2 h-5 min-w-5 px-1 rounded-full text-xs bg-orange-500 text-[#2e2e2e] flex items-center justify-center">
             {cartCount}
           </span>
         )}

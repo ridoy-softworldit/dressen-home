@@ -7,10 +7,10 @@ export default function SmallNavbar() {
     <nav className="bg-gray-50 border-t border-gray-200 px-4 py-2 fixed bottom-0 w-full z-50">
       <div className="flex items-center justify-around max-w-md mx-auto">
         <NavItem icon={Home} label="Home" href="/" />
-        <NavItem icon={Search} label="Search" href="/search" />
-        <NavItem icon={Heart} label="Wishlist" href="/wishlist" />
-        <NavItem icon={ShoppingCart} label="Cart" href="/cart" />
-        <NavItem icon={User} label="My Account" href="/account" isActive />
+        <NavItem icon={Search} label="Search" href="#" />
+        <NavItem icon={Heart} label="Wishlist" href="/dashboard/wishlistItems" />
+        <NavItem icon={ShoppingCart} label="Cart" href="/dashboard/checkout" />
+        <NavItem icon={User} label="My Account" href="/dashboard" isActive />
       </div>
     </nav>
   );

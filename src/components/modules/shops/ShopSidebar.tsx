@@ -61,7 +61,7 @@ export function ShopSidebar() {
               <Button
                 variant="outline"
                 className={`w-full flex items-center gap-1 focus-visible:ring-0 focus-visible:ring-offset-0  ${
-                  isActive ? "bg-[#FA9650] text-white" : "text-gray-700"
+                  isActive ? "bg-[#FA9650] text-[#2e2e2e]" : "text-gray-700"
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -81,7 +81,7 @@ export function ShopSidebar() {
               <Button
                 variant="outline"
                 className={`w-full justify-start focus-visible:ring-0 focus-visible:ring-offset-0  ${
-                  isActive ? "bg-[#FA9650] text-white" : "text-gray-700"
+                  isActive ? "bg-[#FA9650] text-[#2e2e2e]" : "text-gray-700"
                 }`}
               >
                 <Icon className="w-4 h-4 mr-2" />

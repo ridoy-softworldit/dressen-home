@@ -123,7 +123,7 @@ export default function ChangePasswordForm() {
             {/* Submit */}
             <Button
               type="submit"
-              className=" h-11 sm:h-12 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-medium"
+              className=" h-11 sm:h-12 rounded-xl bg-orange-500 hover:bg-orange-600 text-[#2e2e2e] font-medium"
             >
               Update Password
             </Button>

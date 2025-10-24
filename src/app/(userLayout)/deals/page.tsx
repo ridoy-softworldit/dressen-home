@@ -5,6 +5,13 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useGetTodaysDealsQuery } from "@/redux/featured/product/productApi";
+import { useGetAllCategoryQuery } from "@/redux/featured/category/categoryApi";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { addToCart, selectCartItems } from "@/redux/featured/cart/cartSlice";
+import toast from 'react-hot-toast';
+import clsx from 'clsx';
+import { IProduct } from "@/types/product";
 import {
   Search,
   SlidersHorizontal,
@@ -15,7 +22,7 @@ import {
   Flame,
 } from "lucide-react";
 
-type DealCategory = "Electronics" | "Fashion" | "Home" | "Sports";
+type DealCategory = string;
 
 type DealItem = {
   id: string;
@@ -24,22 +31,22 @@ type DealItem = {
   image: string;
   price: number;
   oldPrice: number;
-  createdAt: string; // ISO string
+  createdAt: string;
   rating?: number;
   reviews?: number;
   sold?: number;
   badge?: "SALE" | "HOT" | "NEW";
 };
 
-const DEALS: DealItem[] = [
+const FALLBACK_DEALS: DealItem[] = [
   {
     id: "t1",
-    title: "Noise Cancelling Headphone",
-    category: "Electronics",
+    title: "Creamy Milk Tea",
+    category: "Beverages",
     image: "/new-arrival-3.png",
-    price: 4990,
-    oldPrice: 7990,
-    createdAt: "2025-10-09T09:00:00Z",
+    price: 120,
+    oldPrice: 150,
+    createdAt: "2025-01-09T09:00:00Z",
     rating: 4.6,
     reviews: 120,
     sold: 930,
@@ -47,24 +54,24 @@ const DEALS: DealItem[] = [
   },
   {
     id: "t2",
-    title: "Smartwatch AMOLED",
-    category: "Electronics",
+    title: "Cold Coffee Special",
+    category: "Beverages",
     image: "/man-model.png",
-    price: 6490,
-    oldPrice: 8990,
-    createdAt: "2025-10-08T12:00:00Z",
+    price: 180,
+    oldPrice: 220,
+    createdAt: "2025-01-08T12:00:00Z",
     rating: 4.5,
     reviews: 96,
     sold: 700,
   },
   {
     id: "t3",
-    title: "Premium Hoodie",
-    category: "Fashion",
+    title: "Chocolate Waffle",
+    category: "Desserts",
     image: "/new-arrival-1.png",
-    price: 1490,
-    oldPrice: 2190,
-    createdAt: "2025-10-09T03:00:00Z",
+    price: 250,
+    oldPrice: 300,
+    createdAt: "2025-01-09T03:00:00Z",
     rating: 4.4,
     reviews: 80,
     sold: 450,
@@ -72,24 +79,24 @@ const DEALS: DealItem[] = [
   },
   {
     id: "t4",
-    title: "Leather Sneakers",
-    category: "Fashion",
+    title: "Street Chicken Roll",
+    category: "Street Food",
     image: "/mens.png",
-    price: 2790,
-    oldPrice: 3490,
-    createdAt: "2025-10-07T09:00:00Z",
+    price: 200,
+    oldPrice: 250,
+    createdAt: "2025-01-07T09:00:00Z",
     rating: 4.3,
     reviews: 61,
     sold: 380,
   },
   {
     id: "t5",
-    title: "Cordless Vacuum Cleaner",
-    category: "Home",
+    title: "Mixed Fruit Lassi",
+    category: "Beverages",
     image: "/new-arrival-4.png",
-    price: 6990,
-    oldPrice: 9990,
-    createdAt: "2025-10-09T01:30:00Z",
+    price: 160,
+    oldPrice: 200,
+    createdAt: "2025-01-09T01:30:00Z",
     rating: 4.5,
     reviews: 140,
     sold: 1020,
@@ -97,44 +104,19 @@ const DEALS: DealItem[] = [
   },
   {
     id: "t6",
-    title: "Air Purifier HEPA",
-    category: "Home",
+    title: "Crispy Samosa",
+    category: "Snacks",
     image: "/new-arrival-2.png",
-    price: 8890,
-    oldPrice: 11990,
-    createdAt: "2025-10-06T10:00:00Z",
+    price: 80,
+    oldPrice: 100,
+    createdAt: "2025-01-06T10:00:00Z",
     rating: 4.6,
     reviews: 75,
     sold: 310,
   },
-  {
-    id: "t7",
-    title: "Adjustable Dumbbells (Pair)",
-    category: "Sports",
-    image: "/new-arrival-3.png",
-    price: 3990,
-    oldPrice: 5490,
-    createdAt: "2025-10-09T04:30:00Z",
-    rating: 4.4,
-    reviews: 64,
-    sold: 270,
-  },
-  {
-    id: "t8",
-    title: "Pro Football",
-    category: "Sports",
-    image: "/mens.png",
-    price: 1290,
-    oldPrice: 1690,
-    createdAt: "2025-10-05T19:00:00Z",
-    rating: 4.2,
-    reviews: 30,
-    sold: 210,
-  },
 ];
 
-const categories = ["All", "Electronics", "Fashion", "Home", "Sports"] as const;
-type Category = (typeof categories)[number];
+type Category = string;
 
 function formatBDT(n: number) {
   return `৳${Math.round(n)}`;
@@ -144,7 +126,30 @@ function discountPct(price: number, oldPrice: number) {
   return Math.max(1, Math.min(90, pct));
 }
 
+// Helper functions
+const normalizeProduct = (p: IProduct, categoryName?: string): DealItem => {
+  const price = Number(p.productInfo?.salePrice || p.productInfo?.price || 0);
+  const oldPrice = Number(p.productInfo?.price || price * 1.3);
+  
+  return {
+    id: p._id,
+    title: p.description?.name || "Product",
+    category: categoryName || "General",
+    image: p.featuredImg || p.gallery?.[0] || "/mens.png",
+    price,
+    oldPrice,
+    createdAt: new Date().toISOString(),
+    rating: 4.5,
+    reviews: Math.floor(Math.random() * 100) + 20,
+    sold: Math.floor(Math.random() * 500) + 100,
+  };
+};
+
 export default function DealsMorePage() {
+  const dispatch = useAppDispatch();
+  const cartItems = useAppSelector(selectCartItems);
+  const { data: todaysDeals, isLoading } = useGetTodaysDealsQuery();
+  const { data: categories } = useGetAllCategoryQuery();
   const [activeCat, setActiveCat] = useState<Category>("All");
   const [sortBy, setSortBy] = useState<
     "newest" | "discount" | "price_asc" | "price_desc"
@@ -152,8 +157,37 @@ export default function DealsMorePage() {
   const [q, setQ] = useState("");
   const [minOff, setMinOff] = useState<0 | 10 | 20 | 30>(0);
 
+  const categoryMap = useMemo(() => {
+    if (!Array.isArray(categories)) return new Map();
+    const map = new Map();
+    categories.forEach((cat) => {
+      const id = cat._id || cat.id || cat.slug || 'unknown';
+      map.set(id, cat.name || cat.label || "Category");
+    });
+    return map;
+  }, [categories]);
+
+  const allCategories = useMemo(() => {
+    const cats = ["All"];
+    if (Array.isArray(categories)) {
+      cats.push(...categories.map((cat) => cat.name || cat.label || "Category"));
+    }
+    return cats;
+  }, [categories]);
+
+  const allDeals = useMemo(() => {
+    if (Array.isArray(todaysDeals) && todaysDeals.length > 0) {
+      return todaysDeals.map((p: IProduct) => {
+        const firstCategory = p.brandAndCategories?.categories?.[0];
+        const categoryName = firstCategory ? categoryMap.get(firstCategory.name) : undefined;
+        return normalizeProduct(p, categoryName);
+      });
+    }
+    return FALLBACK_DEALS;
+  }, [todaysDeals, categoryMap]);
+
   const filtered: DealItem[] = useMemo(() => {
-    let arr = DEALS.filter((p) =>
+    let arr = allDeals.filter((p) =>
       activeCat === "All" ? true : p.category === activeCat
     );
 
@@ -192,7 +226,7 @@ export default function DealsMorePage() {
     }
 
     return arr;
-  }, [activeCat, sortBy, q, minOff]);
+  }, [allDeals, activeCat, sortBy, q, minOff]);
 
   return (
     <main className="min-h-screen bg-white">
@@ -202,11 +236,11 @@ export default function DealsMorePage() {
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#1F2937] flex items-center gap-2">
-                <Flame className="w-7 h-7 text-black" />
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-secondary flex items-center gap-2">
+                <Flame className="w-7 h-7 text-primary" />
                 More Deals
               </h1>
-              <p className="text-sm sm:text-base text-gray-600 mt-1">
+              <p className="text-sm sm:text-base text-secondary/60 mt-1">
                 Today’s fresh deals—sorted your way.
               </p>
             </div>
@@ -214,7 +248,7 @@ export default function DealsMorePage() {
             {/* Search */}
             <div className="w-full md:w-[380px]">
               <div className="flex items-center gap-2 rounded-xl border bg-white px-3 py-2 shadow-sm">
-                <Search className="w-5 h-5 text-gray-400" />
+                <Search className="w-5 h-5 text-secondary/40" />
                 <input
                   value={q}
                   onChange={(e) => setQ(e.target.value)}
@@ -226,7 +260,7 @@ export default function DealsMorePage() {
                     variant="ghost"
                     size="sm"
                     onClick={() => setQ("")}
-                    className="text-gray-500"
+                    className="text-secondary/50"
                   >
                     <FilterX className="w-4 h-4" />
                   </Button>
@@ -237,15 +271,15 @@ export default function DealsMorePage() {
 
           {/* Category chips */}
           <div className="mt-4 flex flex-wrap gap-2">
-            {categories.map((c) => (
+            {allCategories.map((c) => (
               <button
                 key={c}
                 onClick={() => setActiveCat(c)}
                 className={[
                   "h-9 rounded-full border px-4 text-sm transition",
                   activeCat === c
-                    ? "bg-primary text-white border-[#795548]"
-                    : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
+                    ? "bg-primary text-secondary border-primary"
+                    : "bg-accent text-secondary border-neutral hover:bg-section",
                 ].join(" ")}
                 aria-pressed={activeCat === c}
               >
@@ -265,14 +299,14 @@ export default function DealsMorePage() {
 
               {/* Quick Min %OFF */}
               <div className="ml-3 flex items-center gap-1">
-                {[0, 10, 20, 30].map((d) => (
+                {[0, 5, 10, 20, 50].map((d) => (
                   <button
                     key={d}
                     onClick={() => setMinOff(d as 0 | 10 | 20 | 30)}
                     className={[
                       "h-7 rounded-full border px-3 text-xs transition",
                       minOff === d
-                        ? "bg-emerald-600 text-white border-emerald-600"
+                        ? "0 text-[#2e2e2e] bg-primary border-primary"
                         : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
                     ].join(" ")}
                     aria-pressed={minOff === d}
@@ -284,27 +318,27 @@ export default function DealsMorePage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">Sort by:</span>
+              <span className="text-sm text-secondary/60">Sort by:</span>
               <div className="relative">
                 <select
                   value={sortBy}
                   onChange={(e) =>
                     setSortBy(
-                      e.target.value as
+                      (e.target as HTMLSelectElement).value as
                         | "newest"
                         | "discount"
                         | "price_asc"
                         | "price_desc"
                     )
                   }
-                  className="appearance-none rounded-md border border-gray-200 bg-white pl-3 pr-8 py-2 text-sm"
+                  className="appearance-none rounded-md border border-neutral bg-accent pl-3 pr-8 py-2 text-sm text-secondary"
                 >
                   <option value="newest">Newest</option>
                   <option value="discount">Biggest Discount</option>
                   <option value="price_asc">Price: Low to High</option>
                   <option value="price_desc">Price: High to Low</option>
                 </select>
-                <ChevronDown className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <ChevronDown className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary/40" />
               </div>
             </div>
           </div>
@@ -313,8 +347,14 @@ export default function DealsMorePage() {
 
       {/* Grid */}
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        {filtered.length === 0 ? (
-          <div className="py-16 text-center text-gray-500">No deals found.</div>
+        {isLoading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div key={i} className="rounded-xl border bg-white p-3 animate-pulse h-[320px]" />
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="py-16 text-center text-secondary/60">No deals found.</div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
             {filtered.map((p: DealItem) => {
@@ -329,11 +369,11 @@ export default function DealsMorePage() {
                 >
                   {/* Badges */}
                   <div className="absolute left-2 top-2 z-10 flex flex-col gap-1">
-                    <span className="inline-block rounded-full bg-red-600 text-white text-[10px] px-2 py-0.5 font-semibold">
+                    <span className="inline-block rounded-full bg-discount text-white text-[10px] px-2 py-0.5 font-semibold">
                       {pct}% OFF
                     </span>
                     {(p.badge || isNew) && (
-                      <span className="inline-block rounded-full bg-primary text-white text-[10px] px-2 py-0.5 font-semibold">
+                      <span className="inline-block rounded-full bg-primary text-secondary text-[10px] px-2 py-0.5 font-semibold">
                         {p.badge ?? "NEW"}
                       </span>
                     )}
@@ -350,11 +390,11 @@ export default function DealsMorePage() {
                   </div>
 
                   <CardContent className="p-3">
-                    <div className="min-h-[40px] text-sm font-medium text-gray-900 line-clamp-2">
+                    <div className="min-h-[40px] text-sm font-medium text-secondary line-clamp-2">
                       {p.title}
                     </div>
 
-                    <div className="mt-1 flex items-center gap-1 text-[11px] text-gray-500">
+                    <div className="mt-1 flex items-center gap-1 text-[11px] text-secondary/50">
                       {typeof p.rating === "number" ? (
                         <>
                           <Star className="w-3.5 h-3.5 text-yellow-500" />
@@ -370,10 +410,10 @@ export default function DealsMorePage() {
                     </div>
 
                     <div className="mt-2 flex items-center gap-2">
-                      <span className="text-xs text-gray-400 line-through">
+                      <span className="text-xs text-secondary/40 line-through decoration-red-500">
                         {formatBDT(p.oldPrice)}
                       </span>
-                      <span className="text-base font-semibold text-black">
+                      <span className="text-base font-semibold text-secondary">
                         {formatBDT(p.price)}
                       </span>
                     </div>
@@ -388,8 +428,30 @@ export default function DealsMorePage() {
                       </Link>
                       <Button
                         variant="outline"
-                        className="w-10 px-0"
-                        aria-label="Add to cart (static)"
+                        className={clsx("w-10 px-0", {
+                          'bg-success hover:bg-success text-accent': cartItems.some(item => item.productId === p.id),
+                          'hover:bg-primary hover:text-secondary': !cartItems.some(item => item.productId === p.id)
+                        })}
+                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          
+                          if (!cartItems.some(item => item.productId === p.id)) {
+                            const cartItem = {
+                              productId: p.id,
+                              productName: p.title,
+                              productImage: p.image,
+                              unitPrice: p.price,
+                              quantity: 1,
+                              color: 'Default',
+                              size: 'M',
+                            };
+                            dispatch(addToCart(cartItem));
+                            toast.success("Added to cart successfully!");
+                          }
+                        }}
+                        disabled={cartItems.some(item => item.productId === p.id)}
+                        aria-label={cartItems.some(item => item.productId === p.id) ? "Added to cart" : "Add to cart"}
                       >
                         <ShoppingCart className="w-4 h-4" />
                       </Button>

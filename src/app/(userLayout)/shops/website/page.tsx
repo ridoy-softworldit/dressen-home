@@ -64,7 +64,7 @@ export default function WebsiteInfoPage() {
             <p className="text-sm text-gray-500">{headerData.url}</p>
           </div>
           <Button
-            className="bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2"
+            className="bg-orange-500 hover:bg-orange-600 text-[#2e2e2e] flex items-center gap-2"
             onClick={() => window.open(headerData.websiteLink, "_blank")}
           >
             <ExternalLink className="w-4 h-4" />
@@ -129,7 +129,7 @@ export default function WebsiteInfoPage() {
         </p>
         <div className="flex justify-center gap-3">
           <Button
-            className="bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2"
+            className="bg-orange-500 hover:bg-orange-600 text-[#2e2e2e] flex items-center gap-2"
             onClick={() => window.open(headerData.websiteLink, "_blank")}
           >
             <ExternalLink className="w-4 h-4" />

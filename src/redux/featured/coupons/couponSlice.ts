@@ -2,15 +2,17 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 
 export type TCoupon = {
-  image: string;
+  _id: string;
   code: string;
   description: string;
-  type: "fixed" | "percentage";
+  type: "free-shipping" | "percentage" | "fixed";
   discountAmount: number;
+  minimumPurchaseAmount: number;
   isVerifiedCustomer?: boolean;
   isApproved?: boolean;
-  activeDate: string;
   expireDate: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 type TCouponState = {

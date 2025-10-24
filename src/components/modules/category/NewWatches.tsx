@@ -56,7 +56,7 @@ export default function NewWatches({ data = [], title = "New Products" }: Props)
               variant={activeCategory === cat ? "default" : "outline"}
               className={`rounded-full px-4 text-xs md:px-5 md:text-sm ${
                 activeCategory === cat
-                  ? "bg-black text-white hover:bg-black"
+                  ? "bg-black text-[#2e2e2e] hover:bg-black"
                   : "border bg-transparent text-gray-700 hover:bg-gray-100"
               }`}
               onClick={() => setActiveCategory(cat)}

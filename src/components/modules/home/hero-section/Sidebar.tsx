@@ -11,7 +11,7 @@ const Sidebar = () => {
   const [open, setOpen] = useState<string | null>(null);
 
   return (
-    <aside className="rounded-[16px] w-full lg:w-[280px] xl:w-[375px] shrink-0 bg-[#F7F7F7]">
+    <aside className="rounded-[16px] w-full lg:w-[280px] xl:w-[375px] shrink-0 bg-neutral">
       <div className="rounded-2xl p-4 mt-8 lg:mt-0">
         <ul className="space-y-5">
           {categories.map((cat) => {
@@ -22,11 +22,11 @@ const Sidebar = () => {
                   onClick={() => setOpen(isOpen ? null : cat.id)}
                   className={cn(
                     "flex w-full items-center justify-between rounded-xl px-3 py-2 text-sm",
-                    isOpen ? "bg-muted/60" : "hover:bg-muted/40"
+                    isOpen ? "bg-accent/60" : "hover:bg-accent/40"
                   )}
                 >
                   <div className="flex items-center gap-4">
-                    <div className="inline-flex items-center gap-2 font-medium bg-[#E8E8E8] p-2 rounded-full relative w-12 xl:w-16 h-12 xl:h-16">
+                    <div className="inline-flex items-center gap-2 font-medium bg-accent p-2 rounded-full relative w-12 xl:w-16 h-12 xl:h-16">
                       {/* ছোট আইকনে fill নয়; width+height + h-auto */}
                       <SmartImage
                         src={(cat.image || "/images/categories/default.png") as string}
@@ -45,7 +45,7 @@ const Sidebar = () => {
                   <ul className="mt-1 space-y-2 pl-3">
                     {cat.children.map((c) => (
                       <li key={c.id}>
-                        <button className="text-muted-foreground hover:text-foreground text-sm px-3 py-1.5 rounded-lg hover:bg-muted/40 w-full text-left">
+                        <button className="text-secondary/70 hover:text-secondary text-sm px-3 py-1.5 rounded-lg hover:bg-accent/40 w-full text-left">
                           {c.label}
                         </button>
                       </li>

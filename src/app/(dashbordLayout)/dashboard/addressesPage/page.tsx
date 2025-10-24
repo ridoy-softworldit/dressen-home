@@ -7,18 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Edit, Trash2, MapPin } from "lucide-react";
 import Link from "next/link";
 import { useGetSingleCustomerQuery } from "@/redux/featured/customer/customerApi";
-import { useAppSelector } from "@/redux/hooks";
-import { selectCurrentUser } from "@/redux/featured/auth/authSlice";
-import { useSession } from "next-auth/react";
-import AuthGuard from "@/components/shared/AuthGuard";
 
 export default function AddressesPage() {
-  const currentUser = useAppSelector(selectCurrentUser);
-  const { data: session } = useSession();
-  
-  // Use actual logged-in user ID
-  const user = session?.user || currentUser;
-  const customerId = user?.id || "";
+  const customerId = "68977cb8e9dabd00341e79e0";
   const {
     data: customer,
     isLoading,
@@ -40,46 +31,30 @@ export default function AddressesPage() {
 
   if (isError) {
     return (
-      <AuthGuard>
-        <div className="w-full p-6">
-          <h1 className="text-2xl font-semibold mb-8">My Addresses</h1>
-          <div className="text-center py-12">
-            <p className="text-gray-500">Your addresses could not be loaded.</p>
-            <Link href="/dashboard/add-new-address">
-              <Button className="mt-4">
-                <MapPin className="h-4 w-4 mr-2" />
-                Add New Address
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </AuthGuard>
+      <p className="p-6 text-sm text-red-600">Error: {JSON.stringify(error)}</p>
     );
   }
 
   if (!customer?.address?.length) {
     return (
-      <AuthGuard>
-        <div className="w-full p-6">
-          <h1 className="text-2xl font-semibold mb-8">My Addresses</h1>
-          <div className="text-center py-12">
-            <p className="text-gray-500">No addresses found.</p>
-            <p className="text-sm text-gray-400 mt-2">Add your first address to get started!</p>
-            <Link href="/dashboard/add-new-address">
-              <Button className="mt-4">
-                <MapPin className="h-4 w-4 mr-2" />
-                Add New Address
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </AuthGuard>
+      <div className="w-full p-6">
+        <h1 className="text-2xl font-semibold mb-8">My Addresses</h1>
+        <p className="text-sm text-gray-500">No addresses found.</p>
+        <Link href={`/dashboard/add-new-address`}>
+          <Button
+            variant="ghost"
+            className="text-orange-600 hover:text-orange-700 mt-4"
+          >
+            <MapPin className="h-4 w-4 mr-2" />
+            Add New
+          </Button>
+        </Link>
+      </div>
     );
   }
 
   return (
-    <AuthGuard>
-      <div className="w-full p-6">
+    <div className="w-full p-6">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-semibold text-foreground">My Addresses</h1>
         <Link href={`/dashboard/add-new-address`} className="md:hidden">
@@ -159,6 +134,5 @@ export default function AddressesPage() {
         </Link>
       </div>
     </div>
-    </AuthGuard>
   );
 }

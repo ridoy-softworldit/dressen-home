@@ -58,7 +58,7 @@ export default function SearchBar({
     border border-gray-200 focus:border-gray-300
     pl-10 pr-10 rounded-lg
     bg-white
-    text-gray-900 placeholder:text-gray-500 caret-[#795548]
+    text-gray-900 placeholder:text-gray-500 caret-[#facf35]
   "
 />
 
@@ -95,7 +95,7 @@ export default function SearchBar({
     border border-gray-200 focus:border-gray-300
     px-4 rounded-lg
     bg-white
-    text-gray-900 placeholder:text-gray-500 caret-[#795548]
+    text-gray-900 placeholder:text-gray-500 caret-[#facf35]
   "
 />
 

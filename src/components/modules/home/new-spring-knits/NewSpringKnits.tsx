@@ -8,7 +8,7 @@ import { ChevronRight } from "lucide-react";
 import { useGetAllProductsQuery } from "@/redux/featured/product/productApi";
 
 const NewSpringKnits = () => {
-  const { data } = useGetAllProductsQuery();
+  const { data } = useGetAllProductsQuery({ page: 1 });
 
   const springKnitsProducts = data?.slice(0, 4) || []; 
 
@@ -20,7 +20,7 @@ const NewSpringKnits = () => {
           {springKnitsProducts.map((product : any) => (
             <div
               key={product._id}
-              className="group rounded-2xl overflow-hidden bg-[#EEEEEE] border-none relative cursor-pointer"
+              className="group rounded-2xl overflow-hidden bg-neutral border-none relative cursor-pointer"
             >
               <div className="relative w-full h-[145px] md:h-[252px] lg:h-[312px] rounded-3xl mt-2">
                 <Image
@@ -45,23 +45,23 @@ const NewSpringKnits = () => {
               </div>
 
               {/* New spring badge */}
-              <button className="text-black bg-white py-1 px-3 rounded-full shadow absolute top-2 md:top-3 left-2 md:left-3 text-[6px] md:text-xs font-semibold">
+              <button className="text-secondary bg-accent py-1 px-3 rounded-full shadow absolute top-2 md:top-3 left-2 md:left-3 text-[6px] md:text-xs font-semibold">
                 New spring
               </button>
 
               {/* Product info overlay (optional) */}
-              <div className="absolute bottom-2 left-2 right-2 bg-white/90 rounded-lg p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 md:hidden">
-                <h3 className="text-sm font-medium truncate">
+              <div className="absolute bottom-2 left-2 right-2 bg-accent/90 rounded-lg p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 md:hidden">
+                <h3 className="text-sm font-medium truncate text-secondary">
                   {product.description?.name}
                 </h3>
                 <div className="flex items-center gap-2 mt-1">
                   {product.productInfo?.salePrice && (
-                    <span className="text-sm font-bold text-red-600">
+                    <span className="text-sm font-bold text-discount">
                       ${product.productInfo.salePrice}
                     </span>
                   )}
                   {product.productInfo?.price && (
-                    <span className={`text-xs ${product.productInfo.salePrice ? 'line-through text-gray-500' : 'font-bold'}`}>
+                    <span className={`text-xs ${product.productInfo.salePrice ? 'line-through text-secondary/50' : 'font-bold text-secondary'}`}>
                       ${product.productInfo.price}
                     </span>
                   )}
@@ -75,7 +75,7 @@ const NewSpringKnits = () => {
       <div className="flex md:hidden justify-center mt-10">
         <Button
           className="py-6 xl:py-7 !px-5 xl:!px-8 rounded-[12px] text-base border 
-            border-[#E5E7EB] md:border-[#181919] w-full md:w-fit"
+            border-neutral md:border-secondary w-full md:w-fit"
           variant={"outline"}
         >
           Go To Collection <ChevronRight />

@@ -60,7 +60,7 @@ export default function ShopPage() {
               className="group relative rounded-xl shadow-sm overflow-hidden h-[360px] border border-[#E2E8F0] bg-white hover:border-[#FF6933] hover:shadow-md transition"
             >
               {product.sale && (
-                <span className="absolute z-30 top-3 left-3 bg-red-500 text-white text-xs font-semibold px-2.5 py-[2px] rounded-full">
+                <span className="absolute z-30 top-3 left-3 bg-red-500 text-[#2e2e2e] text-xs font-semibold px-2.5 py-[2px] rounded-full">
                   SALE
                 </span>
               )}
@@ -107,7 +107,7 @@ export default function ShopPage() {
                 </div>
 
                 {/* Action Button */}
-                <button className="px-3 py-1 rounded-lg bg-gray-200 text-xs font-semibold group-hover:bg-[#FF6933] group-hover:text-white transition">
+                <button className="px-3 py-1 rounded-lg bg-gray-200 text-xs font-semibold group-hover:bg-[#FF6933] group-hover:text-[#2e2e2e] transition">
                   Add to Cart
                 </button>
               </div>

@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     );
 
     return NextResponse.json({ signature });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to sign request" },
       { status: 500 }

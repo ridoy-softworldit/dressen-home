@@ -47,7 +47,7 @@ const products: Product[] = [
     category: "Men",
     size: ["Large", "XL", "Medium"],
     colors: ["Grey"],
-    image: "/grey-adidas-t-shirt-men.png",
+    image: "/placeholder.svg",
   },
   {
     id: 2,
@@ -58,7 +58,7 @@ const products: Product[] = [
     category: "Kids",
     size: ["Small", "Medium", "Large"],
     colors: ["Red", "Multi-Color"],
-    image: "/red-boys-patterned-shirt.png",
+    image: "/placeholder.svg",
   },
   {
     id: 3,
@@ -69,7 +69,7 @@ const products: Product[] = [
     category: "Men",
     size: ["Large", "XL"],
     colors: ["Black"],
-    image: "/placeholder-zhcvp.png",
+    image: "/placeholder.svg",
   },
   {
     id: 4,
@@ -79,7 +79,7 @@ const products: Product[] = [
     category: "Kids",
     size: ["Medium", "Large"],
     colors: ["Red", "Multi-Color"],
-    image: "/red-boys-patterned-shirt.png",
+    image: "/placeholder.svg",
   },
   {
     id: 5,
@@ -89,7 +89,7 @@ const products: Product[] = [
     category: "Men",
     size: ["Small", "Medium", "Large", "XL"],
     colors: ["Black"],
-    image: "/placeholder-zhcvp.png",
+    image: "/placeholder.svg",
   },
   {
     id: 6,
@@ -99,7 +99,7 @@ const products: Product[] = [
     category: "Men",
     size: ["Small", "Medium", "Large"],
     colors: ["Grey"],
-    image: "/grey-adidas-casual-t-shirt.png",
+    image: "/placeholder.svg",
   },
   {
     id: 7,
@@ -109,7 +109,7 @@ const products: Product[] = [
     category: "Men",
     size: ["Small", "Medium", "Large"],
     colors: ["Black"],
-    image: "/placeholder-zhcvp.png",
+    image: "/placeholder.svg",
   },
   {
     id: 8,
@@ -119,7 +119,7 @@ const products: Product[] = [
     category: "Men",
     size: ["Small", "Medium", "Large"],
     colors: ["Grey"],
-    image: "/grey-adidas-casual-t-shirt.png",
+    image: "/placeholder.svg",
   },
   {
     id: 9,
@@ -129,7 +129,7 @@ const products: Product[] = [
     category: "Kids",
     size: ["Small", "Medium", "Large"],
     colors: ["Red", "Multi-Color"],
-    image: "/red-boys-patterned-shirt.png",
+    image: "/placeholder.svg",
   },
 ];
 
@@ -139,11 +139,11 @@ const filterOptions = {
   categories: ["Men", "Women", "Kids"],
   brands: ["Adidas", "Tommy Hilfiger", "Nike", "Gucci", "Louis Vuitton"],
   priceRanges: [
-    "Under ৳10,000",
-    "৳10,000 – ৳30,000",
-    "৳30,000 – ৳60,000",
-    "৳60,000 – ৳100,000",
-    "Above ৳100,000 (৳1 Lakh +)",
+    "Under ৳500",
+    "৳500 – ৳1,000",
+    "৳1,000 – ৳2,000",
+    "৳2,000 – ৳5,000",
+    "Above ৳5,000 ",
   ],
   sizes: ["Large", "Small", "Medium", "XL", "XXL"],
   colors: [
@@ -195,13 +195,18 @@ export default function ProductListing() {
     colors: false,
   });
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // RTK Query
   const {
     data: apiProducts,
     isLoading: apiIsLoading,
     isError: apiIsError,
-  } = useGetAllProductsQuery();
+  } = useGetAllProductsQuery({ page: currentPage });
+
+  // For now, assume 10 products per page and calculate pagination from product count
+  const totalProducts = apiProducts?.length || 0;
+  const totalPages = Math.ceil(totalProducts / 10) || 1;
   // categories from API
   const { data: apiCategories } = useGetAllCategoryQuery();
 
@@ -216,11 +221,25 @@ export default function ProductListing() {
     return "";
   };
 
-  // map API products to local Product shape; keep demo `products` as fallback
-  const sourceProducts: Product[] = useMemo(() => {
-    if (!apiProducts) return products;
+  // Pagination handlers
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
-    return (apiProducts as RemoteProduct[]).map((prod: RemoteProduct) => {
+  const goToPrevious = () => {
+    if (currentPage > 1) goToPage(currentPage - 1);
+  };
+
+  const goToNext = () => {
+    if (currentPage < totalPages) goToPage(currentPage + 1);
+  };
+
+  // map API products to local Product shape; no fallback
+  const sourceProducts: Product[] = useMemo(() => {
+    if (!apiProducts?.length) return [];
+
+    return apiProducts.map((prod: RemoteProduct) => {
       // create a local typed view for fields that are missing in RemoteProduct
       const p = prod as RemoteProduct & {
         specifications?: Array<{ key?: string; value?: unknown }>;
@@ -279,10 +298,10 @@ export default function ProductListing() {
     });
   }, [apiProducts]);
 
-  // derive category filter items from API categories (fall back to static list)
+  // derive category filter items from API categories only (no fallback)
   const categoryFilterItems: { id: string; label: string }[] = useMemo(() => {
     if (!apiCategories || apiCategories.length === 0)
-      return filterOptions.categories.map((s) => ({ id: s, label: s }));
+      return []; // Return empty array instead of fallback categories
 
     // map to display label but keep stable id (slug/_id) as value
     return apiCategories.map((c) => {
@@ -326,7 +345,7 @@ export default function ProductListing() {
 
     // Use fixed BDT ranges provided by the user
     const priceRangesFinal = filterOptions.priceRanges;
-    const thresholds = [0, 10000, 30000, 60000, 100000];
+    const thresholds = [0, 500, 1000, 2000, 5000];
 
     const getRange = (price: number): string => {
       // Assume `price` is expressed in the same unit as the thresholds (here we
@@ -385,11 +404,17 @@ export default function ProductListing() {
         : prev[filterType].filter((item) => item !== value),
     }));
     
+    // Reset pagination when filters change
+    setCurrentPage(1);
+    
     // Scroll to top when filter changes
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const clearAll = () => setFilters({ ...defaultFilters });
+  const clearAll = () => {
+    setFilters({ ...defaultFilters });
+    setCurrentPage(1);
+  };
 
   const handleAddToCart = (product: Product, e: React.MouseEvent) => {
     e.preventDefault()
@@ -522,7 +547,12 @@ export default function ProductListing() {
           <p className="text-sm text-gray-600">
             Showing{" "}
             <span className="font-medium">{filteredProducts.length}</span> of{" "}
-            {sourceProducts.length} products
+            <span className="font-medium">{totalProducts}</span> products
+            {totalPages > 1 && (
+              <span className="ml-2">
+                (Page {currentPage} of {totalPages})
+              </span>
+            )}
           </p>
 
           <div className="flex gap-2">
@@ -627,6 +657,18 @@ export default function ProductListing() {
                   </div>
                 )}
               </div>
+              
+              <FilterSection
+                title="Price"
+                items={derivedFilters.priceRanges}
+                filterKey="priceRanges"
+              />
+              {/* Size Filter - Commented for future use */}
+              <FilterSection
+                title="Size"
+                items={filterOptions.sizes}
+                filterKey="sizes"
+              />
               <FilterSection
                 title="Brands"
                 items={
@@ -635,16 +677,6 @@ export default function ProductListing() {
                     : filterOptions.brands
                 }
                 filterKey="brands"
-              />
-              <FilterSection
-                title="Price"
-                items={derivedFilters.priceRanges}
-                filterKey="priceRanges"
-              />
-              <FilterSection
-                title="Size"
-                items={filterOptions.sizes}
-                filterKey="sizes"
               />
               <FilterSection
                 title="Colors"
@@ -712,8 +744,8 @@ export default function ProductListing() {
                             className={clsx(
                               "absolute top-2 right-2 h-8 w-8 transition-all duration-200 shadow-md",
                               isAddedToCart(product.id)
-                                ? "bg-[#16a34a] hover:bg-[#16a34a] text-white cursor-default shadow-lg"
-                                : "bg-white/90 hover:bg-primary hover:text-white text-black hover:shadow-lg"
+                                ? " bg-green-600 text-secondary hover:bg-success  cursor-default shadow-lg"
+                                : "bg-primary text-secondary hover:bg-green-400 hover:text-secondary  hover:shadow-lg"
                             )}
                             aria-label={`Add ${product.name} to cart`}
                             onClick={(e) => !isAddedToCart(product.id) && handleAddToCart(product, e)}
@@ -732,9 +764,9 @@ export default function ProductListing() {
                           </p>
 
                           <div className="flex items-center gap-2">
-                            <span className="text-lg font-bold text-black">{formatPrice(product.price)}</span>
+                            <span className="text-lg font-bold text-secondary">{formatPrice(product.price)}</span>
                             {product.originalPrice && (
-                              <span className="text-sm text-gray-500 line-through">{formatPrice(product.originalPrice)}</span>
+                              <span className="text-sm text-gray-500 line-through decoration-red-500">{formatPrice(product.originalPrice)}</span>
                             )}
                           </div>
                         </div>
@@ -742,6 +774,56 @@ export default function ProductListing() {
                     </Card>
                   </Link>
                 ))}
+              </div>
+            )}
+            
+            {/* Pagination */}
+            {!apiIsLoading && !apiIsError && totalPages > 1 && (
+              <div className="mt-8 flex justify-center items-center gap-2">
+                <Button 
+                  onClick={goToPrevious}
+                  disabled={currentPage === 1}
+                  variant="outline"
+                  size="sm"
+                >
+                  Previous
+                </Button>
+                
+                <div className="flex gap-1">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNum;
+                    if (totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1;
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i;
+                    } else {
+                      pageNum = currentPage - 2 + i;
+                    }
+                    
+                    return (
+                      <Button
+                        key={pageNum}
+                        onClick={() => goToPage(pageNum)}
+                        variant={currentPage === pageNum ? "default" : "outline"}
+                        size="sm"
+                        className="w-10"
+                      >
+                        {pageNum}
+                      </Button>
+                    );
+                  })}
+                </div>
+                
+                <Button 
+                  onClick={goToNext}
+                  disabled={currentPage === totalPages}
+                  variant="outline"
+                  size="sm"
+                >
+                  Next
+                </Button>
               </div>
             )}
           </main>
@@ -842,15 +924,7 @@ export default function ProductListing() {
                   </div>
                 )}
               </div>
-              <FilterSection
-                title="Brands"
-                items={
-                  derivedFilters.brands.length
-                    ? derivedFilters.brands
-                    : filterOptions.brands
-                }
-                filterKey="brands"
-              />
+              
               <FilterSection
                 title="Price"
                 items={derivedFilters.priceRanges}
@@ -860,6 +934,15 @@ export default function ProductListing() {
                 title="Size"
                 items={filterOptions.sizes}
                 filterKey="sizes"
+              />
+              <FilterSection
+                title="Brands"
+                items={
+                  derivedFilters.brands.length
+                    ? derivedFilters.brands
+                    : filterOptions.brands
+                }
+                filterKey="brands"
               />
               <FilterSection
                 title="Colors"

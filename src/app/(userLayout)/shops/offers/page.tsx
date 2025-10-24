@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 // Button style presets
 const buttonStyles = {
-  filled: "bg-orange-500 text-white hover:bg-orange-600",
+  filled: "bg-orange-500 text-[#2e2e2e] hover:bg-orange-600",
   outline: "bg-[#FAFAFA] border border-gray-300 text-gray-900 hover:bg-gray-100",
 } as const;
 

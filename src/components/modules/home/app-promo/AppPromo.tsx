@@ -5,15 +5,15 @@ const AppPromo = () => {
   return (
     <div
       className="w-full rounded-2xl md:my-20 h-[132px] md:h-80 lg:h-[400px] p-8 md:p-12 
-      bg-[linear-gradient(to_right,_#ffffff,_#EDE9FE,_#FEF9C3,_#ffffff)]
+      bg-gradient-to-r from-accent via-section to-primary/20
       flex items-center justify-between md:gap-8"
     >
       {/* Left Content */}
       <div className="max-w-lg">
-        <p className="text-[10px] md:text-lg lg:text-xl opacity-90">
-          The Mega Bazar App
+        <p className="text-[10px] md:text-lg lg:text-xl text-secondary/70">
+          The Dressen App
         </p>
-        <h2 className="text-sm md:text-2xl lg:text-3xl font-semibold md:mt-2">
+        <h2 className="text-sm md:text-2xl lg:text-3xl font-semibold md:mt-2 text-secondary">
           Share your ideas & shop <br /> endless Inspiration
         </h2>
 
@@ -45,7 +45,7 @@ const AppPromo = () => {
         h-[127px] md:h-[282px] lg:h-[354px]"
         >
           <Image
-            src="/app 1.png"
+            src="/Dressenmobileapp.png"
             alt="App Mockup"
             fill
             className="object-contain"

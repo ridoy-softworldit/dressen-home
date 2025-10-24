@@ -16,7 +16,6 @@ import {
 } from "@/utils/order";
 import { OrderDetailsContent } from "@/components/modules/OrderDetailsContent/OrderDetailsContent";
 
-
 export default function MyOrdersTable() {
   const {
     data: orders,
@@ -57,7 +56,7 @@ export default function MyOrdersTable() {
     );
 
   return (
-      <>
+    <>
       {/* --- Table/Lite list wrapper --- */}
       <div className="w-full px-4 py-6 md:px-6">
         <div className="bg-white w-full max-w-6xl mx-auto rounded-lg shadow-sm overflow-hidden">

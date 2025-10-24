@@ -78,27 +78,172 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const { data: productsData } = useGetAllProductsQuery();
+  const { data: productsData } = useGetAllProductsQuery({ page: 1 });
   const cartItems = useAppSelector(selectCartItems);
 
   const staticColors = useMemo<ColorOption[]>(() => [
-    { name: 'Navy Blue', hex: '#0b2545' },
-    { name: 'Black', hex: '#111827' },
-    { name: 'Gray', hex: '#9CA3AF' },
+    // Basic Colors
+    { name: 'Black', hex: '#000000' },
     { name: 'White', hex: '#FFFFFF' },
+    { name: 'Gray', hex: '#808080' },
+    { name: 'Grey', hex: '#808080' },
+    
+    // Reds
+    { name: 'Red', hex: '#FF0000' },
+    { name: 'Crimson', hex: '#DC143C' },
+    { name: 'Maroon', hex: '#800000' },
+    { name: 'Dark Red', hex: '#8B0000' },
+    { name: 'Fire Red', hex: '#FF4500' },
+    
+    // Blues
+    { name: 'Blue', hex: '#0000FF' },
+    { name: 'Navy', hex: '#000080' },
+    { name: 'Navy Blue', hex: '#0b2545' },
+    { name: 'Royal Blue', hex: '#4169E1' },
+    { name: 'Sky Blue', hex: '#87CEEB' },
+    { name: 'Light Blue', hex: '#ADD8E6' },
+    { name: 'Dark Blue', hex: '#00008B' },
+    
+    // Greens
+    { name: 'Green', hex: '#008000' },
+    { name: 'Dark Green', hex: '#006400' },
+    { name: 'Forest Green', hex: '#228B22' },
+    { name: 'Lime Green', hex: '#32CD32' },
+    { name: 'Olive', hex: '#808000' },
+    
+    // Yellows
+    { name: 'Yellow', hex: '#FFFF00' },
+    { name: 'Gold', hex: '#FFD700' },
+    { name: 'Orange', hex: '#FFA500' },
+    { name: 'Dark Orange', hex: '#FF8C00' },
+    
+    // Purples
+    { name: 'Purple', hex: '#800080' },
+    { name: 'Violet', hex: '#8A2BE2' },
+    { name: 'Magenta', hex: '#FF00FF' },
+    { name: 'Pink', hex: '#FFC0CB' },
+    { name: 'Hot Pink', hex: '#FF69B4' },
+    
+    // Browns
+    { name: 'Brown', hex: '#A52A2A' },
+    { name: 'Chocolate', hex: '#D2691E' },
+    { name: 'Tan', hex: '#D2B48C' },
+    { name: 'Beige', hex: '#F5F5DC' },
+    
+    // Metallics
     { name: 'Silver', hex: '#C0C0C0' },
+    { name: 'Gold', hex: '#FFD700' },
+    { name: 'Bronze', hex: '#CD7F32' },
+    { name: 'Copper', hex: '#B87333' },
+    
+    // Grays
+    { name: 'Light Gray', hex: '#D3D3D3' },
+    { name: 'Dark Gray', hex: '#A9A9A9' },
+    { name: 'Charcoal', hex: '#36454F' },
     { name: 'Titanium Gray', hex: '#808080' },
+    
+    // Other Common Colors
+    { name: 'Turquoise', hex: '#40E0D0' },
+    { name: 'Teal', hex: '#008080' },
+    { name: 'Cyan', hex: '#00FFFF' },
+    { name: 'Indigo', hex: '#4B0082' },
+    { name: 'Coral', hex: '#FF7F50' },
+    { name: 'Salmon', hex: '#FA8072' },
+    { name: 'Khaki', hex: '#F0E68C' },
+    { name: 'Ivory', hex: '#FFFFF0' },
+    { name: 'Cream', hex: '#FFFDD0' },
+    
+    // Additional Fashion Colors
+    { name: 'Rose', hex: '#FF007F' },
+    { name: 'Fuchsia', hex: '#FF00FF' },
+    { name: 'Lavender', hex: '#E6E6FA' },
+    { name: 'Mint', hex: '#98FB98' },
+    { name: 'Peach', hex: '#FFCBA4' },
+    { name: 'Burgundy', hex: '#800020' },
+    { name: 'Wine', hex: '#722F37' },
+    { name: 'Mustard', hex: '#FFDB58' },
+    { name: 'Rust', hex: '#B7410E' },
+    { name: 'Sage', hex: '#9CAF88' },
+    { name: 'Mauve', hex: '#E0B0FF' },
+    { name: 'Plum', hex: '#DDA0DD' },
+    { name: 'Emerald', hex: '#50C878' },
+    { name: 'Ruby', hex: '#E0115F' },
+    { name: 'Sapphire', hex: '#0F52BA' },
+    { name: 'Amber', hex: '#FFBF00' },
+    { name: 'Jade', hex: '#00A86B' },
+    { name: 'Pearl', hex: '#F8F6F0' },
+    { name: 'Onyx', hex: '#353839' },
+    { name: 'Slate', hex: '#708090' },
+    { name: 'Ash', hex: '#B2BEB5' },
+    { name: 'Stone', hex: '#928E85' },
+    { name: 'Sand', hex: '#C2B280' },
+    { name: 'Camel', hex: '#C19A6B' },
+    { name: 'Taupe', hex: '#483C32' },
+    { name: 'Mocha', hex: '#967117' },
+    { name: 'Espresso', hex: '#6F4E37' },
+    { name: 'Vanilla', hex: '#F3E5AB' },
+    { name: 'Champagne', hex: '#F7E7CE' },
+    { name: 'Rose Gold', hex: '#E8B4B8' },
+    { name: 'Platinum', hex: '#E5E4E2' },
+    { name: 'Steel', hex: '#71797E' },
+    { name: 'Gunmetal', hex: '#2C3539' },
+    { name: 'Pewter', hex: '#96A8A1' },
+    { name: 'Mint Green', hex: '#98FB98' },
+    { name: 'Sea Green', hex: '#2E8B57' },
+    { name: 'Lime', hex: '#00FF00' },
+    { name: 'Neon Green', hex: '#39FF14' },
+    { name: 'Electric Blue', hex: '#7DF9FF' },
+    { name: 'Cobalt', hex: '#0047AB' },
+    { name: 'Cerulean', hex: '#007BA7' },
+    { name: 'Azure', hex: '#007FFF' },
+    { name: 'Powder Blue', hex: '#B0E0E6' },
+    { name: 'Baby Blue', hex: '#89CFF0' },
+    { name: 'Periwinkle', hex: '#CCCCFF' },
+    { name: 'Lilac', hex: '#C8A2C8' },
+    { name: 'Orchid', hex: '#DA70D6' },
+    { name: 'Thistle', hex: '#D8BFD8' },
+    { name: 'Blush', hex: '#DE5D83' },
+    { name: 'Dusty Rose', hex: '#DCAE96' },
+    { name: 'Terracotta', hex: '#E2725B' },
+    { name: 'Brick', hex: '#CB4154' },
+    { name: 'Scarlet', hex: '#FF2400' },
+    { name: 'Cherry', hex: '#DE3163' },
+    { name: 'Raspberry', hex: '#E30B5C' },
+    { name: 'Strawberry', hex: '#FC5A8D' },
+    { name: 'Watermelon', hex: '#FF7F7F' },
+    { name: 'Apricot', hex: '#FBCEB1' },
+    { name: 'Tangerine', hex: '#F28500' },
+    { name: 'Papaya', hex: '#FFEFD5' },
+    { name: 'Mango', hex: '#FDBE02' },
+    { name: 'Lemon', hex: '#FFF700' },
+    { name: 'Canary', hex: '#FFFF99' },
+    { name: 'Butter', hex: '#FFFF8B' },
+    { name: 'Honey', hex: '#FFB347' },
+    { name: 'Caramel', hex: '#AF6F09' },
+    { name: 'Cinnamon', hex: '#D2691E' },
+    { name: 'Coffee', hex: '#6F4E37' },
+    { name: 'Cocoa', hex: '#D2691E' },
+    { name: 'Mahogany', hex: '#C04000' },
+    { name: 'Chestnut', hex: '#954535' },
+    { name: 'Auburn', hex: '#A52A2A' },
+    { name: 'Sienna', hex: '#A0522D' },
+    { name: 'Umber', hex: '#635147' },
+    { name: 'Sepia', hex: '#704214' },
   ], []);
-  //st sizes: SizeOption[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+  //const staticSizes: SizeOption[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
   // Extract colors from specifications
   const availableColors = useMemo(() => {
     const specs = (product as any)?.specifications;
-    if (!specs || !Array.isArray(specs)) return [];
+    if (!specs || !Array.isArray(specs)) {
+      return [];
+    }
     const colorSpecs = specs.filter((spec: any) => 
       spec.key && spec.key.toLowerCase() === 'color' && spec.value
     );
-    if (colorSpecs.length === 0) return [];
+    if (colorSpecs.length === 0) {
+      return [];
+    }
     
     const colors = colorSpecs.map((spec: any) => {
       const colorName = spec.value;
@@ -123,16 +268,22 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
   const showStaticSizes = !hasDynamicSizes;
 
   const [mainIdx, setMainIdx] = useState(0);
-  const [color, setColor] = useState<ColorOption>(staticColors[0]);
+  const [color, setColor] = useState<ColorOption | null>(null);
+  const [size, setSize] = useState<SizeOption | string>('M');
 
-  // Update color when availableColors changes
-  const firstAvailableColorName = availableColors.length > 0 ? availableColors[0].name : null;
+  // Set initial color only once when availableColors first loads
   useEffect(() => {
-    if (availableColors.length > 0 && availableColors[0].name !== color.name) {
+    if (availableColors.length > 0 && !color) {
       setColor(availableColors[0]);
     }
-  }, [availableColors, color.name, firstAvailableColorName]);
-  const [size, setSize] = useState<SizeOption>('M');
+  }, [availableColors, color]);
+
+  // Set initial size when dynamic sizes are available
+  useEffect(() => {
+    if (hasDynamicSizes && dynamicSizes.length > 0) {
+      setSize(dynamicSizes[0]);
+    }
+  }, [hasDynamicSizes, dynamicSizes]);
   const [qty, setQty] = useState(1);
   const [wishlisted, setWishlisted] = useState(false);
   const [message, setMessage] = useState<null | { type: 'cart' | 'wish'; text: string }>(null);
@@ -188,8 +339,8 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
     const salePrice = product.productInfo?.salePrice || 0;
     const regularPrice = product.productInfo?.price || 0;
-    const displayPrice = salePrice === 0 ? regularPrice : salePrice;
-    const compareAtPrice = regularPrice > displayPrice ? regularPrice : displayPrice * 1.3;
+    const displayPrice = salePrice > 0 && salePrice < regularPrice ? salePrice : regularPrice;
+    const compareAtPrice = salePrice > 0 && salePrice < regularPrice ? regularPrice : 0;
 
     const badges: Badge[] = [];
     if (salePrice > 0 && salePrice < regularPrice) badges.push('SALE');
@@ -271,7 +422,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       productImage: product.featuredImg || '/placeholder.png',
       unitPrice: Number((product?.productInfo?.salePrice === 0 ? product?.productInfo?.price : product?.productInfo?.salePrice) ?? product?.productInfo?.price ?? 0),
       quantity: qty,
-      color: availableColors.length > 0 ? color.name : 'Default',
+      color: availableColors.length > 0 && color ? color.name : 'Default',
       size: showStaticSizes || hasDynamicSizes ? size : 'One Size',
     };
 
@@ -319,26 +470,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     return cartItems.some((item: any) => item.productId === productIdStr);
   }, [cartItems, product]);
 
-  const vouchers = [
-    {
-      label: '20%',
-      labelColor: 'bg-[#0E1F34] text-white',
-      title: '20% Off',
-      description: 'Get 20% off on orders above $100',
-      minPurchase: '$100',
-      expires: '2024-12-31',
-      code: 'SAVE20',
-    },
-    {
-      label: 'Free ',
-      labelColor: 'bg-emerald-500 text-white',
-      title: 'Free Shipping',
-      description: 'Free shipping on orders above $50',
-      minPurchase: '$50',
-      expires: '2024-12-31',
-      code: 'FREESHIP',
-    },
-  ];
+
 
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-8">
@@ -422,7 +554,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           {/* Enhanced Price Display */}
           <div className="bg-gray-50 p-4 rounded-lg mt-4">
             <div className="flex items-center gap-3 mb-2">
-              <span className="text-3xl font-bold text-black">৳{productView.price.toFixed(0)}</span>
+              <span className="text-3xl font-bold text-secondary">৳{productView.price.toFixed(0)}</span>
               {discountPct > 0 && (
                 <>
                   <span className="text-lg text-gray-500 line-through">৳{productView.compareAt.toFixed(0)}</span>
@@ -440,7 +572,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             {productView.specifications.quantity > 0 ? (
               <>
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="text-green-600 font-medium">Stock Available</span>
+                <span className="text-green-600 font-medium">In Stock ({productView.specifications.quantity} left)</span>
               </>
             ) : (
               <>
@@ -452,13 +584,11 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
           {/* Delivery & Payment Info */}
           <div className="grid grid-cols-2 gap-3 mt-4">
-            <div className="flex items-center gap-2 p-3 bg-orange-50 rounded-lg">
-              <svg className="w-6 h-6 text-orange-600" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 7h-3V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h1.05a2.5 2.5 0 0 0 4.9 0h4.1a2.5 2.5 0 0 0 4.9 0H20a1 1 0 0 0 1-1v-5a1 1 0 0 0-.293-.707L19 7zM7.5 17.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm9 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM19 9.414L20.586 11H19V9.414z"/>
-              </svg>
+            <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg">
+              <Truck className="w-5 h-5 text-blue-600" />
               <div>
-                <p className="text-sm font-medium text-orange-700">Fast Delivery</p>
-                <p className="text-xs text-orange-700">Across Country</p>
+                <p className="text-sm font-medium text-blue-800">Fast Delivery</p>
+                <p className="text-xs text-blue-600">Across whole country</p>
               </div>
             </div>
             <div className="flex items-center gap-2 p-3 bg-green-50 rounded-lg">
@@ -473,17 +603,19 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           {/* color picker - only show if colors available */}
           {availableColors.length > 0 && (
             <div className="mt-6">
-              <p className="text-sm font-medium">Color: {color.name}</p>
+              <p className="text-sm font-medium">Color: {color?.name || 'Select Color'}</p>
               <div className="flex gap-2 mt-2">
                 {availableColors.map((c) => (
                   <button
                     key={c.name}
                     aria-label={c.name}
-                    aria-pressed={c.name === color.name}
+                    aria-pressed={c.name === color?.name}
                     onClick={() => setColor(c)}
                     className={cn(
-                      'size-8 rounded-full ring-2 transition',
-                      c.name === color.name ? 'ring-black' : 'ring-gray-300 hover:ring-gray-400'
+                      'size-7 rounded-full ring-1 transition-all duration-200 relative opacity-70 hover:opacity-90',
+                      c.name === color?.name 
+                        ? 'ring-2 ring-black ring-offset-2 scale-110 shadow-lg opacity-100 brightness-110' 
+                        : 'ring-gray-300 hover:ring-gray-400 hover:scale-105 shadow-sm'
                     )}
                     style={{ backgroundColor: c.hex }}
                   />
@@ -495,31 +627,31 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           {/* Size Picker */}
           {(showStaticSizes || hasDynamicSizes) && (
             <div className="mt-6">
-              <p className="text-sm font-medium mb-2">Size: {size}</p>
-              <div className="flex gap-2">
+              <p className="text-sm font-medium mb-2">Size: {String(size).toUpperCase()}</p>
+              <div className="flex gap-2 flex-wrap">
                 {hasDynamicSizes
-                  ? dynamicSizes.map((s: string) => (
+                  ? dynamicSizes.map((s) => (
                       <button
                         key={s}
-                        onClick={() => setSize(s as SizeOption)}
+                        onClick={() => setSize(s)}
                         className={cn(
-                          'px-3 py-2 border rounded text-sm transition',
+                          'px-4 py-2 border rounded-lg text-sm font-medium transition-all',
                           s === size
-                            ? 'border-black bg-black text-white'
+                            ? 'border-primary bg-primary text-secondary'
                             : 'border-gray-300 hover:border-gray-400'
                         )}
                       >
-                        {s}
+                        {String(s).toUpperCase()}
                       </button>
                     ))
-                  : ['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((s) => (
+                  : (['XS', 'S', 'M', 'L', 'XL', 'XXL'] as SizeOption[]).map((s) => (
                       <button
                         key={s}
-                        onClick={() => setSize(s as SizeOption)}
+                        onClick={() => setSize(s)}
                         className={cn(
-                          'px-3 py-2 border rounded text-sm transition',
+                          'px-4 py-2 border rounded-lg text-sm font-medium transition-all',
                           s === size
-                            ? 'border-black bg-black text-white'
+                            ? 'border-primary bg-primary text-secondary'
                             : 'border-gray-300 hover:border-gray-400'
                         )}
                       >
@@ -558,7 +690,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
               className={clsx('w-full py-6 text-lg font-semibold transition-all', {
                 'bg-gray-500 hover:bg-gray-600': productView.specifications.quantity === 0,
                 'bg-green-600 hover:bg-green-600 cursor-default': isAddedToCart,
-                'bg-primary hover:bg-primary/90 text-white': productView.specifications.quantity > 0 && !isAddedToCart,
+                'bg-primary hover:bg-primary/90 text-secondary': productView.specifications.quantity > 0 && !isAddedToCart,
               })}
             >
               <ShoppingCart className="w-5 h-5 mr-2" />
@@ -568,7 +700,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             <Button
               onClick={handleBuyNow}
               disabled={productView.specifications.quantity === 0}
-              className="w-full py-6 text-lg font-semibold bg-orange-600 hover:bg-orange-700 text-white"
+              className="w-full py-6 text-lg font-semibold bg-green-600 hover:bg-green-600 cursor-default hover:text-white text-white"
             >
               Buy Now - ৳{productView.price.toFixed(0)}
             </Button>
@@ -732,7 +864,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         </Card>
       </div>
 
-      {/* Available Vouchers - Commented Out */}
+      {/* Available Vouchers */}
       {/* <div className="w-full mx-auto mt-10">
         <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <span className="text-xl">🔷</span> Available Vouchers
@@ -793,7 +925,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                   <div className="flex flex-col">
                     <h3 className="text-[16px] font-medium text-gray-900 truncate">{p.name}</h3>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="text-black font-semibold">৳{p.price}</span>
+                      <span className="text-secondary font-semibold">৳{p.price}</span>
                       {p.oldPrice && <span className="text-gray-500 line-through text-sm">৳{p.oldPrice}</span>}
                     </div>
                     <span className="text-gray-500 text-xs mt-1">{p.sold} sold</span>

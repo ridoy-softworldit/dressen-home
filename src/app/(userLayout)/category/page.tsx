@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import NewWatches from "@/components/modules/category/NewWatches";
+import CategoryProduct from "@/components/modules/category/CategoryProduct";
 import BestSelling from "@/components/modules/category/BestSelling";
 import Discount from "@/components/modules/category/Discount";
 import SaveMoreSection from "@/components/modules/category/SaveMoreSection";
@@ -14,7 +14,7 @@ import { useMemo } from "react";
 import type { IProduct, ProductData } from "@/types/product";
 
 export default function CategorySection() {
-  const { data } = useGetAllProductsQuery();
+  const { data } = useGetAllProductsQuery({ page: 1 });
   const { data: categoryData } = useGetAllCategoryQuery();
   const { data: discountedData, isLoading: discountLoading, isError: discountError } = useGetDiscountedProductsQuery();
   const searchParams = useSearchParams();
@@ -165,7 +165,7 @@ const isIProduct = (item: unknown): item is IProduct => {
       <section className="w-full bg-gray-50 rounded-2xl p-6 md:p-12 flex items-center justify-between gap-6 md:gap-10">
         {/* Left Content */}
         <div className="flex-1 max-w-lg space-y-4">
-          <Badge className="px-4 py-2 rounded-full bg-black text-white w-fit">
+          <Badge className="px-4 py-2 rounded-full bg-primary text-[#2e2e2e] w-fit">
             ● {selectedCategory?.name || 'Category'}
           </Badge>
 
@@ -181,7 +181,7 @@ const isIProduct = (item: unknown): item is IProduct => {
         {/* Right Image */}
         <div className="relative w-40 h-40 sm:w-56 sm:h-56 md:w-80 md:h-80 lg:w-96 lg:h-96 flex-shrink-0">
           <Image
-            src={((selectedCategory as Record<string, unknown>)?.icon as Record<string, unknown>)?.url as string || (selectedCategory as Record<string, unknown>)?.image as string || "/watches.png"}
+            src={((selectedCategory as Record<string, unknown>)?.icon as Record<string, unknown>)?.url as string || (selectedCategory as Record<string, unknown>)?.image as string || "/placeholder.jpg"}
             alt={selectedCategory?.name || "Category"}
             fill
             className="object-contain"
@@ -191,7 +191,7 @@ const isIProduct = (item: unknown): item is IProduct => {
       </section>
 
       <BestSelling data={normalized} title={`Best Selling ${selectedCategory?.name || 'Products'}`} />
-      <NewWatches data={normalized} title={`${selectedCategory?.name || ''} Products`} />
+      <CategoryProduct data={normalized} title={`${selectedCategory?.name || ''} Products`} />
       <Discount 
         data={discountedData}
         loading={discountLoading}

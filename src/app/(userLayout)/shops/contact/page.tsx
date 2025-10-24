@@ -220,7 +220,7 @@ export default function ContactPage() {
                   <a key={i} href={link.url} target="_blank" rel="noopener noreferrer">
                     <Button
                       variant="ghost"
-                      className="flex items-center gap-2 px-4 py-2 rounded-md text-white"
+                      className="flex items-center gap-2 px-4 py-2 rounded-md text-[#2e2e2e]"
                       style={{
                         background: link.bgColor,
                         transition: "background-color 0.2s ease"

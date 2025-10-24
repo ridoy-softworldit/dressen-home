@@ -22,7 +22,7 @@ export default function MonetizePage() {
               </p>
             </div>
 
-            <Button className="bg-gray-900 hover:bg-gray-800 text-white px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base rounded-lg font-medium flex items-center gap-2">
+            <Button className="bg-gray-900 hover:bg-gray-800 text-[#2e2e2e] px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base rounded-lg font-medium flex items-center gap-2">
               See Our Admin Panel
               <svg className="w-4 sm:w-5 h-4 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

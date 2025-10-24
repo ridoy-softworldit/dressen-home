@@ -10,7 +10,7 @@ import { useGetAllProductsQuery } from "@/redux/featured/product/productApi";
 import { IProduct, CategoryShape } from "@/types/product"; // আপনার existing types import করুন
 
 const NewArrivals = () => {
-  const { data } = useGetAllProductsQuery();
+  const { data } = useGetAllProductsQuery({ page: 1 });
   const [tab, setTab] = useState<string>("");
 
   const categoryTabs = useMemo(() => {
@@ -91,7 +91,7 @@ const NewArrivals = () => {
       <div className="flex justify-center mt-10">
         <Button
           className="py-6 xl:py-7 !px-5 xl:!px-8 rounded-[12px] text-base border 
-          border-[#E5E7EB] md:border-[#181919] w-full md:w-fit"
+          border-neutral md:border-secondary w-full md:w-fit"
           variant={"outline"}
         >
           Go To Collection <ChevronRight />

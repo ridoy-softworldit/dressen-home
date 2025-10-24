@@ -3,43 +3,51 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useGetHeroSlidesQuery } from "@/redux/featured/slide/slideApi";
-import type { ISlide } from "@/types/slide";
+import { useGetSettingsQuery } from "@/redux/featured/settings/settingsApi";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import type { SerializedError } from "@reduxjs/toolkit";
 
 // Type-safe slide interface
-type Slide = ISlide;
-
-const boisakhi_banner = "https://res.cloudinary.com/dtges64tg/image/upload/w_1200,h_400,f_auto,q_auto/v1759399963/b1_ognlhc.png";
-const frame_banner = "https://res.cloudinary.com/dtges64tg/image/upload/w_1200,h_400,f_auto,q_auto/v1759399970/Frame_224_s3tmrd.png";
+type Slide = {
+  _id: string;
+  imageUrl: string;
+  alt: string;
+  href?: string;
+};
 
 const FALLBACK: Slide[] = [
   { 
     _id: "f1", 
-    imageUrl: boisakhi_banner, // ✅ Cloudinary URL
-    alt: "Footwear Promo", 
+    imageUrl: "/about1.jpg",
+    alt: "Dressen Banner", 
     href: "/products/footwear" 
   },
   { 
-    _id: "f4", 
-    imageUrl: frame_banner, // ✅ Cloudinary URL
-    alt: "New Arrival", 
+    _id: "f2", 
+    imageUrl: "/about2.jpg",
+    alt: "Dressen Banner", 
     href: "/products/new" 
   },
 ];
 
 
 export default function BannerSlider() {
-  // Fetch slides from backend
-  const { data, isLoading, isError, error } = useGetHeroSlidesQuery();
+  // Fetch settings from backend
+  const { data: settings, isLoading, isError, error } = useGetSettingsQuery();
 
   
-  // Normalize slides to use fetched data or fallback
+  // Normalize slides to use settings sliderImages or fallback
   const slides: Slide[] = useMemo(() => {
-    const result = Array.isArray(data) && data.length ? data : FALLBACK;
-    return result;
-  }, [data]);
+    if (settings?.sliderImages?.length) {
+      return settings.sliderImages.map((imageUrl, index) => ({
+        _id: `slide-${index}`,
+        imageUrl,
+        alt: `Banner ${index + 1}`,
+        href: "/product-listing"
+      }));
+    }
+    return FALLBACK;
+  }, [settings]);
 
   const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -137,7 +145,7 @@ export default function BannerSlider() {
         }
       `}</style>
 
-      {isLoading && <div className="absolute inset-0 animate-pulse bg-gray-100" />}
+      {isLoading && <div className="absolute inset-0 animate-pulse bg-neutral" />}
 
       {slides.map((s, i) => {
         const isActive = i === idx;
@@ -161,16 +169,17 @@ export default function BannerSlider() {
             priority={i === 0}
             className={`object-cover absolute inset-0 transition-opacity duration-500 ${animationClass}`}
             sizes="(min-width:1280px) 1000px, 100vw"
+            unoptimized
+            onError={(e) => {
+              console.log('Image failed to load:', s.imageUrl);
+              // Simple fallback to placeholder
+              const target = e.currentTarget as HTMLImageElement;
+              target.src = '/placeholder.svg';
+            }}
           />
         );
 
-        return s.href ? (
-          <Link key={s._id} href={s.href} aria-label={s.alt || "banner"}>
-            {imgEl}
-          </Link>
-        ) : (
-          imgEl
-        );
+        return imgEl;
       })}
 
       <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-2">
@@ -185,7 +194,7 @@ export default function BannerSlider() {
               }, 500);
             }}
             aria-label={`slide ${i + 1}`}
-            className={`h-2 w-2 rounded-full ${i === idx ? "bg-white" : "bg-white/60"}`}
+            className={`h-2 w-2 rounded-full ${i === idx ? "bg-accent" : "bg-accent/60"}`}
           />
         ))}
       </div>

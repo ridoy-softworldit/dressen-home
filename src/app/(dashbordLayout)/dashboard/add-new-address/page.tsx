@@ -4,7 +4,6 @@ import type React from "react";
 import type { LucideIcon } from "lucide-react";
 import { Home, Building2, MapPin, ArrowLeft } from "lucide-react";
 import { useState } from "react";
-import { getData } from "country-list";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,8 +27,6 @@ type AddressItem = {
 };
 
 export default function AddAddressForm() {
-  const countries = getData();
-  
   const [formData, setFormData] = useState({
     addressName: "",
     fullName: "",
@@ -99,7 +96,7 @@ export default function AddAddressForm() {
                         "shrink-0 whitespace-nowrap",
                         "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#FF7A00]",
                         isActive
-                          ? "bg-[#FF7A00] text-white shadow-sm"
+                          ? "bg-[#FF7A00] text-[#2e2e2e] shadow-sm"
                           : "text-slate-700 bg-white border border-slate-200 hover:border-slate-300",
                       ].join(" ")}
                       aria-pressed={isActive}
@@ -108,7 +105,7 @@ export default function AddAddressForm() {
                         className={[
                           "h-4 w-4",
                           isActive
-                            ? "text-white"
+                            ? "text-[#2e2e2e]"
                             : "text-slate-500 group-hover:text-slate-700",
                         ].join(" ")}
                       />
@@ -205,16 +202,15 @@ export default function AddAddressForm() {
                   <SelectTrigger className="h-11">
                     <SelectValue placeholder="Select Country" />
                   </SelectTrigger>
-                  <SelectContent className="max-h-60">
-                    {countries.map((country) => (
-                      <SelectItem 
-                        key={country.code} 
-                        value={country.code}
-                        className="cursor-pointer hover:bg-gray-50"
-                      >
-                        {country.name}
-                      </SelectItem>
-                    ))}
+                  <SelectContent>
+                    <SelectItem value="us">United States</SelectItem>
+                    <SelectItem value="ca">Canada</SelectItem>
+                    <SelectItem value="uk">United Kingdom</SelectItem>
+                    <SelectItem value="au">Australia</SelectItem>
+                    <SelectItem value="de">Germany</SelectItem>
+                    <SelectItem value="fr">France</SelectItem>
+                    <SelectItem value="jp">Japan</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -261,7 +257,7 @@ export default function AddAddressForm() {
             </Button>
             <Button
               type="submit"
-              className="h-11 bg-orange-500 hover:bg-orange-600 text-white"
+              className="h-11 bg-orange-500 hover:bg-orange-600 text-[#2e2e2e]"
             >
               Save Address
             </Button>

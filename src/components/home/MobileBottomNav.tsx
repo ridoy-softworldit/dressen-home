@@ -42,12 +42,12 @@ export default function MobileBottomNav() {
 
   return (
     <>
-      <nav className="fixed bottom-0 inset-x-0 z-40 bg-white border-t shadow-sm lg:hidden">
+      <nav className="fixed bottom-0 inset-x-0 z-40 bg-accent border-t border-neutral shadow-sm lg:hidden">
         <ul className="grid grid-cols-4">
           {items.map((it) =>
             it.href ? (
               <li key={it.key}>
-                <Link href={it.href} className="flex flex-col items-center justify-center py-2 text-gray-700">
+                <Link href={it.href} className="flex flex-col items-center justify-center py-2 text-secondary">
                   {it.icon}
                   <span className="text-[11px] mt-1">{it.label}</span>
                 </Link>
@@ -57,7 +57,7 @@ export default function MobileBottomNav() {
                 <button
                   type="button"
                   onClick={it.onClick}
-                  className="w-full flex flex-col items-center justify-center py-2 text-gray-700"
+                  className="w-full flex flex-col items-center justify-center py-2 text-secondary"
                 >
                   {it.icon}
                   <span className="text-[11px] mt-1">{it.label}</span>
@@ -73,33 +73,33 @@ export default function MobileBottomNav() {
         <div className="fixed inset-0 z-50 lg:hidden">
           {/* Backdrop */}
           <div 
-            className="absolute inset-0 bg-black bg-opacity-50"
+            className="absolute inset-0 bg-secondary bg-opacity-50"
             onClick={closeDrawer}
           />
           
           {/* Drawer Content */}
-          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-4 max-h-[80vh] overflow-y-auto">
+          <div className="absolute bottom-0 left-0 right-0 bg-accent rounded-t-2xl p-4 max-h-[80vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold">Menu</h3>
               <button 
                 onClick={closeDrawer}
-                className="p-1 rounded-full hover:bg-gray-100"
+                className="p-1 rounded-full hover:bg-neutral"
               >
                 <X size={20} />
               </button>
             </div>
             
             <div className="space-y-2">
-              <Link href="/product-listing" className="block p-3 hover:bg-gray-100 rounded" onClick={closeDrawer}>
+              <Link href="/product-listing" className="block p-3 hover:bg-neutral rounded" onClick={closeDrawer}>
                 All Products
               </Link>
-              <Link href="/categories" className="block p-3 hover:bg-gray-100 rounded" onClick={closeDrawer}>
+              <Link href="/product-listing" className="block p-3 hover:bg-neutral rounded" onClick={closeDrawer}>
                 All Categories
               </Link>
-              <Link href="/about" className="block p-3 hover:bg-gray-100 rounded" onClick={closeDrawer}>
+              <Link href="/about" className="block p-3 hover:bg-neutral rounded" onClick={closeDrawer}>
                 About Us
               </Link>
-              <Link href="/contact" className="block p-3 hover:bg-gray-100 rounded" onClick={closeDrawer}>
+              <Link href="/contact-us" className="block p-3 hover:bg-neutral rounded" onClick={closeDrawer}>
                 Contact
               </Link>
             </div>

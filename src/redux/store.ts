@@ -10,17 +10,7 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import createWebStorage from "redux-persist/lib/storage/createWebStorage";
-
-const createNoopStorage = () => ({
-  getItem() { return Promise.resolve(null); },
-  setItem() { return Promise.resolve(); },
-  removeItem() { return Promise.resolve(); }
-});
-
-const storage = typeof window !== "undefined" 
-  ? createWebStorage("local") 
-  : createNoopStorage();
+import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 // RTK Query APIs
@@ -41,6 +31,7 @@ import termsReducer from "./featured/terms/termsSlice";
 import usersReducer from "./featured/user/userSlice";
 import couponReducer from "./featured/coupons/couponSlice";
 import cartReducer from "./featured/cart/cartSlice";
+import settingsReducer from "./featured/settings/settingsSlice";
 
 // Persist configuration (only persist cart)
 const persistConfig = {
@@ -66,6 +57,7 @@ const rootReducer = combineReducers({
   terms: termsReducer,
   users: usersReducer,
   coupon: couponReducer,
+  settings: settingsReducer,
   [baseApi.reducerPath]: baseApi.reducer,
 });
 

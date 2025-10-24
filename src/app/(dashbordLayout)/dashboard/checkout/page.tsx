@@ -12,6 +12,7 @@ import {
 } from "@/redux/featured/cart/cartSlice";
 import { useCreateOrderMutation } from "@/redux/featured/order/orderApi";
 import { useGetAllProductsQuery } from "@/redux/featured/product/productApi";
+import { useGetAllCouponsQuery } from "@/redux/featured/coupons/couponApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   ArrowLeft,
@@ -23,6 +24,9 @@ import {
   Minus,
   Plus,
   X,
+  Copy,
+  Tag,
+  CheckCircle,
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -30,70 +34,88 @@ import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
 // Local types
-type OrderStatus =
-  | "pending"
-  | "processing"
-  | "at-local-facility"
-  | "out-for-delivery"
-  | "cancelled"
-  | "completed";
-
-type ShippingType = "amount" | "percentage";
+type OrderStatus = "pending" | "processing" | "completed" | "cancelled";
 
 interface ShippingInfo {
   name: string;
-  type: ShippingType;
+  type: "amount" | "percentage";
 }
 
-interface LineTotals {
+interface ProductInOrder {
+  product: string;
+  shop: string;
+  name: string;
+  sku: string;
+  price: number;
+  salePrice: number;
+  retailPrice: number;
+  wholeSalePrice: number;
+  quantity: number;
+  variant?: string;
+  subtotal: number;
+}
+
+interface OrderItemTotalAmount {
   subTotal: number;
+  tax: number;
+  shipping: ShippingInfo;
   discount: number;
   total: number;
-  shipping: ShippingInfo;
 }
 
-interface OrderLine {
+interface Commission {
+  isAddedToBalance: boolean;
+  type: "percentage" | "fixed";
+  value: number;
+  amount: number;
+}
+
+interface OrderItem {
+  user: number;
   productInfo: string;
-  trackingNumber: string;
-  quantity: number;
-  status: OrderStatus;
   isCancelled: boolean;
-  totalAmount: LineTotals;
-  commission: { type: string; value: number; amount: number };
+  quantity: number;
+  selectedPrice: number;
+  products: ProductInOrder[];
+  totalAmount: OrderItemTotalAmount;
+  commission: Commission;
 }
-
-type OrderInfo = OrderLine[];
 
 interface CustomerInfo {
   firstName: string;
   lastName: string;
+  email?: string;
   phone: string;
   address: string;
+  city?: string;
+  postalCode?: string;
   country: string;
 }
 
-type CashOn = "cash-on";
-
-type PaymentInfo = CashOn | "bkash" | "nagad";
-
-interface _IOrder {
-  _id: string;
-  orderInfo: OrderInfo;
-  customerInfo?: CustomerInfo | string;
-  paymentInfo?: PaymentInfo;
-  totalAmount: number | LineTotals;
-  createdAt: string;
-  updatedAt?: string;
+interface PaymentInfo {
+  cardNumber?: string;
+  expireDate?: string;
+  cvc?: string;
+  nameOnCard?: string;
 }
 
 interface CreateOrderInput {
-  orderInfo: OrderLine[];
+  orderBy: string;
+  userRole: "customer";
+  status: OrderStatus;
+  isCancelled: boolean;
+  totalQuantity: number;
+  orderInfo: OrderItem[];
   customerInfo: CustomerInfo;
-  paymentInfo?: PaymentInfo;
+  paymentInfo: PaymentInfo | string;
   totalAmount: number;
+  orderNote?: string;
 }
 
 import { CartItem } from "@/redux/featured/cart/cartSlice";
+import { TCoupon } from "@/redux/featured/coupons/couponSlice";
+
+type Coupon = TCoupon;
 
 // -------------------- small helpers (type-safe) --------------------
 const num = (v: unknown, d = 0): number => {
@@ -123,11 +145,14 @@ export default function CheckoutPage() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [createOrder] = useCreateOrderMutation();
-  const { data: productsData } = useGetAllProductsQuery();
+  const { data: productsData } = useGetAllProductsQuery({ page: 1 });
+  const { data: couponsData } = useGetAllCouponsQuery();
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
   const [promoCode, setPromoCode] = useState("");
-  const [promoApplied, setPromoApplied] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
   const [createOrderLoading, setCreateOrderLoading] = useState(false);
+  const [showThanksModal, setShowThanksModal] = useState(false);
+  const [orderId, setOrderId] = useState<string>("");
   const [paymentMethod, setPaymentMethod] = useState<"cod" | "bkash" | "nagad">(
     "cod"
   );
@@ -135,8 +160,11 @@ export default function CheckoutPage() {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
+    email: "",
     phone: "",
     address: "",
+    city: "",
+    postalCode: "",
     country: "Bangladesh",
   });
 
@@ -144,7 +172,21 @@ export default function CheckoutPage() {
     return cartItems.reduce((acc, item) => acc + item.totalAmount, 0);
   }, [cartItems]);
 
-  const finalTotal = subTotal - (promoApplied ? 5 : 0);
+  const calculateDiscount = () => {
+    if (!appliedCoupon) return { discount: 0, shipping: 0 };
+    
+    if (appliedCoupon.type === "free-shipping") {
+      return { discount: 0, shipping: 0 }; // Free shipping
+    } else if (appliedCoupon.type === "percentage") {
+      return { discount: (subTotal * appliedCoupon.discountAmount) / 100, shipping: 0 };
+    } else if (appliedCoupon.type === "fixed") {
+      return { discount: appliedCoupon.discountAmount, shipping: 0 };
+    }
+    return { discount: 0, shipping: 0 };
+  };
+
+  const { discount } = calculateDiscount();
+  const finalTotal = subTotal - discount;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -179,6 +221,9 @@ export default function CheckoutPage() {
     if (!formData.lastName.trim()) errors.lastName = "Last name is required";
     if (!formData.address.trim()) errors.address = "Address is required";
     if (!formData.phone.trim()) errors.phone = "Phone is required";
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.email = "Please enter a valid email address";
+    }
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -188,12 +233,39 @@ export default function CheckoutPage() {
   };
 
   const applyPromoCode = () => {
-    if (promoCode.trim()) {
-      setPromoApplied(true);
-      toast.success("Promo code applied!");
-    } else {
-      toast.error("Please enter a valid promo code.");
+    if (!promoCode.trim()) {
+      toast.error("Please enter a promo code.");
+      return;
     }
+
+    const coupon = couponsData?.find(
+      (c: Coupon) => c.code.toLowerCase() === promoCode.toLowerCase() && c.isApproved
+    );
+
+    if (!coupon) {
+      toast.error("Invalid or expired promo code.");
+      return;
+    }
+
+    if (subTotal < coupon.minimumPurchaseAmount) {
+      toast.error(`Minimum purchase amount is ৳${coupon.minimumPurchaseAmount}`);
+      return;
+    }
+
+    setAppliedCoupon(coupon);
+    toast.success(`Coupon "${coupon.code}" applied successfully!`);
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+    setPromoCode("");
+    toast.success("Coupon removed");
+  };
+
+  const copyCouponCode = (code: string) => {
+    navigator.clipboard.writeText(code);
+    setPromoCode(code);
+    toast.success("Coupon code copied!");
   };
 
   const clearCarts = () => {
@@ -201,59 +273,76 @@ export default function CheckoutPage() {
   };
 
   const buildOrderPayload = (): CreateOrderInput | null => {
-    const lines = cartItems
+    const orderItems = cartItems
       .map((it) => {
         const pidStr = it.productId;
         const p = productsData?.find((pr) => pr._id === pidStr);
         if (!p || !pidStr) {
           return null;
         }
-        const lineSub = it.totalAmount;
-        const lineTotal = lineSub;
-        const orderLine = {
+        
+        const itemSubTotal = it.totalAmount;
+        const tax = 0;
+        const discount = 0;
+        const itemTotal = itemSubTotal + tax - discount;
+        
+        const orderItem = {
+          user: 1,
           productInfo: pidStr,
-          trackingNumber: makeTracking(),
-          status: "pending",
           isCancelled: false,
-          quantity: num(it.quantity, 0),
-          totalQuantity: num(it.quantity, 0),
-          orderBy: "507f1f77bcf86cd799439011",
+          quantity: num(it.quantity, 1),
+          selectedPrice: it.unitPrice,
           totalAmount: {
-            subTotal: lineSub,
-            discount: 0,
-            total: lineTotal,
-            shipping: { name: "Free Shipping", type: "amount" },
+            subTotal: itemSubTotal,
+            tax,
+            shipping: { name: "Standard Shipping", type: "amount" as const },
+            discount,
+            total: itemTotal
           },
-          commission: { type: "fixed", value: 5, amount: 0 },
-        } as OrderLine;
-        return orderLine;
+          commission: {
+            isAddedToBalance: false,
+            type: "percentage" as const,
+            value: 5,
+            amount: itemTotal * 0.05
+          },
+          products: []
+        };
+        return orderItem;
       })
-      .filter((line) => !!line) as OrderLine[];
+      .filter((item) => !!item);
 
-    if (lines.length === 0) {
+    if (orderItems.length === 0) {
       toast.error("No valid items in cart.");
       return null;
     }
 
-    let grandTotal = lines.reduce(
-      (sum, l) => sum + num(l?.totalAmount?.total ?? 0),
-      0
-    );
-    if (promoApplied) {
-      grandTotal -= 5;
+    const totalQuantity = orderItems.reduce((sum, item) => sum + item.quantity, 0);
+    let grandTotal = orderItems.reduce((sum, item) => sum + item.totalAmount.total, 0);
+    
+    if (appliedCoupon) {
+      if (appliedCoupon.type === "percentage") {
+        grandTotal -= (grandTotal * appliedCoupon.discountAmount) / 100;
+      } else if (appliedCoupon.type === "fixed") {
+        grandTotal -= appliedCoupon.discountAmount;
+      }
     }
 
     const payload: CreateOrderInput = {
-      orderInfo: lines,
+      orderBy: "507f1f77bcf86cd799439011",
+      userRole: "customer" as const,
+      status: "pending" as const,
+      isCancelled: false,
+      totalQuantity,
+      orderInfo: orderItems,
       customerInfo: {
         firstName: formData.firstName,
         lastName: formData.lastName,
         phone: formData.phone,
         address: formData.address,
-        country: "Bangladesh",
+        country: formData.country,
       },
-      paymentInfo: paymentMethod === "cod" ? "cash-on" : paymentMethod,
-      totalAmount: grandTotal,
+      paymentInfo: "cash-on",
+      totalAmount: grandTotal
     };
     return payload;
   };
@@ -261,7 +350,6 @@ export default function CheckoutPage() {
   const handlePlaceOrder = async () => {
     if (!validateShippingForm() || !validatePaymentForm()) {
       setCurrentStep(1);
-      toast.error("Please fill in all required fields.");
       return;
     }
     if (cartItems.length === 0) {
@@ -270,21 +358,30 @@ export default function CheckoutPage() {
     }
     const finalOrder = buildOrderPayload();
     if (!finalOrder) return;
+    
     try {
       setCreateOrderLoading(true);
       const response = await createOrder(finalOrder as any).unwrap();
       clearCarts();
       setCurrentStep(1);
+      setAppliedCoupon(null);
+      setPromoCode("");
       setFormData({
         firstName: "",
         lastName: "",
+        email: "",
         phone: "",
         address: "",
+        city: "",
+        postalCode: "",
         country: "Bangladesh",
       });
-      toast.success("Order placed successfully!");
+      // Generate order ID from response or create a tracking ID
+      const generatedOrderId = response?._id || makeTracking();
+      setOrderId(generatedOrderId);
+      setShowThanksModal(true);
+      
     } catch (error) {
-
       toast.error(
         (error as any)?.data?.message || "Failed to place order. Please try again."
       );
@@ -319,6 +416,66 @@ export default function CheckoutPage() {
 
   // ---------- UI (unchanged structure) ----------
   return (
+    <>
+      {/* Thanks Modal */}
+      {showThanksModal && (
+        <div className="fixed inset-0 bg-opacity-50 backdrop-blur-xs flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-8 max-w-md mx-4 text-center shadow-2xl">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="w-8 h-8 text-green-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Order Placed Successfully!
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Your order has been placed successfully. We&apos;ll process it shortly.
+            </p>
+            
+            {/* Order ID Section */}
+            <div className="bg-gray-50 rounded-lg p-4 mb-6">
+              <p className="text-sm font-medium text-gray-700 mb-2">Order ID / Tracking ID</p>
+              <div className="flex items-center justify-between bg-white border rounded-lg p-3">
+                <span className="font-mono text-sm font-bold text-gray-900">{orderId}</span>
+                <Button
+                  onClick={() => {
+                    navigator.clipboard.writeText(orderId);
+                    toast.success('Order ID copied to clipboard!');
+                  }}
+                  variant="outline"
+                  size="sm"
+                  className="ml-2"
+                >
+                  <Copy className="w-4 h-4 mr-1" />
+                  Copy
+                </Button>
+              </div>
+              <p className="text-xs text-gray-500 mt-2">
+                Save this ID to track your order
+              </p>
+            </div>
+            
+            <div className="flex gap-3">
+              <Button
+                onClick={() => {
+                  setShowThanksModal(false);
+                  router.push('/product-listing');
+                }}
+                className="flex-1 bg-primary hover:bg-gray-300"
+              >
+                Continue Shopping
+              </Button>
+              <Button
+                onClick={() => setShowThanksModal(false)}
+                variant="outline"
+                className="flex-1"
+              >
+                Close
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+      
     <div className="min-h-screen bg-[#FFFFFF] py-4 md:py-8">
       <div className="w-full px-4 max-w-6xl mx-auto">
         {/* Header */}
@@ -326,13 +483,23 @@ export default function CheckoutPage() {
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6">
             Complete Your Order
           </h1>
-          {/* Progress Steps */}
-          <div className="flex items-center justify-center mb-6 md:mb-8">
+          {/* Progress Steps with Back Button */}
+          <div className="relative flex items-center justify-center mb-6 md:mb-8">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.push('/product-listing')}
+              className="absolute left-0 hidden lg:flex items-center text-gray-600 hover:text-gray-800 border-gray-300"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Shopping
+            </Button>
+            <div className="flex items-center">
             <div className="flex flex-col items-center w-24 md:w-32">
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${
                   currentStep >= 1
-                    ? "bg-orange-500 text-white"
+                    ? "bg-primary text-[#2e2e2e]"
                     : "bg-gray-200 text-gray-600"
                 }`}
               >
@@ -341,7 +508,7 @@ export default function CheckoutPage() {
               <span
                 className={`mt-2 text-xs md:text-sm ${
                   currentStep >= 1
-                    ? "text-orange-500 font-medium"
+                    ? "text-secondary font-medium"
                     : "text-gray-500"
                 }`}
               >
@@ -350,14 +517,14 @@ export default function CheckoutPage() {
             </div>
             <div
               className={`w-8 md:w-16 h-1 ${
-                currentStep >= 2 ? "bg-orange-500" : "bg-gray-300"
+                currentStep >= 2 ? "bg-primary" : "bg-gray-300"
               }`}
             />
             <div className="flex flex-col items-center w-24 md:w-32">
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${
                   currentStep >= 2
-                    ? "bg-orange-500 text-white"
+                    ? "bg-primary text-[#2e2e2e]"
                     : currentStep === 2
                     ? "border-2 border-orange-500 text-orange-500 bg-white"
                     : "bg-gray-200 text-gray-600"
@@ -368,7 +535,7 @@ export default function CheckoutPage() {
               <span
                 className={`mt-2 text-xs md:text-sm ${
                   currentStep >= 2
-                    ? "text-orange-500 font-medium"
+                    ? "text-secondary font-medium"
                     : "text-gray-500"
                 }`}
               >
@@ -377,14 +544,14 @@ export default function CheckoutPage() {
             </div>
             <div
               className={`w-8 md:w-16 h-1 ${
-                currentStep >= 3 ? "bg-orange-500" : "bg-gray-300"
+                currentStep >= 3 ? "bg-primary" : "bg-gray-300"
               }`}
             />
             <div className="flex flex-col items-center w-24 md:w-32">
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${
                   currentStep >= 3
-                    ? "bg-orange-500 text-white"
+                    ? "bg-primary text-[#2e2e2e]"
                     : currentStep === 3
                     ? "border-2 border-orange-500 text-orange-500 bg-white"
                     : "bg-gray-200 text-gray-600"
@@ -395,12 +562,13 @@ export default function CheckoutPage() {
               <span
                 className={`mt-2 text-xs md:text-sm ${
                   currentStep >= 3
-                    ? "text-orange-500 font-medium"
+                    ? "text-secondary font-medium"
                     : "text-gray-500"
                 }`}
               >
                 Review
               </span>
+            </div>
             </div>
           </div>
         </div>
@@ -440,6 +608,13 @@ export default function CheckoutPage() {
                               <p className="text-xs text-gray-600">
                                 ৳{item.unitPrice.toFixed(2)} each
                               </p>
+                              {(item.size || item.color) && (
+                                <p className="text-xs text-gray-500">
+                                  {item.size && <span>Size: {item.size.toUpperCase()}</span>}
+                                  {item.size && item.color && <span> • </span>}
+                                  {item.color && <span>Color: {item.color}</span>}
+                                </p>
+                              )}
                             </div>
                             <div className="flex items-center space-x-2">
                               <Button
@@ -545,28 +720,25 @@ export default function CheckoutPage() {
                         )}
                       </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                      {/* Phone */}
-                      <div>
-                        <Label htmlFor="phone" className="text-sm font-medium">
-                          Phone
-                        </Label>
-                        <Input
-                          required
-                          id="phone"
-                          type="tel"
-                          value={formData.phone}
-                          onChange={handleInputChange}
-                          className={`mt-1 ${
-                            formErrors.phone ? "border-red-500" : ""
-                          }`}
-                        />
-                        {formErrors.phone && (
-                          <p className="mt-1 text-xs text-red-500">
-                            {formErrors.phone}
-                          </p>
-                        )}
-                      </div>
+                    <div>
+                      <Label htmlFor="phone" className="text-sm font-medium">
+                        Phone
+                      </Label>
+                      <Input
+                        required
+                        id="phone"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        className={`mt-1 ${
+                          formErrors.phone ? "border-red-500" : ""
+                        }`}
+                      />
+                      {formErrors.phone && (
+                        <p className="mt-1 text-xs text-red-500">
+                          {formErrors.phone}
+                        </p>
+                      )}
                     </div>
                     {/* Address */}
                     <div>
@@ -588,6 +760,7 @@ export default function CheckoutPage() {
                         </p>
                       )}
                     </div>
+
                   </div>
                 </>
               ) : currentStep === 2 ? (
@@ -683,10 +856,10 @@ export default function CheckoutPage() {
                     <div className="rounded-lg border bg-gray-50 p-6 text-center animate-in fade-in duration-300">
                       <Truck className="w-8 h-8 mx-auto text-gray-500 mb-2" />
                       <p className="text-sm font-medium text-gray-800 mb-2">
-                        bKash Number: 01712345678
+                        bKash Number: +8801909008004
                       </p>
                       <p className="text-xs text-gray-500">
-                        Send money to this number and call admin at 01812345678
+                        Send money to this number and call admin at +8801909008004
                         to confirm your payment.
                       </p>
                     </div>
@@ -695,10 +868,10 @@ export default function CheckoutPage() {
                     <div className="rounded-lg border bg-gray-50 p-6 text-center animate-in fade-in duration-300">
                       <Truck className="w-8 h-8 mx-auto text-gray-500 mb-2" />
                       <p className="text-sm font-medium text-gray-800 mb-2">
-                        Nagad Number: 01912345678
+                        Nagad Number: +8801909008004
                       </p>
                       <p className="text-xs text-gray-500">
-                        Send money to this number and call admin at 01812345678
+                        Send money to this number and call admin at +8801909008004
                         to confirm your payment.
                       </p>
                     </div>
@@ -799,6 +972,13 @@ export default function CheckoutPage() {
                                     </p>
                                     <p className="text-xs text-gray-600">
                                       Qty: {num(item.quantity, 1)}
+                                      {(item.size || item.color) && (
+                                        <span className="ml-2">
+                                          {item.size && <span>• Size: {item.size.toUpperCase()}</span>}
+                                          {item.size && item.color && <span> </span>}
+                                          {item.color && <span>• Color: {item.color}</span>}
+                                        </span>
+                                      )}
                                     </p>
                                   </div>
                                   <div className="text-right">
@@ -830,7 +1010,7 @@ export default function CheckoutPage() {
                 <Button
                   type="button"
                   onClick={handleNextStepOrSubmit}
-                  className="bg-orange-500 hover:bg-orange-600 h-10 px-5 text-sm"
+                  className="bg-primary hover:bg-gray-300 h-10 px-5 text-sm"
                   disabled={createOrderLoading || cartItems.length === 0}
                 >
                   {createOrderLoading ? `Creating Order...` : nextCtaText}
@@ -848,11 +1028,20 @@ export default function CheckoutPage() {
                   <span className="text-gray-600">Subtotal</span>
                   <span className="text-gray-900">৳{subTotal.toFixed(2)}</span>
                 </div>
-
-                {promoApplied && (
+                {/* <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Shipping</span>
+                  <span className="text-green-600">Free</span>
+                </div> */}
+                {appliedCoupon && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Discount</span>
-                    <span className="text-green-600">-৳5.00</span>
+                    <span className="text-gray-600">
+                      {appliedCoupon.type === "free-shipping" ? "Free Shipping" : "Discount"}
+                    </span>
+                    <span className="text-green-600">
+                      {appliedCoupon.type === "free-shipping" 
+                        ? "Free" 
+                        : `-৳${discount.toFixed(2)}`}
+                    </span>
                   </div>
                 )}
                 <div className="border-t pt-3">
@@ -872,51 +1061,141 @@ export default function CheckoutPage() {
                   Secure SSL encrypted checkout
                 </span>
               </div>
-
+              {/* Free Shipping Notice */}
+              {/* <div className="rounded-lg bg-blue-50 p-3 mb-4">
+                <p className="text-xs text-blue-800 flex items-center">
+                  <Truck className="w-3 h-3 mr-1" />
+                  Free shipping on orders over ৳50!
+                </p>
+              </div> */}
+              {/* Available Coupons */}
+              {couponsData && couponsData.length > 0 && (
+                <div className="border-t pt-4 mb-4">
+                  <p className="text-sm font-medium text-gray-900 mb-3 flex items-center">
+                    <Tag className="w-4 h-4 mr-2 text-orange-500" />
+                    Available Coupons
+                  </p>
+                  <div className="space-y-2 max-h-32 overflow-y-auto">
+                    {couponsData
+                      .filter((coupon: Coupon) => coupon.isApproved)
+                      .map((coupon: Coupon) => {
+                        const isEligible = subTotal >= coupon.minimumPurchaseAmount;
+                        const isExpired = new Date(coupon.expireDate) < new Date();
+                        return (
+                          <div
+                            key={coupon._id}
+                            className={`p-2 rounded-lg border text-xs ${
+                              isEligible && !isExpired
+                                ? "border-green-200 bg-green-50"
+                                : "border-gray-200 bg-gray-50"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-mono font-bold text-orange-600">
+                                    {coupon.code}
+                                  </span>
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => copyCouponCode(coupon.code)}
+                                    className="h-5 w-5 p-0 hover:bg-orange-100"
+                                  >
+                                    <Copy className="w-3 h-3" />
+                                  </Button>
+                                </div>
+                                <p className="text-gray-600 mt-1">{coupon.description}</p>
+                                <p className="text-gray-500 mt-1">
+                                  {coupon.type === "free-shipping"
+                                    ? "Free shipping"
+                                    : coupon.type === "percentage"
+                                    ? `${coupon.discountAmount}% off`
+                                    : `৳${coupon.discountAmount} off`}
+                                  {" • Min: ৳"}{coupon.minimumPurchaseAmount}
+                                </p>
+                              </div>
+                              {!isEligible && (
+                                <span className="text-red-500 text-xs">
+                                  Need ৳{(coupon.minimumPurchaseAmount - subTotal).toFixed(2)} more
+                                </span>
+                              )}
+                              {isExpired && (
+                                <span className="text-red-500 text-xs">Expired</span>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
+              )}
+              
               {/* Promo Code */}
               <div className="border-t pt-4">
                 <p className="text-sm font-medium text-gray-900 mb-2">
-                  Have a promo code?
+                  Apply Coupon Code
                 </p>
-                <div className="flex flex-col md:flex-row gap-2">
-                  <Input
-                    placeholder="Enter code"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value)}
-                    className="flex-1"
-                    disabled={promoApplied}
-                  />
-                  <Button
-                    type="button"
-                    onClick={applyPromoCode}
-                    className="bg-gray-800 hover:bg-gray-900 h-11 md:h-12 w-full md:w-auto"
-                    disabled={promoApplied}
-                  >
-                    {promoApplied ? "Applied" : "Apply"}
-                  </Button>
-                </div>
-                {/* Mobile controls */}
-                <div className="mt-4 flex justify-end flex-col md:hidden gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={handleBackClick}
-                    className="bg-transparent text-gray-700 border-gray-300 h-12 w-full"
-                    disabled={currentStep === 1}
-                  >
-                    <ArrowLeft className=" mr-2" />
-                    {currentStep === 2 ? "Back to Shipping" : "Back to Payment"}
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={handleNextStepOrSubmit}
-                    className="bg-orange-500 hover:bg-orange-600 px-6 py-2 h-12 w-full"
-                    disabled={createOrderLoading || cartItems.length === 0}
-                  >
-                    {createOrderLoading ? `Creating Order...` : nextCtaText}
-                    {currentStep < 3 && <ArrowRight className=" ml-2" />}
-                  </Button>
-                </div>
+                {appliedCoupon ? (
+                  <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <div>
+                      <p className="text-sm font-medium text-green-800">
+                        {appliedCoupon.code} Applied
+                      </p>
+                      <p className="text-xs text-green-600">
+                        {appliedCoupon.description}
+                      </p>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={removeCoupon}
+                      className="text-red-600 hover:text-red-800 hover:bg-red-50"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex flex-col md:flex-row gap-2">
+                    <Input
+                      placeholder="Enter coupon code"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                      className="flex-1 h-10"
+                    />
+                    <Button
+                      type="button"
+                      onClick={applyPromoCode}
+                      className="bg-primary hover:bg-gray-400 h-10 w-full md:w-auto px-4"
+                    >
+                      Apply
+                    </Button>
+                  </div>
+                )}
+              </div>
+              {/* Mobile controls */}
+              <div className="mt-4 flex justify-end flex-col md:hidden gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleBackClick}
+                  className="bg-transparent text-gray-700 border-gray-300 h-12 w-full"
+                  disabled={currentStep === 1}
+                >
+                  <ArrowLeft className=" mr-2" />
+                  {currentStep === 2 ? "Back to Shipping" : "Back to Payment"}
+                </Button>
+                <Button
+                  type="button"
+                  onClick={handleNextStepOrSubmit}
+                  className="bg-primary hover:bg-orange-600 px-6 py-2 h-12 w-full"
+                  disabled={createOrderLoading || cartItems.length === 0}
+                >
+                  {createOrderLoading ? `Creating Order...` : nextCtaText}
+                  {currentStep < 3 && <ArrowRight className=" ml-2" />}
+                </Button>
               </div>
             </div>
             {/* End Right Column */}
@@ -924,5 +1203,6 @@ export default function CheckoutPage() {
         </form>
       </div>
     </div>
+    </>
   );
 }

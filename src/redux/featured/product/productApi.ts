@@ -2,7 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { baseApi } from "@/redux/api/baseApi";
-import { IOrder } from "@/types/order";
 import type { IProduct } from "@/types/product";
 
 // --- Common API response shape ---
@@ -91,8 +90,8 @@ const dynamicProductFilter = (
 // --- API ---
 export const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getAllProducts: builder.query<IProduct[], void>({
-      query: () => ({ url: "/product", method: "GET" }),
+    getAllProducts: builder.query<IProduct[], { page?: number }>({
+      query: ({ page = 1 } = {}) => ({ url: `/product?page=${page}`, method: "GET" }),
       transformResponse: (res: ApiResponse<IProduct[]>) => res.data,
       providesTags: (result) =>
         result
@@ -182,19 +181,7 @@ export const productApi = baseApi.injectEndpoints({
       keepUnusedDataFor: 15,
     }),
 
-    // (অ্যাডমিন/অর্ডার)
-    getAllOrders: builder.query<IOrder[], void>({
-      query: () => ({ url: "/order", method: "GET" }),
-      transformResponse: (res: { data: IOrder[] }) => res.data,
-      providesTags: (result) =>
-        result
-          ? [
-              { type: "Order" as const, id: "LIST" },
-              ...result.map((o) => ({ type: "Order" as const, id: o._id })),
-            ]
-          : [{ type: "Order" as const, id: "LIST" }],
-      keepUnusedDataFor: 120,
-    }),
+
   }),
 
   overrideExisting: false,
@@ -209,5 +196,4 @@ export const {
   useGetDiscountedProductsQuery,
   useGetTodaysDealsQuery,
   useGetTopReviewedProductsQuery,
-  useGetAllOrdersQuery,
 } = productApi;

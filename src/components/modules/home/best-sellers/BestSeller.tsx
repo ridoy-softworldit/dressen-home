@@ -8,7 +8,7 @@ import { useGetAllProductsQuery } from "@/redux/featured/product/productApi";
 import { TagShape } from "@/types/product"; // আপনার existing TagShape type import করুন
 
 const BestSeller = () => {
-  const { data } = useGetAllProductsQuery();
+  const { data } = useGetAllProductsQuery({ page: 1 });
 
   // Filter products that have "Best Selling" tag
   const bestSellerProducts = React.useMemo(() => {
@@ -32,7 +32,7 @@ const BestSeller = () => {
       <>
         <SectionHeader title="Best Sellers" />
         <div className="flex justify-center items-center py-20">
-          <div className="text-lg text-gray-500">No best seller products found</div>
+          <div className="text-lg text-secondary/60">No best seller products found</div>
         </div>
       </>
     );
@@ -57,7 +57,7 @@ const BestSeller = () => {
       <div className="flex justify-center mt-10">
         <Button
           className="py-6 xl:py-7 !px-5 xl:!px-8 rounded-[12px] text-base border
-           border-[#E5E7EB] w-full md:w-fit md:border-[#181919]"
+           border-neutral w-full md:w-fit md:border-secondary"
           variant={"outline"}
         >
           Go To Collection <ChevronRight />

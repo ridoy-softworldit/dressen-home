@@ -5,12 +5,9 @@ interface PersistStorage {
 }
 
 const createNoopStorage = (): PersistStorage => ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getItem: async (key: string): Promise<string | null> => null,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  setItem: async (key: string, value: string): Promise<void> => {},
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  removeItem: async (key: string): Promise<void> => {},
+  getItem: async (): Promise<string | null> => null,
+  setItem: async (): Promise<void> => {},
+  removeItem: async (): Promise<void> => {},
 });
 
 const createBrowserStorage = (): PersistStorage => {
@@ -24,7 +21,7 @@ const createBrowserStorage = (): PersistStorage => {
     getItem: async (key: string): Promise<string | null> => {
       try {
         return window.localStorage.getItem(key);
-      } catch (error) {
+      } catch {
         return null;
       }
     },
@@ -32,13 +29,13 @@ const createBrowserStorage = (): PersistStorage => {
     setItem: async (key: string, value: string): Promise<void> => {
       try {
         window.localStorage.setItem(key, value);
-      } catch (error) {}
+      } catch {}
     },
 
     removeItem: async (key: string): Promise<void> => {
       try {
         window.localStorage.removeItem(key);
-      } catch (error) {}
+      } catch {}
     },
   };
 };

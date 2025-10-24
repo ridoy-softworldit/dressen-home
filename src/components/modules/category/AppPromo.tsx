@@ -10,7 +10,7 @@ const AppPromo = () => {
     >
       {/* Left Content */}
       <div className="max-w-lg text-center md:text-left">
-        <p className="text-lg lg:text-xl opacity-90">The Mega Bazar App</p>
+        <p className="text-lg lg:text-xl opacity-90">The Dressen App</p>
         <h2 className="text-2xl lg:text-3xl font-semibold mt-2">
           Share your ideas & shop <br /> endless Inspiration
         </h2>
@@ -40,7 +40,7 @@ const AppPromo = () => {
       <div className="flex-shrink-0 mt-10 lg:mt-12">
         <div className="relative w-[300px] lg:w-[362px] h-[282px] lg:h-[354px]">
           <Image
-            src="/app 1.png"
+            src="/Dressenmobileapp.png"
             alt="App Mockup"
             fill
             className="object-contain"

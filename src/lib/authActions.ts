@@ -17,7 +17,7 @@ export function useAuthHandlers() {
     password: string;
   }) => {
     try {
-      const res = await registerUser(data).unwrap();
+      await registerUser(data).unwrap();
       toast.success("Registration successful!");
     } catch (err: any) {
       throw new Error(err?.data?.message || "Registration failed");

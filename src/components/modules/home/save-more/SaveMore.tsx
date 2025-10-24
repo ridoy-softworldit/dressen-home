@@ -13,16 +13,16 @@ const SaveMore = () => {
               key={index}
               className="flex flex-col items-center text-center px-3 md:border-r 
               last:border-r-0 last:px-0 first:px-0 first:pr-3 last:pl-3 border-r-0
-               border-gray-200"
+               border-neutral"
             >
               <Icon
-                className={`w-12 h-12 mb-4 ${data.iconColor || "text-black"}`}
+                className={`w-12 h-12 mb-4 ${data.iconColor || "text-primary"}`}
                 strokeWidth={1.8}
               />
-              <h3 className="font-semibold text-sm lg:text-xl mb-3">
+              <h3 className="font-semibold text-sm lg:text-xl mb-3 text-secondary">
                 {data.title}
               </h3>
-              <p className="opacity-60 text-[10px] lg:text-base">
+              <p className="text-secondary/60 text-[10px] lg:text-base">
                 {data.description}
               </p>
             </div>

@@ -18,6 +18,8 @@ import {
   useGetAllCategoryQuery,
   type RemoteCategory,
 } from "@/redux/featured/category/categoryApi";
+import { useGetSettingsQuery } from "@/redux/featured/settings/settingsApi";
+import Image from "next/image";
 
 // 🔐 auth + cart selectors & logout
 import { useAppSelector } from "@/redux/hooks";
@@ -66,6 +68,8 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [guestCartCount, setGuestCartCount] = useState(0);
+  const [isClient, setIsClient] = useState(false);
+  const { data: settings } = useGetSettingsQuery();
 
   const router = useRouter();
   const cartCount = useAppSelector(selectCartCount);
@@ -75,13 +79,12 @@ export default function Navbar() {
   const isLoggedIn = Boolean(currentUser?.id);
 
   useEffect(() => {
+    setIsClient(true);
     if (!isLoggedIn) {
       const cart = getLocalCart();
       setGuestCartCount(cart.reduce((acc, item) => acc + item.quantity, 0));
     }
   }, [isLoggedIn]);
-
-  const effectiveCartCount = isLoggedIn ? cartCount : guestCartCount;
 
   const cartItems = useAppSelector(selectCartItems);
   // Fetch categories from API
@@ -124,19 +127,24 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16">
             {/* Logo + Title */}
             <div className="flex items-center space-x-3 flex-shrink-0">
-              {/* <Image
-                src="/logo.svg"
-                alt="Dressen Home"
-                width={36}
-                height={36}
-                className="rounded"
-              /> */}
               <Link
                 href="/"
-                className="font-extrabold text-3xl text-[#785706] cursor-pointer hover:text-secondary/80 transition-colors"
+                className="flex items-center"
                 aria-label="Go to homepage"
               >
-                Dressen
+                {settings?.logo ? (
+                  <Image
+                    src={settings.logo}
+                    alt="Dressen Logo"
+                    width={120}
+                    height={40}
+                    className="h-10 w-auto"
+                  />
+                ) : (
+                  <span className="font-extrabold text-3xl text-primary">
+                    Dressen
+                  </span>
+                )}
               </Link>
             </div>
 
@@ -155,7 +163,7 @@ export default function Navbar() {
             <div className="flex items-center gap-3 flex-shrink-0">
               <Link
                 href="/contact-us"
-                className="inline-flex items-center text-secondary gap-2 px-3 py-2 rounded-md border border-neutral hover:bg-highlight/90 bg-highlight transition-all duration-200"
+                className="inline-flex items-center text-accent gap-2 px-3 py-2 rounded-md border border-neutral hover:bg-secondary bg-primary"
                 aria-label="contact"
               >
                 <Headphones size={18} />
@@ -163,12 +171,12 @@ export default function Navbar() {
 
               <Link
                 href="/dashboard/checkout"
-                className="relative inline-flex items-center justify-center h-10 w-10 rounded-md border border-neutral hover:bg-accent/50 text-secondary"
+                className="relative inline-flex items-center justify-center h-10 w-10 rounded-md border border-neutral hover:bg-primary hover:text-secondary"
                 aria-label="cart"
               >
                 <ShoppingCart size={18} />
-                {typeof window !== 'undefined' && cartItems.length > 0 && (
-                  <span className="absolute -top-2 -right-2 h-5 min-w-5 px-1 rounded-full text-xs bg-orange-500 text-white flex items-center justify-center">
+                {isClient && cartItems.length > 0 && (
+                  <span className="absolute -top-2 -right-2 h-5 min-w-5 px-1 rounded-full text-xs bg-secondary text-accent flex items-center justify-center">
                     {cartItems.length}
                   </span>
                 )}
@@ -201,27 +209,39 @@ export default function Navbar() {
       </div>
 
       {/* ===== Mobile/Small Screen ===== */}
-      <div className="lg:hidden bg-primary text-secondary w-full">
+      <div className="lg:hidden bg-primary text-accent w-full">
         <div className="container mx-auto px-4 py-3">
           {/* Normal State */}
           {!isSearchActive && (
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <button
-                  className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+                  className="p-2 rounded-lg bg-accent/10 hover:bg-accent/20 transition-colors"
                   aria-label="Menu"
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
                 >
                   <Menu size={20} />
                 </button>
-                <Link href="/" className="font-bold text-xl text-secondary">
-                  Dressen
+                <Link href="/" className="flex items-center">
+                  {/* {settings?.logo ? (
+                    <Image
+                      src={settings.logo}
+                      alt="Dressen Logo"
+                      width={80}
+                      height={32}
+                      className="h-8 w-auto"
+                    />
+                  ) : ( */}
+                    <span className="font-bold text-xl text-accent">
+                      Dressen
+                    </span>
+                  {/* )} */}
                 </Link>
               </div>
 
               <div className="flex items-center gap-2">
                 <button
-                  className="p-2 rounded-lg bg-white text-black hover:bg-white/90 transition-colors"
+                  className="p-2 rounded-lg bg-accent text-secondary hover:bg-accent/90 transition-colors"
                   aria-label="Search"
                   onClick={() => setIsSearchActive(true)}
                 >
@@ -230,7 +250,7 @@ export default function Navbar() {
 
                 <Link
                   href="/contact-us"
-                  className="p-2 rounded-lg bg-white text-black hover:bg-white/90 transition-colors"
+                  className="p-2 rounded-lg bg-accent text-secondary hover:bg-accent/90 transition-colors"
                   aria-label="Contact"
                 >
                   <Phone size={18} />
@@ -238,13 +258,13 @@ export default function Navbar() {
 
                 <Link
                   href="/dashboard/checkout"
-                  className="relative p-2 rounded-lg bg-white text-black hover:bg-white/90 transition-colors"
+                  className="relative p-2 rounded-lg bg-accent text-secondary hover:bg-accent/90 transition-colors"
                   aria-label="Cart"
                 >
                   <ShoppingCart size={18} />
-                  {effectiveCartCount > 0 && (
-                    <span className="absolute -top-1 -right-1 h-4 min-w-4 px-1 rounded-full text-xs bg-orange-500 text-white flex items-center justify-center">
-                      {effectiveCartCount}
+                  {isClient && cartItems.length > 0 && (
+                    <span className="absolute -top-1 -right-1 h-4 min-w-4 px-1 rounded-full text-xs bg-secondary text-accent flex items-center justify-center">
+                      {cartItems.length}
                     </span>
                   )}
                 </Link>
@@ -252,7 +272,7 @@ export default function Navbar() {
                 {!isLoggedIn ? (
                   <Link
                     href="/auth/login"
-                    className="p-2 rounded-lg bg-white text-black hover:bg-white/90 transition-colors"
+                    className="p-2 rounded-lg bg-accent text-secondary hover:bg-accent/90 transition-colors"
                     aria-label="Login/Register"
                   >
                     <UserIcon size={18} />
@@ -263,7 +283,7 @@ export default function Navbar() {
                     onClick={handleLogout}
                     aria-label="Logout"
                     disabled={isLogoutLoading}
-                    className="p-2 rounded-lg bg-white text-black hover:bg-white/90 transition-colors disabled:opacity-60"
+                    className="p-2 rounded-lg bg-accent text-secondary hover:bg-accent/90 transition-colors disabled:opacity-60"
                   >
                     <LogOut size={18} />
                   </button>
@@ -277,7 +297,7 @@ export default function Navbar() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsSearchActive(false)}
-                className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors flex-shrink-0"
+                className="p-2 rounded-lg bg-accent/10 hover:bg-accent/20 transition-colors flex-shrink-0"
                 aria-label="Close search"
               >
                 <Menu size={20} />
@@ -303,11 +323,11 @@ export default function Navbar() {
 
           {/* Categories Menu */}
           {isMenuOpen && !isSearchActive && (
-            <div className="mt-3 bg-white/10 rounded-lg p-3">
+            <div className="mt-3 bg-accent/10 rounded-lg p-3">
               <nav className="space-y-2">
                 <Link
                   href="/product-listing"
-                  className="block py-2 px-3 hover:bg-white/10 rounded transition-colors"
+                  className="block py-2 px-3 hover:bg-accent/10 rounded transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   All Categories
@@ -317,7 +337,7 @@ export default function Navbar() {
                   <Link
                     key={category.id}
                     href={`/products?category=${category.slug ?? category.id}`}
-                    className="block py-2 px-3 hover:bg-white/10 rounded transition-colors"
+                    className="block py-2 px-3 hover:bg-accent/10 rounded transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {category.label}

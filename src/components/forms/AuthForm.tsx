@@ -34,16 +34,6 @@ export default function AuthForm({ type }: AuthFormProps) {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleGoogleSignIn = async () => {
-    // Force Google to show account selection
-    await signIn("google", {
-      callbackUrl: "/",
-      redirect: true
-    }, {
-      prompt: "select_account consent"
-    });
-  };
-
   const onSubmit = async (data: FormData) => {
     setError("");
     try {
@@ -67,11 +57,11 @@ export default function AuthForm({ type }: AuthFormProps) {
       <Link href={"/"}>
         <div className="flex justify-center">
           {/* <Image src="/logo.png" alt="logo" width={100} height={100} /> */}
-          <h1 className="bg-base lg:text-3xl font-bold text-xl">Dressen</h1>
+          <h1 className="text-primary lg:text-3xl font-bold text-xl">Dressen</h1>
         </div>
       </Link>
       <h2 className="my-6 capitalize text-center">{type} to dashboard</h2>
-      <div className=" bg-white border  px-5 py-5 border-gray-300 rounded-lg text-black">
+      <div className=" bg-accent border  px-5 py-5 border-neutral rounded-lg text-secondary">
         {/* form */}
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           {type === "register" && (
@@ -112,7 +102,7 @@ export default function AuthForm({ type }: AuthFormProps) {
           {/* Remember me & Forgot password */}
           <div className="flex justify-between items-center text-sm">
             <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-black" />
+              <input type="checkbox" className="accent-primary" />
               Remember me
             </label>
             <Link href="#" className="hover:underline">
@@ -120,18 +110,18 @@ export default function AuthForm({ type }: AuthFormProps) {
             </Link>
           </div>
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {error && <p className="text-error text-sm">{error}</p>}
           {/* submit btn  */}
           <Button type="submit" className="w-full">
             {type === "register" ? "Register" : "Login"}
           </Button>
           {/* google login */}
           <div className="flex flex-col items-center gap-4 mt-4">
-            <hr className="w-full border-gray-300" />
+            <hr className="w-full border-neutral" />
             <Button
               variant={"outline"}
               type="button"
-              onClick={handleGoogleSignIn}
+              onClick={() => signIn("google", { callbackUrl: "/" })}
               className="justify-center rounded-full"
             >
               <Image src="/google.png" alt="logo" width={20} height={20} />

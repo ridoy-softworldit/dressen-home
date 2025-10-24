@@ -29,7 +29,7 @@ const Sidebar: React.FC = () => {
     <>
       {/* Mobile menu button */}
       <button
-        className="md:hidden fixed top-4 left-4 z-50 rounded-lg mb-8 bg-gray-900 p-2 text-white"
+        className="md:hidden fixed top-4 left-4 z-50 rounded-lg mb-8 bg-gray-900 p-2 text-[#2e2e2e]"
         onClick={() => setOpen(true)}
       >
         <Menu size={20} />

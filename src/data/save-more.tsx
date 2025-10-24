@@ -23,6 +23,6 @@ export const saveMoreData = [
     title: "1K+Products Priced at cost",
     description:
       "If you don't make your membership fee in savings, we'll refund the difference",
-    iconColor: "fill-[#2D264B] text-white",
+    iconColor: "fill-[#2D264B] text-[#2e2e2e]",
   },
 ];

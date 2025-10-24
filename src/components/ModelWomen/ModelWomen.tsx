@@ -37,7 +37,7 @@ export default function ModelWomen() {
               <p className="text-gray-600 text-xs sm:text-sm mb-5 sm:mb-6">Holiday Bit</p>
 
               <Button
-                className="bg-gray-900 hover:bg-gray-800 text-white px-5 py-2 sm:px-7 sm:py-2.5 rounded-md"
+                className="bg-gray-900 hover:bg-gray-800 text-[#2e2e2e] px-5 py-2 sm:px-7 sm:py-2.5 rounded-md"
                 aria-label="Get discount"
               >
                 Get Discount

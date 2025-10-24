@@ -79,7 +79,7 @@ export default function CloudinaryUploader({ onUpload }: CloudinaryUploaderProps
       <button
         onClick={uploadImage}
         disabled={!file || uploading}
-        className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50"
+        className="mt-3 px-4 py-2 bg-blue-600 text-[#2e2e2e] rounded-lg disabled:opacity-50"
       >
         {uploading ? "Uploading..." : "Upload"}
       </button>
