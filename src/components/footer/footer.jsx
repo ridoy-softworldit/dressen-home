@@ -205,7 +205,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="https://admin.dressen.com/auth/login"
+                  href="https://dressen-admin-panel-gamma.vercel.app/auth/login"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-black transition-colors"
