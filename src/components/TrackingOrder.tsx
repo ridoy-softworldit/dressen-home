@@ -74,7 +74,7 @@ export default function TrackingOrder() {
     
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:5000/api/v1/order/track/${trackingInput}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/order/track/${trackingInput}`);
       const result = await response.json();
       
       if (result.success) {

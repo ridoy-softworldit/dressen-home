@@ -357,7 +357,7 @@ export default function CheckoutPage() {
         postalCode: formData.postalCode,
         country: formData.country,
       },
-      paymentInfo: paymentMethod === "cod" ? "cash-on" : paymentMethod,
+      paymentInfo: paymentMethod === "cod" ? "cash-on" : { method: paymentMethod },
       totalAmount: grandTotal
     };
     return payload;
