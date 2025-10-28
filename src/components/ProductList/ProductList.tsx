@@ -217,10 +217,7 @@ export default function ProductListing() {
   const totalItems = paginatedData?.pagination?.totalItems || 0;
   
   // Debug logging
-  console.log('Paginated Data:', paginatedData);
-  console.log('API Products:', apiProducts);
-  console.log('Has Next Page:', hasNextPage);
-  console.log('Total Items:', totalItems);
+
   // categories from API
   const { data: apiCategories } = useGetAllCategoryQuery();
 

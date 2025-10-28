@@ -203,7 +203,7 @@ export default function Navbar() {
       </div>
 
       {/* ===== Mobile/Small Screen ===== */}
-      <div className="lg:hidden bg-primary text-accent w-full">
+      <div className="lg:hidden sticky top-0 z-30 bg-primary text-accent w-full">
         <div className="container mx-auto px-4 py-3">
           {/* Normal State */}
           {!isSearchActive && (

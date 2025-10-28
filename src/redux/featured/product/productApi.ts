@@ -139,7 +139,7 @@ export const productApi = baseApi.injectEndpoints({
         return { url: `/product?${params.toString()}`, method: "GET" };
       },
       transformResponse: (res: BackendPaginatedResponse<IProduct>, meta, arg): PaginatedResponse<IProduct> => {
-        console.log('Raw API Response:', res);
+       
         
         // If no meta, create pagination based on data length and current page
         const currentPage = arg.page || 1;
