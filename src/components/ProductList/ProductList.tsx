@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ChevronDown, ChevronUp, ShoppingCart, Filter, X } from "lucide-react"
 import Image from "next/image"
-import { useGetAllProductsQuery } from "@/redux/featured/product/productApi"
+import { useGetPaginatedProductsQuery } from "@/redux/featured/product/productApi"
 import { useGetAllCategoryQuery } from "@/redux/featured/category/categoryApi"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import { addToCart, selectCartItems } from "@/redux/featured/cart/cartSlice"
@@ -196,17 +196,31 @@ export default function ProductListing() {
   });
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // RTK Query
+  // RTK Query with Load More
   const {
-    data: apiProducts,
+    data: paginatedData,
     isLoading: apiIsLoading,
     isError: apiIsError,
-  } = useGetAllProductsQuery({ page: currentPage });
+    isFetching,
+  } = useGetPaginatedProductsQuery({ 
+    page: currentPage, 
+    limit: 10,
+    search: searchQuery 
+  });
 
-  // For now, assume 10 products per page and calculate pagination from product count
-  const totalProducts = apiProducts?.length || 0;
-  const totalPages = Math.ceil(totalProducts / 10) || 1;
+  const apiProducts = useMemo(() => {
+    return paginatedData?.data || [];
+  }, [paginatedData?.data]);
+  const hasNextPage = paginatedData?.pagination?.hasNextPage || false;
+  const totalItems = paginatedData?.pagination?.totalItems || 0;
+  
+  // Debug logging
+  console.log('Paginated Data:', paginatedData);
+  console.log('API Products:', apiProducts);
+  console.log('Has Next Page:', hasNextPage);
+  console.log('Total Items:', totalItems);
   // categories from API
   const { data: apiCategories } = useGetAllCategoryQuery();
 
@@ -221,23 +235,16 @@ export default function ProductListing() {
     return "";
   };
 
-  // Pagination handlers
-  const goToPage = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Load More handler
+  const handleLoadMore = () => {
+    if (hasNextPage && !isFetching) {
+      setCurrentPage(prev => prev + 1);
+    }
   };
 
-  const goToPrevious = () => {
-    if (currentPage > 1) goToPage(currentPage - 1);
-  };
-
-  const goToNext = () => {
-    if (currentPage < totalPages) goToPage(currentPage + 1);
-  };
-
-  // map API products to local Product shape; no fallback
+  // map API products to local Product shape; use fallback if no API data
   const sourceProducts: Product[] = useMemo(() => {
-    if (!apiProducts?.length) return [];
+    if (!apiProducts?.length) return products; // Use fallback products if no API data
 
     return apiProducts.map((prod: RemoteProduct) => {
       // create a local typed view for fields that are missing in RemoteProduct
@@ -404,11 +411,13 @@ export default function ProductListing() {
         : prev[filterType].filter((item) => item !== value),
     }));
     
-    // Reset pagination when filters change
+    // Reset to first page when filters change
     setCurrentPage(1);
-    
-    // Scroll to top when filter changes
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    setCurrentPage(1);
   };
 
   const clearAll = () => {
@@ -542,16 +551,33 @@ export default function ProductListing() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto max-w-screen-2xl w-full px-4 sm:px-6 lg:px-8 py-6">
+        {/* Search Bar */}
+        <div className="mb-4">
+          <div className="relative max-w-md">
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+        </div>
+
         {/* Top row (mobile: stacked) */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
           <p className="text-sm text-gray-600">
-            Showing{" "}
-            <span className="font-medium">{filteredProducts.length}</span> of{" "}
-            <span className="font-medium">{totalProducts}</span> products
-            {totalPages > 1 && (
-              <span className="ml-2">
-                (Page {currentPage} of {totalPages})
-              </span>
+            {isAnyFilterActive ? (
+              <>
+                Showing{" "}
+                <span className="font-medium">{filteredProducts.length}</span> filtered of{" "}
+                <span className="font-medium">{totalItems}</span> total products
+              </>
+            ) : (
+              <>
+                Showing{" "}
+                <span className="font-medium">{totalItems}</span> products
+              </>
             )}
           </p>
 
@@ -692,7 +718,7 @@ export default function ProductListing() {
 
           {/* Product Grid: 1 → 2 → 3 columns */}
           <main className="flex-1">
-            {apiIsLoading ? (
+            {apiIsLoading && currentPage === 1 ? (
               <div className="bg-white border rounded-lg p-8 text-center">
                 Loading products...
               </div>
@@ -707,124 +733,91 @@ export default function ProductListing() {
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-                {filteredProducts.map((product) => (
-                  <Link
-                    key={product.id}
-                    href={`/product-details?id=${product.id}`}
-                    className="group"
-                    aria-label={`View details for ${product.name}`}
-                    style={{ willChange: "transform, box-shadow" }}
-                  >
-                    <Card className="bg-white shadow-md transform-gpu transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg">
-                      <CardContent className="p-0">
-                        <div className="relative">
-                          {/* Square card media for consistency */}
-                          <div
-                            className="w-full aspect-square overflow-hidden rounded-t-lg"
-                            style={{
-                              willChange: "transform",
-                              transform: "translateZ(0)",
-                              backfaceVisibility: "hidden",
-                            }}
-                          >
-                            <Image
-                              src={product.image || "/placeholder.svg"}
-                              alt={product.name}
-                              width={500}
-                              height={500}
-                              className="h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105 transform-gpu"
-                              loading="lazy"
-                            />
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                  {filteredProducts.map((product) => (
+                    <Link
+                      key={product.id}
+                      href={`/product-details?id=${product.id}`}
+                      className="group"
+                      aria-label={`View details for ${product.name}`}
+                      style={{ willChange: "transform, box-shadow" }}
+                    >
+                      <Card className="bg-white shadow-md transform-gpu transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg">
+                        <CardContent className="p-0">
+                          <div className="relative">
+                            {/* Square card media for consistency */}
+                            <div
+                              className="w-full aspect-square overflow-hidden rounded-t-lg"
+                              style={{
+                                willChange: "transform",
+                                transform: "translateZ(0)",
+                                backfaceVisibility: "hidden",
+                              }}
+                            >
+                              <Image
+                                src={product.image || "/placeholder.svg"}
+                                alt={product.name}
+                                width={500}
+                                height={500}
+                                className="h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105 transform-gpu"
+                                loading="lazy"
+                              />
+                            </div>
+
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className={clsx(
+                                "absolute top-2 right-2 h-8 w-8 transition-all duration-200 shadow-md",
+                                isAddedToCart(product.id)
+                                  ? " bg-green-600 text-secondary hover:bg-success  cursor-default shadow-lg"
+                                  : "bg-primary text-secondary hover:bg-green-400 hover:text-secondary  hover:shadow-lg"
+                              )}
+                              aria-label={`Add ${product.name} to cart`}
+                              onClick={(e) => !isAddedToCart(product.id) && handleAddToCart(product, e)}
+                              disabled={isAddedToCart(product.id)}
+                            >
+                              <ShoppingCart className="h-4 w-4" />
+                            </Button>
                           </div>
 
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className={clsx(
-                              "absolute top-2 right-2 h-8 w-8 transition-all duration-200 shadow-md",
-                              isAddedToCart(product.id)
-                                ? " bg-green-600 text-secondary hover:bg-success  cursor-default shadow-lg"
-                                : "bg-primary text-secondary hover:bg-green-400 hover:text-secondary  hover:shadow-lg"
-                            )}
-                            aria-label={`Add ${product.name} to cart`}
-                            onClick={(e) => !isAddedToCart(product.id) && handleAddToCart(product, e)}
-                            disabled={isAddedToCart(product.id)}
-                          >
-                            <ShoppingCart className="h-4 w-4" />
-                          </Button>
-                        </div>
+                          <div className="p-4">
+                            <h3 className="font-medium text-gray-900 mb-1 text-sm line-clamp-2">
+                              {product.name}
+                            </h3>
+                            <p className="text-xs text-gray-500 mb-2">
+                              {product.brand}
+                            </p>
 
-                        <div className="p-4">
-                          <h3 className="font-medium text-gray-900 mb-1 text-sm line-clamp-2">
-                            {product.name}
-                          </h3>
-                          <p className="text-xs text-gray-500 mb-2">
-                            {product.brand}
-                          </p>
-
-                          <div className="flex items-center gap-2">
-                            <span className="text-lg font-bold text-secondary">{formatPrice(product.price)}</span>
-                            {product.originalPrice && (
-                              <span className="text-sm text-gray-500 line-through decoration-red-500">{formatPrice(product.originalPrice)}</span>
-                            )}
+                            <div className="flex items-center gap-2">
+                              <span className="text-lg font-bold text-secondary">{formatPrice(product.price)}</span>
+                              {product.originalPrice && (
+                                <span className="text-sm text-gray-500 line-through decoration-red-500">{formatPrice(product.originalPrice)}</span>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                ))}
-              </div>
-            )}
-            
-            {/* Pagination */}
-            {!apiIsLoading && !apiIsError && totalPages > 1 && (
-              <div className="mt-8 flex justify-center items-center gap-2">
-                <Button 
-                  onClick={goToPrevious}
-                  disabled={currentPage === 1}
-                  variant="outline"
-                  size="sm"
-                >
-                  Previous
-                </Button>
-                
-                <div className="flex gap-1">
-                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                    let pageNum;
-                    if (totalPages <= 5) {
-                      pageNum = i + 1;
-                    } else if (currentPage <= 3) {
-                      pageNum = i + 1;
-                    } else if (currentPage >= totalPages - 2) {
-                      pageNum = totalPages - 4 + i;
-                    } else {
-                      pageNum = currentPage - 2 + i;
-                    }
-                    
-                    return (
-                      <Button
-                        key={pageNum}
-                        onClick={() => goToPage(pageNum)}
-                        variant={currentPage === pageNum ? "default" : "outline"}
-                        size="sm"
-                        className="w-10"
-                      >
-                        {pageNum}
-                      </Button>
-                    );
-                  })}
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  ))}
                 </div>
                 
-                <Button 
-                  onClick={goToNext}
-                  disabled={currentPage === totalPages}
-                  variant="outline"
-                  size="sm"
-                >
-                  Next
-                </Button>
-              </div>
+                {/* Load More Button */}
+                {hasNextPage && (
+                  <div className="mt-8 flex justify-center">
+                    <Button 
+                      onClick={handleLoadMore}
+                      disabled={isFetching}
+                      variant="outline"
+                      size="lg"
+                      className="px-8"
+                    >
+                      {isFetching ? "Loading..." : "Load More"}
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
           </main>
         </div>

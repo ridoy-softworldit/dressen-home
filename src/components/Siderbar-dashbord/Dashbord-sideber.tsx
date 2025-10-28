@@ -12,6 +12,7 @@ import {
   CreditCard,
   MapPin,
   Lock,
+  Truck,
   LucideIcon,
 } from "lucide-react";
 
@@ -28,6 +29,7 @@ interface SidebarItem {
 const sidebarItems: SidebarItem[] = [
   { icon: User, label: "Profile", path: "/dashboard/profile" },
   { icon: Package, label: "Orders", path: "/dashboard/orders" },
+  { icon: Truck, label: "Tracking Order", path: "/dashboard/tracking-order" },
   { icon: BarChart3, label: "Dashboard", path: "/dashboard/user-dashboard" },
   { icon: Heart, label: "Wishlist", path: "/dashboard/wishlistItems" },
   {
@@ -73,7 +75,7 @@ export default function DashboardSidebar({ onClose }: DashboardSidebarProps) {
 
 
   return (
-    <Card className="md:w-64 bg-[#F9FAFB] shadow-sm rounded-xl">
+    <Card className="md:w-72 bg-[#F9FAFB] shadow-sm rounded-xl">
       <CardContent className="p-0">
         {/* User Info */}
         <div className="p-6 border-b border-gray-200">

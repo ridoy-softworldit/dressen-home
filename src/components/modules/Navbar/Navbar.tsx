@@ -2,7 +2,6 @@
 
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
-
 import { useRouter } from "next/navigation";
 import {
   Menu,
@@ -12,6 +11,8 @@ import {
   ShoppingCart,
   LogOut,
   User as UserIcon,
+  ChevronDown,
+  ChevronRight,
 } from "lucide-react";
 
 import {
@@ -23,13 +24,13 @@ import Image from "next/image";
 
 // 🔐 auth + cart selectors & logout
 import { useAppSelector } from "@/redux/hooks";
-import { selectCartCount } from "@/redux/featured/customer/customerSlice";
+
 import { selectCurrentUser } from "@/redux/featured/auth/authSlice";
 import { useLogoutMutation } from "@/redux/featured/auth/authApi";
 import SmartSearch from "@/components/search/SmartSearch";
 import { selectCartItems } from "@/redux/featured/cart/cartSlice";
 
-type UICategory = { id: string; slug?: string; label: string; image?: string };
+
 
 // ----- safe helpers -----
 function isRecord(v: unknown): v is Record<string, unknown> {
@@ -43,36 +44,20 @@ function getStr(o: unknown, k: string): string | undefined {
   return typeof v === "string" ? v : undefined;
 }
 
-type CartItem = {
-  productId: string;
-  quantity: number;
-  totalAmount: number;
-  productName: string;
-  productImage: string;
-  unitPrice: number;
-};
 
-const getLocalCart = (): CartItem[] => {
-  if (typeof window === "undefined") return [];
-  const cartStr = localStorage.getItem("guestCart");
-  if (!cartStr) return [];
-  try {
-    const cart = JSON.parse(cartStr);
-    return cart.productInfo || [];
-  } catch {
-    return [];
-  }
-};
+
+
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchActive, setIsSearchActive] = useState(false);
-  const [guestCartCount, setGuestCartCount] = useState(0);
+
   const [isClient, setIsClient] = useState(false);
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const { data: settings } = useGetSettingsQuery();
 
   const router = useRouter();
-  const cartCount = useAppSelector(selectCartCount);
+
   const currentUser = useAppSelector(selectCurrentUser);
   const [logoutMutation, { isLoading: isLogoutLoading }] = useLogoutMutation();
 
@@ -80,31 +65,39 @@ export default function Navbar() {
 
   useEffect(() => {
     setIsClient(true);
-    if (!isLoggedIn) {
-      const cart = getLocalCart();
-      setGuestCartCount(cart.reduce((acc, item) => acc + item.quantity, 0));
-    }
-  }, [isLoggedIn]);
+  }, []);
 
   const cartItems = useAppSelector(selectCartItems);
   // Fetch categories from API
   const { data } = useGetAllCategoryQuery();
 
   // Transform categories for UI
-  const categories = useMemo<UICategory[]>(() => {
+  const categories = useMemo(() => {
     const raw: RemoteCategory[] = Array.isArray(data) ? data : [];
+
     return raw.map((c) => {
       const id = String((c._id ?? c.id ?? c.slug ?? "") || "");
       const slug = typeof c.slug === "string" ? c.slug : undefined;
       const label = String(
         getStr(c, "name") ?? getStr(c, "label") ?? "Category"
       );
-      const icon = getProp(c, "icon");
-      const iconUrl = isRecord(icon) ? getStr(icon, "url") : undefined;
-      const image = iconUrl ?? getStr(c, "image") ?? undefined;
-      return { id, slug, label, image };
+      const subCategories = Array.isArray(c.subCategories) ? c.subCategories : (Array.isArray(c.children) ? c.children.map(child => getStr(child, "name") ?? getStr(child, "label") ?? "Subcategory") : []);
+
+      return { id, slug, label, subCategories };
     });
   }, [data]);
+
+  const toggleCategory = (categoryId: string) => {
+    setExpandedCategories(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(categoryId)) {
+        newSet.delete(categoryId);
+      } else {
+        newSet.add(categoryId);
+      }
+      return newSet;
+    });
+  };
 
   const handleLogout = async () => {
     try {
@@ -138,7 +131,8 @@ export default function Navbar() {
                     alt="Dressen Logo"
                     width={120}
                     height={40}
-                    className="h-10 w-auto"
+                    className="h-10"
+                    style={{ width: 'auto' }}
                   />
                 ) : (
                   <span className="font-extrabold text-3xl text-primary">
@@ -327,21 +321,51 @@ export default function Navbar() {
               <nav className="space-y-2">
                 <Link
                   href="/product-listing"
-                  className="block py-2 px-3 hover:bg-accent/10 rounded transition-colors"
+                  className="block py-2 px-3 hover:bg-accent/10 rounded transition-colors text-black"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   All Categories
                 </Link>
 
                 {categories.map((category) => (
-                  <Link
-                    key={category.id}
-                    href={`/products?category=${category.slug ?? category.id}`}
-                    className="block py-2 px-3 hover:bg-accent/10 rounded transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {category.label}
-                  </Link>
+                  <div key={category.id}>
+                    <div className="flex items-center justify-between py-2 px-3 hover:bg-accent/10 rounded transition-colors">
+                      <Link
+                        href={`/category?slug=${encodeURIComponent(category.slug ?? category.id)}`}
+                        className="flex-1 text-black"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {category.label}
+                      </Link>
+                      {category.subCategories && category.subCategories.length > 0 && (
+                        <button
+                          onClick={() => toggleCategory(category.id)}
+                          className="p-3 hover:bg-accent/20 rounded min-w-[100px] min-h-[44px] flex items-center justify-center"
+                          aria-label={`Toggle ${category.label} subcategories`}
+                        >
+                          {expandedCategories.has(category.id) ? (
+                            <ChevronDown size={20} className="text-black" />
+                          ) : (
+                            <ChevronRight size={20} className="text-black" />
+                          )}
+                        </button>
+                      )}
+                    </div>
+                    {category.subCategories && category.subCategories.length > 0 && expandedCategories.has(category.id) && (
+                      <div className="ml-4 space-y-1">
+                        {category.subCategories.map((subCat, index) => (
+                          <Link
+                            key={`${subCat}-${index}`}
+                            href={`/category?slug=${encodeURIComponent(category.slug ?? category.id)}&sub=${encodeURIComponent(subCat)}`}
+                            className="block py-1.5 px-3 text-sm hover:bg-accent/10 rounded transition-colors text-black"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            {subCat}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 ))}
               </nav>
             </div>

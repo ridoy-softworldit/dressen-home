@@ -253,7 +253,7 @@ const discountPct = (mrp?: number | null, sale?: number | null): number => {
 
 export default function ProductSixGrid({
   title = "Featured Deals",
-  useQuery = () => useGetAllProductsQuery({ page: 1 }),
+  useQuery = () => useGetAllProductsQuery(),
   fallback = FALLBACK,
 }: Props) {
   const { data: fetched, isLoading, error } = useQuery();

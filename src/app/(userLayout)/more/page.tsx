@@ -13,7 +13,7 @@ import {
   ShoppingCart,
   Sparkles,
 } from "lucide-react";
-import { useGetAllProductsQuery } from "@/redux/featured/product/productApi";
+import { useGetPaginatedProductsQuery } from "@/redux/featured/product/productApi";
 import { useGetAllCategoryQuery } from "@/redux/featured/category/categoryApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { addToCart, selectCartItems } from "@/redux/featured/cart/cartSlice";
@@ -33,12 +33,29 @@ function formatBDT(n: number) {
 export default function FeaturedMorePage() {
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector(selectCartItems);
-  const { data: apiProducts, isLoading } = useGetAllProductsQuery({ page: 1 });
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data: paginatedData, isLoading, isFetching } = useGetPaginatedProductsQuery({ 
+    page: currentPage, 
+    limit: 10 
+  });
   const { data: apiCategories } = useGetAllCategoryQuery();
   
   const [activeCat, setActiveCat] = useState<string>("All");
   const [sortBy, setSortBy] = useState<"newest" | "price_asc" | "price_desc">("newest");
   const [q, setQ] = useState("");
+
+  const hasNextPage = paginatedData?.pagination?.hasNextPage || false;
+  const totalItems = paginatedData?.pagination?.totalItems || 0;
+  
+  const apiProducts = useMemo(() => {
+    return paginatedData?.data || [];
+  }, [paginatedData?.data]);
+
+  const handleLoadMore = () => {
+    if (hasNextPage && !isFetching) {
+      setCurrentPage(prev => prev + 1);
+    }
+  };
 
   const categories = useMemo(() => {
     if (!apiCategories) return ["All"];
@@ -188,8 +205,7 @@ export default function FeaturedMorePage() {
             <div className="flex items-center gap-2 text-gray-600 text-sm">
               <SlidersHorizontal className="w-4 h-4" />
               <span>
-                Showing <b>{filtered.length}</b> item
-                {filtered.length !== 1 ? "s" : ""}
+                Showing <b>{filtered.length}</b> of <b>{totalItems}</b> products
               </span>
             </div>
 
@@ -224,11 +240,12 @@ export default function FeaturedMorePage() {
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {filtered.length === 0 ? (
           <div className="py-16 text-center text-gray-500">
-            No featured items found.
+            {isLoading ? "Loading products..." : "No featured items found."}
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
-            {filtered.map((p: { id: string; title: string; image: string; price: number; oldPrice?: number }) => (
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
+              {filtered.map((p: { id: string; title: string; image: string; price: number; oldPrice?: number }) => (
               <Card
                 key={p.id}
                 className="group relative rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
@@ -291,7 +308,23 @@ export default function FeaturedMorePage() {
                 </CardContent>
               </Card>
             ))}
-          </div>
+            </div>
+            
+            {/* Load More Button */}
+            {hasNextPage && (
+              <div className="mt-8 flex justify-center">
+                <Button 
+                  onClick={handleLoadMore}
+                  disabled={isFetching}
+                  variant="outline"
+                  size="lg"
+                  className="px-8 bg-[#facf35] hover:bg-[#facf35]/90 text-[#2e2e2e] border-[#facf35]"
+                >
+                  {isFetching ? "Loading..." : "Load More Products"}
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </section>
     </main>

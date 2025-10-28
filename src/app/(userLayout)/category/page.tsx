@@ -14,7 +14,7 @@ import { useMemo } from "react";
 import type { IProduct, ProductData } from "@/types/product";
 
 export default function CategorySection() {
-  const { data } = useGetAllProductsQuery({ page: 1 });
+  const { data } = useGetAllProductsQuery();
   const { data: categoryData } = useGetAllCategoryQuery();
   const { data: discountedData, isLoading: discountLoading, isError: discountError } = useGetDiscountedProductsQuery();
   const searchParams = useSearchParams();

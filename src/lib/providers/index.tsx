@@ -21,9 +21,14 @@
 
 import { store } from "@/redux/store";
 import { Provider } from "react-redux";
+import AuthSyncProvider from "@/components/providers/AuthSyncProvider";
 
 const Providers = ({ children }: { children: React.ReactNode }) => (
-  <Provider store={store}>{children}</Provider>
+  <Provider store={store}>
+    <AuthSyncProvider>
+      {children}
+    </AuthSyncProvider>
+  </Provider>
 );
 
 export default Providers;

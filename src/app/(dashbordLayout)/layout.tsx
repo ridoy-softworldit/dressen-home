@@ -4,7 +4,9 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useAppSelector } from "@/redux/hooks";
+import { selectCurrentUser } from "@/redux/featured/auth/authSlice";
 import Footer from "@/components/footer/footer";
 import NavBer from "@/components/navBer/navBer";
 import DashboardSideber from "@/components/Siderbar-dashbord/Dashbord-sideber";
@@ -18,14 +20,38 @@ interface AccountLayoutProps {
 export default function AccountLayout({ children }: AccountLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const currentUser = useAppSelector(selectCurrentUser);
 
   const isCheckoutPage = pathname.startsWith("/dashboard/checkout");
   const showSidebar = !isCheckoutPage;
+  
+  // Check if user is authenticated for non-checkout pages
+  const isAuthenticated = Boolean(currentUser?.id);
+  const requiresAuth = pathname.startsWith("/dashboard") && !isCheckoutPage;
+
+  useEffect(() => {
+    if (requiresAuth && !isAuthenticated) {
+      router.push("/auth/login");
+    }
+  }, [requiresAuth, isAuthenticated, router]);
 
   useEffect(() => {
     document.body.classList.toggle("overflow-hidden", sidebarOpen);
     return () => document.body.classList.remove("overflow-hidden");
   }, [sidebarOpen]);
+
+  // Show loading or redirect for protected routes
+  if (requiresAuth && !isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Redirecting to login...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -57,7 +83,7 @@ export default function AccountLayout({ children }: AccountLayoutProps) {
           className="
             hidden lg:flex
             fixed left-0 top-[64px]
-            h-[calc(100vh-64px)] w-64
+            h-[calc(100vh-64px)] w-72
             border-r bg-white z-30
           "
           aria-label="Dashboard sidebar"

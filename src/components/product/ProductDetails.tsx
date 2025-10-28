@@ -78,7 +78,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const { data: productsData } = useGetAllProductsQuery({ page: 1 });
+  const { data: productsData } = useGetAllProductsQuery();
   const cartItems = useAppSelector(selectCartItems);
 
   const staticColors = useMemo<ColorOption[]>(() => [

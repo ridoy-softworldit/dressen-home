@@ -273,7 +273,7 @@ function FilterPanel({
 }
 
 export function ProductCollection() {
-  const { data, isLoading, error } = useGetAllProductsQuery({ page: 1 });
+  const { data, isLoading, error } = useGetAllProductsQuery();
   const [productData, setProductData] = useState<Product[]>([]);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useGetTodaysDealsQuery } from "@/redux/featured/product/productApi";
+import { useGetPaginatedProductsQuery } from "@/redux/featured/product/productApi";
 import { useGetAllCategoryQuery } from "@/redux/featured/category/categoryApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { addToCart, selectCartItems } from "@/redux/featured/cart/cartSlice";
@@ -148,7 +148,11 @@ const normalizeProduct = (p: IProduct, categoryName?: string): DealItem => {
 export default function DealsMorePage() {
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector(selectCartItems);
-  const { data: todaysDeals, isLoading } = useGetTodaysDealsQuery();
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data: paginatedData, isLoading, isFetching } = useGetPaginatedProductsQuery({ 
+    page: currentPage, 
+    limit: 10 
+  });
   const { data: categories } = useGetAllCategoryQuery();
   const [activeCat, setActiveCat] = useState<Category>("All");
   const [sortBy, setSortBy] = useState<
@@ -175,16 +179,55 @@ export default function DealsMorePage() {
     return cats;
   }, [categories]);
 
+  const hasNextPage = paginatedData?.pagination?.hasNextPage || false;
+  
+  const apiProducts = useMemo(() => {
+    return paginatedData?.data || [];
+  }, [paginatedData?.data]);
+
+  const handleLoadMore = () => {
+    if (hasNextPage && !isFetching) {
+      setCurrentPage(prev => prev + 1);
+    }
+  };
+
+  // Today's bounds logic from productApi
+  const getTodayBounds = () => {
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+    return { startMs: start.getTime(), endMs: end.getTime() };
+  };
+
+  const getCreatedAtMs = (p: IProduct): number => {
+    const raw = p?.createdAt ?? (p as unknown as Record<string, unknown>)?.created_at ?? (p as unknown as Record<string, unknown>)?.createdOn ?? (p as unknown as Record<string, unknown>)?.date ?? null;
+    if (!raw) return 0;
+    const t = new Date(raw as string).getTime();
+    return Number.isFinite(t) ? t : 0;
+  };
+
   const allDeals = useMemo(() => {
-    if (Array.isArray(todaysDeals) && todaysDeals.length > 0) {
-      return todaysDeals.map((p: IProduct) => {
+    if (Array.isArray(apiProducts) && apiProducts.length > 0) {
+      const { startMs, endMs } = getTodayBounds();
+      
+      // Filter for today's products (created today)
+      const todaysProducts = apiProducts.filter((p: IProduct) => {
+        const createdMs = getCreatedAtMs(p);
+        return createdMs >= startMs && createdMs <= endMs;
+      });
+      
+      // If no products created today, fallback to newest products
+      const productsToUse = todaysProducts.length > 0 ? todaysProducts : apiProducts.slice(0, 10);
+      
+      return productsToUse.map((p: IProduct) => {
         const firstCategory = p.brandAndCategories?.categories?.[0];
         const categoryName = firstCategory ? categoryMap.get(firstCategory.name) : undefined;
         return normalizeProduct(p, categoryName);
       });
     }
     return FALLBACK_DEALS;
-  }, [todaysDeals, categoryMap]);
+  }, [apiProducts, categoryMap]);
 
   const filtered: DealItem[] = useMemo(() => {
     let arr = allDeals.filter((p) =>
@@ -293,8 +336,7 @@ export default function DealsMorePage() {
             <div className="flex items-center gap-2 text-gray-600 text-sm">
               <SlidersHorizontal className="w-4 h-4" />
               <span>
-                Showing <b>{filtered.length}</b> item
-                {filtered.length !== 1 ? "s" : ""}
+                Showing <b>{filtered.length}</b> today&apos;s deal{filtered.length !== 1 ? 's' : ''}
               </span>
 
               {/* Quick Min %OFF */}
@@ -356,8 +398,9 @@ export default function DealsMorePage() {
         ) : filtered.length === 0 ? (
           <div className="py-16 text-center text-secondary/60">No deals found.</div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
-            {filtered.map((p: DealItem) => {
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
+              {filtered.map((p: DealItem) => {
               const pct = discountPct(p.price, p.oldPrice);
               const isNew =
                 (Date.now() - new Date(p.createdAt).getTime()) / 36e5 < 48; // <48h
@@ -460,7 +503,20 @@ export default function DealsMorePage() {
                 </Card>
               );
             })}
-          </div>
+            </div>
+            
+            {hasNextPage && (
+              <div className="mt-8 text-center">
+                <Button
+                  onClick={handleLoadMore}
+                  disabled={isFetching}
+                  className="px-8 py-2"
+                >
+                  {isFetching ? "Loading..." : "Load More Deals"}
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </section>
     </main>

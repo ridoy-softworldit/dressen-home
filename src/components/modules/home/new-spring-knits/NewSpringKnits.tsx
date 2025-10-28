@@ -8,7 +8,7 @@ import { ChevronRight } from "lucide-react";
 import { useGetAllProductsQuery } from "@/redux/featured/product/productApi";
 
 const NewSpringKnits = () => {
-  const { data } = useGetAllProductsQuery({ page: 1 });
+  const { data } = useGetAllProductsQuery();
 
   const springKnitsProducts = data?.slice(0, 4) || []; 
 

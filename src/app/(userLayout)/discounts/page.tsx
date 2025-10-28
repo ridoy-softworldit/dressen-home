@@ -13,7 +13,7 @@ import {
   ShoppingCart,
   Percent,
 } from "lucide-react";
-import { useGetDiscountedProductsQuery } from "@/redux/featured/product/productApi";
+import { useGetPaginatedProductsQuery } from "@/redux/featured/product/productApi";
 import { useGetAllCategoryQuery } from "@/redux/featured/category/categoryApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { addToCart, selectCartItems } from "@/redux/featured/cart/cartSlice";
@@ -41,7 +41,11 @@ function discountPct(price: number, oldPrice: number) {
 export default function DiscountsPage() {
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector(selectCartItems);
-  const { data: discountedProducts, isLoading } = useGetDiscountedProductsQuery();
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data: paginatedData, isLoading, isFetching } = useGetPaginatedProductsQuery({ 
+    page: currentPage, 
+    limit: 10 
+  });
   const { data: apiCategories } = useGetAllCategoryQuery();
   
   const [activeCat, setActiveCat] = useState("All");
@@ -49,6 +53,22 @@ export default function DiscountsPage() {
     "discount"
   );
   const [q, setQ] = useState("");
+
+  // Filter for discounted products from all products
+  const allProducts = paginatedData?.data || [];
+  const discountedProducts = allProducts.filter((product: IProduct) => {
+    const salePrice = Number(product.productInfo?.salePrice ?? 0);
+    const regularPrice = Number(product.productInfo?.price ?? 0);
+    return salePrice > 0 && salePrice < regularPrice;
+  });
+  const hasNextPage = paginatedData?.pagination?.hasNextPage || false;
+
+
+  const handleLoadMore = () => {
+    if (hasNextPage && !isFetching) {
+      setCurrentPage(prev => prev + 1);
+    }
+  };
 
   // Transform API data to DiscountItem format
   const discountItems: DiscountItem[] = useMemo(() => {
@@ -191,8 +211,7 @@ export default function DiscountsPage() {
             <div className="flex items-center gap-2 text-gray-600 text-sm">
               <SlidersHorizontal className="w-4 h-4" />
               <span>
-                Showing <b>{filtered.length}</b> item
-                {filtered.length !== 1 ? "s" : ""}
+                Showing <b>{filtered.length}</b> discounted items
               </span>
             </div>
 
@@ -223,21 +242,22 @@ export default function DiscountsPage() {
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {filtered.length === 0 ? (
           <div className="py-16 text-center text-gray-500">
-            No discounted items found.
+            {isLoading ? "Loading discounted products..." : "No discounted items found."}
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
-            {filtered.map((p: DiscountItem) => {
-              const pct = discountPct(p.price, p.oldPrice);
-              const isAddedToCart = (productId: string) => {
-                return cartItems.some((item) => item.productId === productId);
-              };
-              
-              const handleAddToCart = (product: DiscountItem, e: React.MouseEvent) => {
-                e.preventDefault();
-                e.stopPropagation();
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
+              {filtered.map((p: DiscountItem) => {
+                const pct = discountPct(p.price, p.oldPrice);
+                const isAddedToCart = (productId: string) => {
+                  return cartItems.some((item) => item.productId === productId);
+                };
                 
-                const cartItem = {
+                const handleAddToCart = (product: DiscountItem, e: React.MouseEvent) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  
+                  const cartItem = {
                   productId: product.id,
                   productName: product.title,
                   productImage: product.image,
@@ -311,7 +331,23 @@ export default function DiscountsPage() {
                 </Card>
               );
             })}
-          </div>
+            </div>
+            
+            {/* Load More Button */}
+            {hasNextPage && (
+              <div className="mt-8 flex justify-center">
+                <Button 
+                  onClick={handleLoadMore}
+                  disabled={isFetching}
+                  variant="outline"
+                  size="lg"
+                  className="px-8 bg-[#facf35] hover:bg-[#facf35]/90 text-[#2e2e2e] border-[#facf35]"
+                >
+                  {isFetching ? "Loading..." : "Load More Discounts"}
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </section>
     </main>

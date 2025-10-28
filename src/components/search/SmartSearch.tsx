@@ -122,7 +122,7 @@ export default function SmartSearch({
   const inputRef = useRef<HTMLInputElement>(null);
 
   // ফুল লিস্ট (RTK Query) – শুধু ফ্রন্টএন্ড ফিল্টার
-  const { data: products, isLoading, isError } = useGetAllProductsQuery({ page: 1 });
+  const { data: products, isLoading, isError } = useGetAllProductsQuery();
 
 
 

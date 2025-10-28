@@ -8,7 +8,7 @@ import { useGetAllProductsQuery } from "@/redux/featured/product/productApi";
 import { TagShape } from "@/types/product"; // আপনার existing TagShape type import করুন
 
 const BestSeller = () => {
-  const { data } = useGetAllProductsQuery({ page: 1 });
+  const { data } = useGetAllProductsQuery();
 
   // Filter products that have "Best Selling" tag
   const bestSellerProducts = React.useMemo(() => {

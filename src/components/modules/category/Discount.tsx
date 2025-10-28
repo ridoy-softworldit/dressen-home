@@ -87,8 +87,8 @@ export default function Discount({
                   <div className="relative mb-4 grid h-28 w-full place-items-center sm:h-32 lg:h-40">
                     {showSale && discountPct > 0 && (
                       <div className="absolute left-0 top-0 z-10">
-                        <span className="inline-block bg-discount text-white text-[10px] px-2 py-1 font-semibold">
-                          {discountPct}% OFF
+                        <span className="inline-block bg-discount text-white bg-red-500 rounded-sm text-[10px] px-1 py-1 font-semibold">
+                          {discountPct}%
                         </span>
                       </div>
                     )}

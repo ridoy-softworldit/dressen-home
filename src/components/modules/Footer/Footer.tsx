@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import React from "react";
+import Link from "next/link";
 import { useGetSettingsQuery } from "@/redux/featured/settings/settingsApi";
 const footerLinks = [
   {
@@ -8,7 +9,7 @@ const footerLinks = [
     links: [
       { label: "FAQ", href: "/faqs-page" },
       { label: "Privacy Policy", href: "/privacy-trust" },
-
+      { label: "Track Your Order", href: "/tracking-order" },
       "Search",
       "Shop",
     ],
@@ -116,7 +117,7 @@ const Footer = () => {
                         </li>
                       ) : (
                         <li key={j}>
-                          <a href={link.href}>{link.label}</a>
+                          <Link href={link.href}>{link.label}</Link>
                         </li>
                       )
                     )}
@@ -129,7 +130,7 @@ const Footer = () => {
                       </li>
                     ) : (
                       <li key={j}>
-                        <a href={link.href}>{link.label}</a>
+                        <Link href={link.href}>{link.label}</Link>
                       </li>
                     )
                   )

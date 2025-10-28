@@ -17,6 +17,7 @@ export type RemoteCategory = {
   name?: string;
   label?: string;
   children?: RemoteSubCategory[];
+  subCategories?: string[];
 };
 
 /** Helper: stable tag id নির্বাচন */

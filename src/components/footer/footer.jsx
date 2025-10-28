@@ -117,6 +117,7 @@ export default function Footer() {
                   FAQ
                 </Link>
               </li>
+              
                <li>
                 <Link href="/return-policy" className="hover:text-black transition-colors">
                   {settings?.returnPolicy?.title || 'Return & Exchange'}
@@ -202,6 +203,11 @@ export default function Footer() {
                 <a href="/product-listing" className="hover:text-black transition-colors">
                   Shop
                 </a>
+              </li>
+              <li>
+                <Link href="/tracking-order" className="hover:text-black transition-colors">
+                  Track Your Order
+                </Link>
               </li>
               <li>
                 <a

@@ -10,7 +10,7 @@ import { useGetAllProductsQuery } from "@/redux/featured/product/productApi";
 import { IProduct, CategoryShape } from "@/types/product"; // আপনার existing types import করুন
 
 const NewArrivals = () => {
-  const { data } = useGetAllProductsQuery({ page: 1 });
+  const { data } = useGetAllProductsQuery();
   const [tab, setTab] = useState<string>("");
 
   const categoryTabs = useMemo(() => {

@@ -67,6 +67,7 @@ export interface IOrder {
   paymentInfo?: PaymentInfo | CashOn;
   // কখনও number (top-level total), কখনও full object আসে
   totalAmount: number | LineTotals;
+  trackingNumber?: string;
   createdAt: string;
   updatedAt?: string;
 }

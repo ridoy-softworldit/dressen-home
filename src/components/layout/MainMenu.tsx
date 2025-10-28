@@ -2,22 +2,25 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+
 import { ShoppingCart, LogOut } from "lucide-react";
-import { useAppSelector } from "@/redux/hooks";
+import { signOut } from "next-auth/react";
+import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { selectCartCount } from "@/redux/featured/customer/customerSlice";
-import { selectCurrentUser } from "@/redux/featured/auth/authSlice";
+import { selectCurrentUser, logoutUser } from "@/redux/featured/auth/authSlice";
 import { useLogoutMutation } from "@/redux/featured/auth/authApi";
+import toast from "react-hot-toast";
 
 export default function MainMenu() {
-  // 🔢 কার্ট কাউন্ট (ডায়নামিক ব্যাজ)
+  // 🔢 কার্ট কাউন্ট (ডায়নামিক ব্যাজ)
   const cartCount = useAppSelector(selectCartCount);
   // 👤 বর্তমান ইউজার
   const currentUser = useAppSelector(selectCurrentUser);
   // 🔐 লগআউট মিউটেশন
-  const [logoutMutation, { isLoading: isLogoutLoading }] = useLogoutMutation();
+  const [logoutMutation] = useLogoutMutation();
+  const dispatch = useAppDispatch();
 
-  const router = useRouter();
+
 
   const isLoggedIn = Boolean(currentUser?.id);
   const displayName =
@@ -29,28 +32,24 @@ export default function MainMenu() {
 
   // User image debugging removed
 
-  // 🚪 লগআউট হ্যান্ডলার: ব্যাকএন্ড হিট + লোকাল ক্লিন + রিডাইরেক্ট
+  // 🚪 লগআউট হ্যান্ডলার: NextAuth + Redux + ব্যাকএন্ড ক্লিন
   const handleLogout = async () => {
     try {
-      const userId = currentUser?.id ?? "";
+      const userId = currentUser?.id;
       if (userId) {
         await logoutMutation(userId).unwrap();
-      } else {
-        // fallback: local/session storage ক্লিয়ার (যদি টোকেন থাকে)
-        const keys = ["accessToken", "refreshToken", "token", "auth", "user"];
-        for (const k of keys) {
-          try {
-            localStorage.removeItem(k);
-          } catch {}
-          try {
-            sessionStorage.removeItem(k);
-          } catch {}
-        }
       }
     } catch {
-      // নেটওয়ার্ক ফেল হলেও আমরা রিডাইরেক্ট করাবো
+      // ব্যাকএন্ড ফেল হলেও এগিয়ে যাবো
     } finally {
-      router.replace("/auth/login");
+      // Redux state ক্লিয়ার
+      dispatch(logoutUser());
+      
+      // NextAuth session ক্লিয়ার + রিডাইরেক্ট
+      await signOut({ callbackUrl: "/auth/login", redirect: false });
+      
+      // Show success toast
+      toast.success("Successfully signed out!");
     }
   };
 
@@ -91,7 +90,7 @@ export default function MainMenu() {
                       sizes="28px"
                       priority
                       onError={(e) => {
-                        // যদি image load না হয়, তাহলে fallback হিসেবে avatar icon show করবে
+                        // যদি image load না হয়, তাহলে fallback হিসেবে avatar icon show করবে
                         const target = e.target as HTMLImageElement;
                         target.style.display = 'none';
                       }}
@@ -107,10 +106,9 @@ export default function MainMenu() {
                   onClick={handleLogout}
                   aria-label="Logout"
                   className="inline-flex items-center gap-1 rounded-md border border-white/30 px-2 py-1 text-sm hover:bg-white/10 disabled:opacity-60 transition-colors"
-                  disabled={isLogoutLoading}
                 >
                   <LogOut size={16} />
-                  {isLogoutLoading ? "Logging out..." : "Logout"}
+                  Logout
                 </button>
               </div>
             )}

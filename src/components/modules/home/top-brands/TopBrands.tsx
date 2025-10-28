@@ -11,7 +11,7 @@ type Brand = {
 };
 
 const TopBrands = () => {
-  const { data } = useGetAllProductsQuery({ page: 1 });
+  const { data } = useGetAllProductsQuery();
   const brands = data
     ? data
         .map((product: any) => ({

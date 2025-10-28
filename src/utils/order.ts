@@ -22,6 +22,20 @@ export const displayCustomer = (order: IOrder): string => {
 };
 
 export const statusLabel = (order: IOrder): string => {
+  // Check if order has top-level status (new API structure)
+  const orderWithStatus = order as unknown as Record<string, unknown>;
+  if (orderWithStatus.status) {
+    const status = orderWithStatus.status as string;
+    if (status === "completed") return "Delivered";
+    if (status === "cancelled") return "Cancelled";
+    if (status === "out-for-delivery") return "Out for delivery";
+    if (status === "processing") return "Processing";
+    if (status === "at-local-facility") return "At local facility";
+    if (status === "pending") return "Pending";
+    return status.charAt(0).toUpperCase() + status.slice(1);
+  }
+  
+  // Fallback to old structure
   const lines = toOrderLines(order.orderInfo);
   const statuses = lines.map((l) => l.status).filter(Boolean);
 
@@ -35,17 +49,46 @@ export const statusLabel = (order: IOrder): string => {
   return "Pending";
 };
 
-export const itemsCount = (order: IOrder): number =>
-  toOrderLines(order.orderInfo).length;
-
-export const orderTotal = (order: IOrder): number => {
-  if (typeof order.totalAmount === "number") return order.totalAmount;
-  const t = order.totalAmount as LineTotals | undefined;
-  return t?.total ?? 0;
+export const itemsCount = (order: IOrder): number => {
+  // Check if order has totalQuantity (new API structure)
+  const orderWithQuantity = order as unknown as Record<string, unknown>;
+  if (orderWithQuantity.totalQuantity) {
+    return Number(orderWithQuantity.totalQuantity);
+  }
+  
+  // Check if orderInfo is array with items (new API structure)
+  if (Array.isArray(order.orderInfo)) {
+    return order.orderInfo.reduce((sum: number, item: unknown) => {
+      const itemData = item as Record<string, unknown>;
+      return sum + Number(itemData.quantity || 1);
+    }, 0);
+  }
+  
+  // Fallback to old structure
+  return toOrderLines(order.orderInfo).length;
 };
 
-export const trackingNumber = (order: IOrder): string | undefined =>
-  toOrderLines(order.orderInfo)[0]?.trackingNumber;
+export const orderTotal = (order: IOrder): string => {
+  let total = 0;
+  if (typeof order.totalAmount === "number") {
+    total = order.totalAmount;
+  } else {
+    const t = order.totalAmount as LineTotals | undefined;
+    total = t?.total ?? 0;
+  }
+  return `৳${total.toFixed(2)}`;
+};
+
+export const trackingNumber = (order: IOrder): string | undefined => {
+  // Check if order has top-level trackingNumber (new API structure)
+  const orderWithTracking = order as unknown as Record<string, unknown>;
+  if (orderWithTracking.trackingNumber) {
+    return String(orderWithTracking.trackingNumber);
+  }
+  
+  // Fallback to old structure
+  return toOrderLines(order.orderInfo)[0]?.trackingNumber;
+};
 
 export const ymd = (iso?: string): string => {
   if (!iso) return "";

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useGetSettingsQuery } from "@/redux/featured/settings/settingsApi";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
@@ -36,24 +36,32 @@ export default function BannerSlider() {
   const { data: settings, isLoading, isError, error } = useGetSettingsQuery();
 
   
-  // Normalize slides to use settings sliderImages or fallback
+  const [failedApiImages, setFailedApiImages] = useState<Set<string>>(new Set());
+  
+  // Show API images if available, otherwise fallback
   const slides: Slide[] = useMemo(() => {
-    if (settings?.sliderImages?.length) {
-      return settings.sliderImages.map((imageUrl, index) => ({
-        _id: `slide-${index}`,
-        imageUrl,
-        alt: `Banner ${index + 1}`,
-        href: "/product-listing"
-      }));
+    if (settings?.sliderImages && settings.sliderImages.length > 0) {
+      // Filter out failed API images
+      const validApiImages = settings.sliderImages.filter(img => !failedApiImages.has(img));
+      
+      if (validApiImages.length > 0) {
+        return validApiImages.map((imageUrl, index) => ({
+          _id: `slide-${index}`,
+          imageUrl,
+          alt: `Banner ${index + 1}`,
+          href: "/product-listing"
+        }));
+      }
     }
     return FALLBACK;
-  }, [settings]);
+  }, [settings, failedApiImages]);
 
   const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
   const [animationState, setAnimationState] = useState<"in" | "out" | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [prefersReducedMotion, setPRM] = useState(false);
+
 
   // Handle prefers-reduced-motion
   useEffect(() => {
@@ -160,6 +168,11 @@ export default function BannerSlider() {
             ? "opacity-100"
             : "opacity-0";
 
+        // Skip rendering if imageUrl is invalid
+        if (!s.imageUrl || s.imageUrl === '"' || s.imageUrl.includes('"')) {
+          return null;
+        }
+
         const imgEl = (
           <Image
             key={s._id}
@@ -170,11 +183,11 @@ export default function BannerSlider() {
             className={`object-cover absolute inset-0 transition-opacity duration-500 ${animationClass}`}
             sizes="(min-width:1280px) 1000px, 100vw"
             unoptimized
-            onError={(e) => {
-              console.log('Image failed to load:', s.imageUrl);
-              // Simple fallback to placeholder
-              const target = e.currentTarget as HTMLImageElement;
-              target.src = '/placeholder.svg';
+            onError={() => {
+              // Mark API image as failed, will trigger fallback
+              if (settings && settings.sliderImages && settings.sliderImages.includes(s.imageUrl)) {
+                setFailedApiImages(prev => new Set(prev).add(s.imageUrl));
+              }
             }}
           />
         );

@@ -187,7 +187,7 @@ function matchesCategory(p: IProduct, t: { id?: string; slug?: string; name?: st
 /* ---------- Component ---------- */
 export default function CategoryProductCards() {
   const { data: catData } = useGetAllCategoryQuery();
-  const { data: prodData } = useGetAllProductsQuery({ page: 1 });
+  const { data: prodData } = useGetAllProductsQuery();
 
   const router = useRouter();
   const params = useSearchParams();
